@@ -656,7 +656,8 @@ export interface Orca {
      * Registers a "before command" hook to conditionally prevent a command from executing.
      *
      * @param id - The identifier of the command to hook into
-     * @param pred - A predicate function that returns true if the command should proceed, false to cancel
+     * @param pred - A predicate function that returns true if the command should proceed, false to cancel.
+     * The first parameter is the command ID, followed by the arguments of the command being monitored.
      *
      * @example
      * ```ts
@@ -700,7 +701,9 @@ export interface Orca {
      * Registers an "after command" hook to execute code after a command completes.
      *
      * @param id - The identifier of the command to hook into
-     * @param fn - The function to execute after the command completes
+     * @param fn - The function to execute after the command completes. The first
+     * parameter is the command ID, followed by the arguments of the command
+     * being monitored.
      *
      * @example
      * ```ts

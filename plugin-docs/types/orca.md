@@ -869,7 +869,9 @@ The identifier of the command to hook into
 
 [`AfterHook`](#afterhook)
 
-The function to execute after the command completes
+The function to execute after the command completes. The first
+parameter is the command ID, followed by the arguments of the command
+being monitored.
 
 ###### Returns
 
@@ -908,7 +910,8 @@ The identifier of the command to hook into
 
 [`BeforeHookPred`](#beforehookpred)
 
-A predicate function that returns true if the command should proceed, false to cancel
+A predicate function that returns true if the command should proceed, false to cancel.
+The first parameter is the command ID, followed by the arguments of the command being monitored.
 
 ###### Returns
 

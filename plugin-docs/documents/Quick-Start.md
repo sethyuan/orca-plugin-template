@@ -112,7 +112,7 @@ When a user enables the plugin or the application automatically enables it at st
 ```typescript
 export async function load(pluginName: string) {
   // Register command
-  await orca.commands.registerCommand(
+  orca.commands.registerCommand(
     `${pluginName}.helloWorld`,
     () => {
       orca.notify("info", "Hello from My Plugin!")
@@ -121,10 +121,10 @@ export async function load(pluginName: string) {
   )
 
   // Register block renderer
-  await orca.renderers.registerBlock("myblock", false, MyCustomBlockRenderer)
+  orca.renderers.registerBlock("myblock", false, MyCustomBlockRenderer)
 
   // Add toolbar button
-  await orca.toolbar.registerToolbarButton(`${pluginName}.toolbarButton`, {
+  orca.toolbar.registerToolbarButton(`${pluginName}.toolbarButton`, {
     icon: "ti ti-star",
     tooltip: "My Tool Button",
     command: `${pluginName}.helloWorld`,
@@ -144,13 +144,13 @@ When a user disables the plugin or the application closes, the plugin's `unload`
 ```typescript
 export async function unload() {
   // Unregister command
-  await orca.commands.unregisterCommand(`${pluginName}.helloWorld`)
+  orca.commands.unregisterCommand(`${pluginName}.helloWorld`)
 
   // Unregister block renderer
-  await orca.renderers.unregisterBlock("myblock")
+  orca.renderers.unregisterBlock("myblock")
 
   // Remove toolbar button
-  await orca.toolbar.unregisterToolbarButton(`${pluginName}.toolbarButton`)
+  orca.toolbar.unregisterToolbarButton(`${pluginName}.toolbarButton`)
 }
 ```
 
@@ -401,7 +401,7 @@ By following these conventions, you can ensure that your plugin integrates seaml
 
 To quickly start development, you can use the following project template:
 
-- [Basic Plugin Template](https://github.com/sethyuan/orca-plugin-template) - Plugin template with basic configuration
+- [Plugin Template](https://github.com/sethyuan/orca-plugin-template) - Plugin template with documentation and l10n set up.
 
 # Examples
 
@@ -414,10 +414,8 @@ This example shows how to create a simple command that inserts a new block with 
 ```tsx
 // src/main.ts
 export async function load(pluginName: string) {
-  const Button = orca.components.Button
-
   // Register command
-  await orca.commands.registerEditorCommand(
+  orca.commands.registerEditorCommand(
     "myplugin.insertTimeBlock",
     async ([_panelId, _rootBlockId, cursor]) => {
       if (!cursor || !cursor.anchor) return null
@@ -448,7 +446,7 @@ export async function load(pluginName: string) {
   )
 
   // Register slash command
-  await orca.slashCommands.registerSlashCommand("myplugin.insertTimeBlock", {
+  orca.slashCommands.registerSlashCommand("myplugin.insertTimeBlock", {
     icon: "ti ti-clock",
     group: "Utilities",
     title: "Insert Time Block",
@@ -458,10 +456,10 @@ export async function load(pluginName: string) {
 
 export async function unload() {
   // Unregister command
-  await orca.commands.unregisterCommand("myplugin.insertTimeBlock")
+  orca.commands.unregisterCommand("myplugin.insertTimeBlock")
 
   // Remove slash command
-  await orca.slashCommands.unregisterSlashCommand("myplugin.insertTimeBlock")
+  orca.slashCommands.unregisterSlashCommand("myplugin.insertTimeBlock")
 }
 ```
 
@@ -504,7 +502,6 @@ export default function MapBlockRenderer({
 }: Props) {
   const { blocks } = useSnapshot(orca.state)
   const block = blocks[mirrorId ?? blockId]
-  const iframeRef = useRef<HTMLIFrameElement>(null)
 
   const childrenBlocks = useMemo(
     () => (
@@ -535,7 +532,6 @@ export default function MapBlockRenderer({
       contentAttrs={{ contentEditable: false }} // Prevent editing the iframe itself
       contentJsx={
         <iframe
-          ref={iframeRef}
           src={`https://ditu.amap.com/search?query=${encodeURIComponent(
             keyword,
           )}`}
@@ -574,7 +570,7 @@ export async function load(pluginName: string) {
       const repr = { type: "myplugin.map", keyword: "Beijing" }
 
       // Insert the new map block after the current block using core.editor.insertBlock
-      const { ret: newBlockId } = await orca.commands.invokeEditorCommand(
+      const newBlockId = await orca.commands.invokeEditorCommand(
         "core.editor.insertBlock",
         null, // No initial content needed
         currentBlock, // Reference block

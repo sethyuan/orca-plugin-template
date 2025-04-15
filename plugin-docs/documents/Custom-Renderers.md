@@ -69,7 +69,6 @@ export default function CustomImageBlockRenderer({
 }: Props) {
   const { blocks } = useSnapshot(orca.state)
   const block = blocks[mirrorId ?? blockId]
-  const imageRef = useRef<HTMLImageElement>(null)
 
   const childrenBlocks = useMemo(
     () => (
@@ -98,7 +97,7 @@ export default function CustomImageBlockRenderer({
       reprClassName="myplugin-repr-image"
       contentClassName="myplugin-repr-image-content"
       contentAttrs={{ contentEditable: false }}
-      contentJsx={<img ref={imageRef} src={src} />}
+      contentJsx={<img src={src} />}
       childrenJsx={childrenBlocks}
     />
   )

@@ -39,7 +39,7 @@ These commands form the basis for manipulating blocks and their content.
 ```typescript
 // Insert a new text block after block 123
 const someBlock = orca.state.blocks[123]
-const { ret: newBlockId } = await orca.commands.invokeEditorCommand(
+const newBlockId = await orca.commands.invokeEditorCommand(
   "core.editor.insertBlock",
   null, // cursor data (can be null if not needed for context)
   someBlock,
@@ -204,7 +204,7 @@ await orca.commands.invokeEditorCommand(
 ```typescript
 const aliasName = "my-important-block"
 const blockIdToAlias: DbId = 301
-const { ret: error } = await orca.commands.invokeEditorCommand(
+const error = await orca.commands.invokeEditorCommand(
   "core.editor.createAlias",
   null,
   aliasName,
@@ -272,7 +272,7 @@ const targetBlockId: DbId = 402
 const propertyAlias = "relatedDocument"
 
 // Create a property reference from block 401 to block 402 with alias 'relatedDocument'
-const { ret: refId } = await orca.commands.invokeEditorCommand(
+const refId = await orca.commands.invokeEditorCommand(
   "core.editor.createRef",
   null,
   sourceBlockId,
@@ -501,7 +501,7 @@ await orca.commands.invokeEditorCommand(
 
 ```typescript
 // Add a simple tag
-const { ret: tagId } = await orca.commands.invokeEditorCommand(
+const tagId = await orca.commands.invokeEditorCommand(
   "core.editor.insertTag",
   cursor,
   blockId,
@@ -832,7 +832,7 @@ await orca.commands.invokeEditorCommand(
 
 ```typescript
 // Split the current block at the cursor position
-const { ret: newBlockId } = await orca.commands.invokeEditorCommand(
+const newBlockId = await orca.commands.invokeEditorCommand(
   "core.editor.splitBlock",
   cursor,
 )

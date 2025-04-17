@@ -734,6 +734,41 @@ await orca.commands.invokeEditorCommand(
 )
 ```
 
+### `core.editor.removeAllInstances`
+
+- **Description**: Removes all instances of a tag from blocks that reference it.
+- **Parameters**:
+- `tagBlockId: DbId`: The ID of the tag block whose instances should be removed.
+- **Usage**: Removes all references to a specific tag throughout the knowledge base.
+
+```typescript
+const tagBlockId: DbId = 501
+await orca.commands.invokeEditorCommand(
+  "core.editor.removeAllInstances",
+  null,
+  tagBlockId,
+)
+```
+
+### `core.editor.migrateTagInstances`
+
+- **Description**: Migrates all instances of a tag to another tag, replacing references throughout the knowledge base.
+- **Parameters**:
+- `sourceTagId: DbId`: The ID of the source tag block whose instances should be migrated.
+- `targetTagName: string`: The name of the target tag to migrate instances to.
+- **Usage**: Useful for reorganizing tag structures or replacing one tag with another.
+
+```typescript
+const sourceTagId: DbId = 501
+const targetTagName = "new-project-tag"
+await orca.commands.invokeEditorCommand(
+  "core.editor.migrateTagInstances",
+  null,
+  sourceTagId,
+  targetTagName,
+)
+```
+
 ## Indent/Outdent Commands
 
 ### `core.editor.indentSelection`

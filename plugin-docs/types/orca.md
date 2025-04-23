@@ -797,7 +797,7 @@ await orca.commands.invokeEditorCommand(
 
 ###### invokeGroup()
 
-> **invokeGroup**(`callback`): `Promise`\<`void`\>
+> **invokeGroup**(`callback`, `options`?): `Promise`\<`void`\>
 
 Executes a group of commands as a single undoable operation.
 This is useful when multiple commands should be treated as a single step in the undo/redo history.
@@ -809,6 +809,22 @@ This is useful when multiple commands should be treated as a single step in the 
 () => `Promise`\<`void`\>
 
 An async function that will perform multiple command operations
+
+###### options?
+
+Optional configuration for the command group
+
+###### topGroup?
+
+`boolean`
+
+Whether this is a top-level command group not nested in another group (defaults to false)
+
+###### undoable?
+
+`boolean`
+
+Whether the command group should be undoable (defaults to true)
 
 ###### Returns
 
@@ -849,6 +865,49 @@ await orca.commands.invokeGroup(async () => {
     { type: "text" } // repr parameter
   )
 })
+```
+
+###### invokeTopEditorCommand()
+
+> **invokeTopEditorCommand**(`id`, `cursor`, ...`args`): `Promise`\<`any`\>
+
+Invokes an editor command (as a top command) by its ID with cursor context and optional arguments.
+
+###### Parameters
+
+###### id
+
+`string`
+
+The identifier of the editor command to invoke
+
+###### cursor
+
+The cursor data context for the command, or null
+
+`null` | [`CursorData`](#cursordata)
+
+###### args
+
+...`any`[]
+
+Optional arguments to pass to the command
+
+###### Returns
+
+`Promise`\<`any`\>
+
+A Promise that resolves to the result of the command execution
+
+###### Example
+
+```ts
+// Invoke an editor command
+await orca.commands.invokeEditorCommand(
+  "core.editor.insertFragments",
+  null,
+  [{t: "t", v: "Text to insert"}]
+)
 ```
 
 ###### registerAfterCommand()
@@ -1201,6 +1260,38 @@ await orca.commands.invokeCommand("myplugin.sayHello", "User")
 Pre-built UI components from Orca that can be used in plugin development.
 These components follow Orca's design system and provide consistent UI patterns.
 
+###### AliasEditor
+
+> **AliasEditor**: `any`
+
+Provides an editor interface for managing aliases/tags, including adding/removing aliases,
+formatting options, template selection, and inclusion relationships.
+
+###### Example
+
+```tsx
+// Edit aliases for a block
+<orca.components.AliasEditor
+  blockId={123}
+>
+  {(open) => (
+    <orca.components.Button variant="outline" onClick={open}>
+      Edit Alias
+    </orca.components.Button>
+  )}
+</orca.components.AliasEditor>
+
+// With custom container
+<orca.components.AliasEditor
+  blockId={456}
+  container={containerRef}
+>
+  {(open) => (
+    <span onClick={open}>Configure Tag Settings</span>
+  )}
+</orca.components.AliasEditor>
+```
+
 ###### Block()
 
 > **Block**: (`props`) => `null` \| `Element`
@@ -1307,7 +1398,7 @@ Renders a block's children
 
 ###### renderingMode?
 
-`"normal"` \| `"simple"` \| `"simple-children"` \| `"readonly"`
+[`BlockRenderingMode`](#blockrenderingmode)
 
 ###### Returns
 
@@ -1435,7 +1526,7 @@ Core component for block rendering with common UI elements
 
 ###### renderingMode?
 
-`"normal"` \| `"simple"` \| `"simple-children"` \| `"readonly"`
+[`BlockRenderingMode`](#blockrenderingmode)
 
 ###### reprAttrs?
 
@@ -2943,6 +3034,90 @@ Data table component
     </tr>
   )}
 />
+```
+
+###### TagPopup
+
+> **TagPopup**: `any`
+
+Provides a popup menu for tag selection and creation.
+Allows users to search, select existing tags, or create new ones.
+
+###### Example
+
+```tsx
+// Basic usage
+<orca.components.TagPopup
+  blockId={123}
+  closeMenu={() => setMenuVisible(false)}
+  onTagClick={(tag) => console.log(`Selected tag: ${tag}`)}
+>
+  {(open) => (
+    <orca.components.Button variant="outline" onClick={open}>
+      Add Tag
+    </orca.components.Button>
+  )}
+</orca.components.TagPopup>
+
+// Custom placeholder text
+<orca.components.TagPopup
+  blockId={456}
+  closeMenu={handleClose}
+  onTagClick={handleTagSelect}
+  placeholder="Search or create a new tag..."
+  container={containerRef}
+>
+  {(open) => (
+    <span onClick={open}>Manage Tags</span>
+  )}
+</orca.components.TagPopup>
+```
+
+###### TagPropsEditor
+
+> **TagPropsEditor**: `any`
+
+Provides an editor interface for managing and configuring tag properties.
+Allows users to add, edit, and delete tag properties, set property types and values.
+
+###### Example
+
+```tsx
+// Basic usage
+<orca.components.TagPropsEditor
+  blockId={123}
+>
+  {(open) => (
+    <orca.components.Button variant="outline" onClick={open}>
+      Edit Tag Properties
+    </orca.components.Button>
+  )}
+</orca.components.TagPropsEditor>
+
+// With custom container
+<orca.components.TagPropsEditor
+  blockId={456}
+  container={containerRef}
+>
+  {(open) => (
+    <span onClick={open}>Configure Properties</span>
+  )}
+</orca.components.TagPropsEditor>
+
+// Combined with other components
+<div className="tag-controls">
+  <orca.components.TagPropsEditor blockId={789}>
+    {(open) => (
+      <orca.components.Button
+        variant="plain"
+        onClick={open}
+        className="property-button"
+      >
+        <i className="ti ti-settings" />
+      </orca.components.Button>
+    )}
+  </orca.components.TagPropsEditor>
+</div>
 ```
 
 ###### Tooltip()
@@ -6178,7 +6353,7 @@ Called after a command has been executed.
 
 ### APIMsg
 
-> **APIMsg** = `"get-aliased-blocks"` \| `"get-aliases"` \| `"get-aliases-ids"` \| `"get-block"` \| `"get-block-by-alias"` \| `"get-blockid-by-alias"` \| `"get-blocks"` \| `"get-blocks-with-tags"` \| `"get-block-tree"` \| `"get-children-tags"` \| `"get-children-tag-blocks"` \| `"get-journal-block"` \| `"get-tags"` \| `"query"` \| `"search-aliases"` \| `"search-blocks-by-text"` \| `"set-app-config"` \| `"set-config"` \| `"shell-open"` \| `"show-in-folder"` \| `"upload-asset-binary"` \| `"upload-assets"` \| `string`
+> **APIMsg** = `"get-aliased-blocks"` \| `"get-aliases"` \| `"get-aliases-ids"` \| `"get-block"` \| `"get-block-by-alias"` \| `"get-blockid-by-alias"` \| `"get-blocks"` \| `"get-blocks-with-tags"` \| `"get-block-tree"` \| `"get-children-tags"` \| `"get-children-tag-blocks"` \| `"get-journal-block"` \| `"get-tags"` \| `"query"` \| `"search-aliases"` \| `"search-blocks-by-text"` \| `"set-app-config"` \| `"set-config"` \| `"shell-open"` \| `"show-in-folder"` \| `"upload-asset-binary"` \| `"upload-assets"` \| `"image-ocr"` \| `string`
 
 Supported backend API message types for communicating with the Orca backend.
 These message types are used with the `invokeBackend` method to perform
@@ -6311,6 +6486,14 @@ Indicates this command works on multiple selected blocks
 > **BlockRefData** = `Pick`\<[`BlockProperty`](#blockproperty), `"name"` \| `"type"` \| `"value"`\>
 
 Simplified type for block reference data.
+
+***
+
+### BlockRenderingMode
+
+> **BlockRenderingMode** = `"normal"` \| `"relative"` \| `"simple"` \| `"simple-children"` \| `"readonly"`
+
+Block rendering modes
 
 ***
 
@@ -6680,9 +6863,10 @@ Adds custom actions to tag right-click menus.
 
 ##### render()
 
-> **render**: (`tagBlock`, `close`) => `React.ReactElement`
+> **render**: (`tagBlock`, `close`, `tagRef`?) => `React.ReactElement`
 
-Function to render the menu item, receiving the tag block and close function
+Function to render the menu item, receiving the tag block, the close function
+and the tag reference if called on a tag instance.
 
 ###### Parameters
 
@@ -6693,6 +6877,10 @@ Function to render the menu item, receiving the tag block and close function
 ###### close
 
 () => `void`
+
+###### tagRef?
+
+[`BlockRef`](#blockref)
 
 ###### Returns
 

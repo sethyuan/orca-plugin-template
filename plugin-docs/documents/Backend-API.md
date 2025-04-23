@@ -272,6 +272,31 @@ Example:
 const tags = await orca.invokeBackend("get-tags")
 ```
 
+## image-ocr
+
+Performs Optical Character Recognition (OCR) on an image file.
+
+Parameters:
+
+- fileSrc - The image file source (either a file path string or an ArrayBuffer containing the image binary data).
+
+Returns:
+
+The OCR results containing recognized text and positions.
+
+Example:
+
+```ts
+// OCR from a file path
+const ocrResult = await orca.invokeBackend("image-ocr", "./assets/document.png")
+
+// OCR from binary data
+const response = await fetch("https://example.com/image.jpg")
+const imageData = await response.arrayBuffer()
+const ocrResult = await orca.invokeBackend("image-ocr", imageData)
+console.log(`OCR text recognized: ${ocrResult.length} elements`)
+```
+
 ## query
 
 Executes a complex query to search and filter blocks.

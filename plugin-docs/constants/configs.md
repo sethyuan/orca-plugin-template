@@ -56,6 +56,10 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 
 > `readonly` **AITranslateToPresets**: `25` = `25`
 
+##### AutoDownloadWebImages
+
+> `readonly` **AutoDownloadWebImages**: `42` = `42`
+
 ##### CachedEditorNum
 
 > `readonly` **CachedEditorNum**: `13` = `13`
@@ -230,6 +234,10 @@ These keys are used to store settings that are specific to a single repo.
 ##### AITranslateToPresets
 
 > `readonly` **AITranslateToPresets**: `25` = `25`
+
+##### AutoDownloadWebImages
+
+> `readonly` **AutoDownloadWebImages**: `42` = `42`
 
 ##### CachedEditorNum
 

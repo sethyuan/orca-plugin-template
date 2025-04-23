@@ -177,14 +177,14 @@ await orca.commands.invokeEditorCommand(
 - **Description**: Copies the given blocks to a new position relative to a reference block.
 - **Parameters**:
 - `blockIds: DbId[]`: An array of block IDs (numbers) to copy.
-- `refBlockId: DbId`: The ID (number) of the reference block.
-- `position: "before" | "after" | "firstChild" | "lastChild"`: The target position relative to `refBlockId`.
+- `refBlockId: DbId | null`: The ID (number) of the reference block.
+- `position: "before" | "after" | "firstChild" | "lastChild | null"`: The target position relative to `refBlockId`.
 - **Usage**: Duplicates blocks and their descendants.
 
 ```typescript
 const blockIdsToCopy: DbId[] = [201]
 const targetRefBlockId: DbId = 202
-await orca.commands.invokeEditorCommand(
+const newBlocks = await orca.commands.invokeEditorCommand(
   "core.editor.copyBlocks",
   null,
   blockIdsToCopy,

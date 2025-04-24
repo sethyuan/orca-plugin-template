@@ -1260,12 +1260,22 @@ await orca.commands.invokeCommand("myplugin.sayHello", "User")
 Pre-built UI components from Orca that can be used in plugin development.
 These components follow Orca's design system and provide consistent UI patterns.
 
-###### AliasEditor
+###### AliasEditor()
 
-> **AliasEditor**: `any`
+> **AliasEditor**: (`props`) => `null` \| `Element`
 
 Provides an editor interface for managing aliases/tags, including adding/removing aliases,
 formatting options, template selection, and inclusion relationships.
+
+###### Parameters
+
+###### props
+
+`object` & `Partial`\<\{ `alignment`: `"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`; `allowBeyondContainer`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className`: `string`; `container`: `any`; `crossOffset`: `number`; `defaultPlacement`: `"top"` \| `"bottom"` \| `"left"` \| `"right"`; `escapeToClose`: `boolean`; `keyboardNav`: `boolean`; `menu`: (`close`, `state`?) => `ReactNode`; `menuAttr`: `Record`\<`string`, `any`\>; `navDirection`: `"vertical"` \| `"both"`; `noPointerLogic`: `boolean`; `offset`: `number`; `onClosed`: () => `void`; `onOpened`: () => `void`; `placement`: `"vertical"` \| `"horizontal"`; `style`: `any`; \}\>
+
+###### Returns
+
+`null` \| `Element`
 
 ###### Example
 
@@ -1784,7 +1794,7 @@ Displays a confirmation dialog
 
 ###### props
 
-`any`
+`object` & `Partial`\<\{ `alignment`: `"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`; `allowBeyondContainer`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className`: `string`; `container`: `any`; `crossOffset`: `number`; `defaultPlacement`: `"top"` \| `"bottom"` \| `"left"` \| `"right"`; `escapeToClose`: `boolean`; `keyboardNav`: `boolean`; `menu`: (`close`, `state`?) => `ReactNode`; `menuAttr`: `Record`\<`string`, `any`\>; `navDirection`: `"vertical"` \| `"both"`; `noPointerLogic`: `boolean`; `offset`: `number`; `onClosed`: () => `void`; `onOpened`: () => `void`; `placement`: `"vertical"` \| `"horizontal"`; `style`: `any`; \}\>
 
 ###### Returns
 
@@ -2199,7 +2209,7 @@ Input dialog with label and actions
 
 ###### props
 
-`any`
+`object` & `Partial`\<\{ `alignment`: `"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`; `allowBeyondContainer`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className`: `string`; `container`: `any`; `crossOffset`: `number`; `defaultPlacement`: `"top"` \| `"bottom"` \| `"left"` \| `"right"`; `escapeToClose`: `boolean`; `keyboardNav`: `boolean`; `menu`: (`close`, `state`?) => `ReactNode`; `menuAttr`: `Record`\<`string`, `any`\>; `navDirection`: `"vertical"` \| `"both"`; `noPointerLogic`: `boolean`; `offset`: `number`; `onClosed`: () => `void`; `onOpened`: () => `void`; `placement`: `"vertical"` \| `"horizontal"`; `style`: `any`; \}\>
 
 ###### Returns
 
@@ -3036,12 +3046,22 @@ Data table component
 />
 ```
 
-###### TagPopup
+###### TagPopup()
 
-> **TagPopup**: `any`
+> **TagPopup**: (`props`) => `null` \| `Element`
 
 Provides a popup menu for tag selection and creation.
 Allows users to search, select existing tags, or create new ones.
+
+###### Parameters
+
+###### props
+
+`object` & `Partial`\<\{ `alignment`: `"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`; `allowBeyondContainer`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className`: `string`; `container`: `any`; `crossOffset`: `number`; `defaultPlacement`: `"top"` \| `"bottom"` \| `"left"` \| `"right"`; `escapeToClose`: `boolean`; `keyboardNav`: `boolean`; `menu`: (`close`, `state`?) => `ReactNode`; `menuAttr`: `Record`\<`string`, `any`\>; `navDirection`: `"vertical"` \| `"both"`; `noPointerLogic`: `boolean`; `offset`: `number`; `onClosed`: () => `void`; `onOpened`: () => `void`; `placement`: `"vertical"` \| `"horizontal"`; `style`: `any`; \}\>
+
+###### Returns
+
+`null` \| `Element`
 
 ###### Example
 
@@ -3073,12 +3093,22 @@ Allows users to search, select existing tags, or create new ones.
 </orca.components.TagPopup>
 ```
 
-###### TagPropsEditor
+###### TagPropsEditor()
 
-> **TagPropsEditor**: `any`
+> **TagPropsEditor**: (`props`) => `null` \| `Element`
 
 Provides an editor interface for managing and configuring tag properties.
 Allows users to add, edit, and delete tag properties, set property types and values.
+
+###### Parameters
+
+###### props
+
+`object` & `Partial`\<\{ `alignment`: `"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`; `allowBeyondContainer`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className`: `string`; `container`: `any`; `crossOffset`: `number`; `defaultPlacement`: `"top"` \| `"bottom"` \| `"left"` \| `"right"`; `escapeToClose`: `boolean`; `keyboardNav`: `boolean`; `menu`: (`close`, `state`?) => `ReactNode`; `menuAttr`: `Record`\<`string`, `any`\>; `navDirection`: `"vertical"` \| `"both"`; `noPointerLogic`: `boolean`; `offset`: `number`; `onClosed`: () => `void`; `onOpened`: () => `void`; `placement`: `"vertical"` \| `"horizontal"`; `style`: `any`; \}\>
+
+###### Returns
+
+`null` \| `Element`
 
 ###### Example
 

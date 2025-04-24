@@ -609,10 +609,37 @@ export interface Orca {
     ): Promise<any>
 
     /**
+     * Invokes an editor command (as a top command) by its ID with cursor context and optional arguments.
+     *
+     * @param id - The identifier of the editor command to invoke
+     * @param cursor - The cursor data context for the command, or null
+     * @param args - Optional arguments to pass to the command
+     * @returns A Promise that resolves to the result of the command execution
+     *
+     * @example
+     * ```ts
+     * // Invoke an editor command
+     * await orca.commands.invokeEditorCommand(
+     *   "core.editor.insertFragments",
+     *   null,
+     *   [{t: "t", v: "Text to insert"}]
+     * )
+     * ```
+     */
+    invokeTopEditorCommand(
+      id: string,
+      cursor: CursorData | null,
+      ...args: any[]
+    ): Promise<any>
+
+    /**
      * Executes a group of commands as a single undoable operation.
      * This is useful when multiple commands should be treated as a single step in the undo/redo history.
      *
      * @param callback - An async function that will perform multiple command operations
+     * @param options - Optional configuration for the command group
+     * @param options.undoable - Whether the command group should be undoable (defaults to true)
+     * @param options.topGroup - Whether this is a top-level command group not nested in another group (defaults to false)
      *
      * @example
      * ```ts
@@ -650,7 +677,13 @@ export interface Orca {
      * })
      * ```
      */
-    invokeGroup(callback: () => Promise<void>): Promise<void>
+    invokeGroup(
+      callback: () => Promise<void>,
+      options?: {
+        undoable?: boolean
+        topGroup?: boolean
+      },
+    ): Promise<void>
 
     /**
      * Registers a "before command" hook to conditionally prevent a command from executing.
@@ -1670,6 +1703,61 @@ export interface Orca {
    */
   components: {
     /**
+     * Provides an editor interface for managing aliases/tags, including adding/removing aliases,
+     * formatting options, template selection, and inclusion relationships.
+     *
+     * @example
+     * ```tsx
+     * // Edit aliases for a block
+     * <orca.components.AliasEditor
+     *   blockId={123}
+     * >
+     *   {(open) => (
+     *     <orca.components.Button variant="outline" onClick={open}>
+     *       Edit Alias
+     *     </orca.components.Button>
+     *   )}
+     * </orca.components.AliasEditor>
+     *
+     * // With custom container
+     * <orca.components.AliasEditor
+     *   blockId={456}
+     *   container={containerRef}
+     * >
+     *   {(open) => (
+     *     <span onClick={open}>Configure Tag Settings</span>
+     *   )}
+     * </orca.components.AliasEditor>
+     * ```
+     */
+    AliasEditor: (
+      props: {
+        blockId: DbId
+      } & Partial<{
+        className?: string
+        style?: CSSProperties
+        menu: (close: () => void, state?: any) => ReactNode
+        children: (
+          openMenu: (e: React.UIEvent, state?: any) => void,
+          closeMenu: () => void,
+        ) => ReactNode
+        container?: RefObject<HTMLElement>
+        alignment?: "left" | "top" | "center" | "bottom" | "right"
+        placement?: "vertical" | "horizontal"
+        defaultPlacement?: "top" | "bottom" | "left" | "right"
+        allowBeyondContainer?: boolean
+        noPointerLogic?: boolean
+        keyboardNav?: boolean
+        navDirection?: "vertical" | "both"
+        menuAttr?: Record<string, any>
+        offset?: number
+        crossOffset?: number
+        escapeToClose?: boolean
+        onOpened?: () => void
+        onClosed?: () => void
+      }>,
+    ) => JSX.Element | null
+    /**
      * Renders a block with all its content and children
      *
      * @example
@@ -1701,7 +1789,7 @@ export interface Orca {
         indentLevel: number
         withBreadcrumb?: boolean
         initiallyCollapsed?: boolean
-        renderingMode?: "normal" | "simple" | "simple-children" | "readonly"
+        renderingMode?: BlockRenderingMode
       } & React.HTMLAttributes<HTMLDivElement>,
     ) => JSX.Element | null
     /**
@@ -1753,7 +1841,7 @@ export interface Orca {
       panelId: string
       blockLevel: number
       indentLevel: number
-      renderingMode?: "normal" | "simple" | "simple-children" | "readonly"
+      renderingMode?: BlockRenderingMode
     }) => JSX.Element | null
     /**
      * Provides block selection functionality
@@ -1836,7 +1924,7 @@ export interface Orca {
       indentLevel: number
       withBreadcrumb?: boolean
       initiallyCollapsed?: boolean
-      renderingMode?: "normal" | "simple" | "simple-children" | "readonly"
+      renderingMode?: BlockRenderingMode
       reprClassName: string
       reprAttrs?: Record<string, any>
       contentTag?: any
@@ -2041,7 +2129,29 @@ export interface Orca {
           openMenu: (e: React.UIEvent, state?: any) => void,
           closeMenu: () => void,
         ) => React.ReactNode
-      } & Partial<ContextMenuProps>,
+      } & Partial<{
+        className?: string
+        style?: CSSProperties
+        menu: (close: () => void, state?: any) => ReactNode
+        children: (
+          openMenu: (e: React.UIEvent, state?: any) => void,
+          closeMenu: () => void,
+        ) => ReactNode
+        container?: RefObject<HTMLElement>
+        alignment?: "left" | "top" | "center" | "bottom" | "right"
+        placement?: "vertical" | "horizontal"
+        defaultPlacement?: "top" | "bottom" | "left" | "right"
+        allowBeyondContainer?: boolean
+        noPointerLogic?: boolean
+        keyboardNav?: boolean
+        navDirection?: "vertical" | "both"
+        menuAttr?: Record<string, any>
+        offset?: number
+        crossOffset?: number
+        escapeToClose?: boolean
+        onOpened?: () => void
+        onClosed?: () => void
+      }>,
     ) => JSX.Element | null
     /**
      * Creates a context menu attached to an element
@@ -2324,7 +2434,29 @@ export interface Orca {
           openMenu: (e: React.UIEvent, state?: any) => void,
           closeMenu: () => void,
         ) => React.ReactNode
-      } & Partial<ContextMenuProps>,
+      } & Partial<{
+        className?: string
+        style?: CSSProperties
+        menu: (close: () => void, state?: any) => ReactNode
+        children: (
+          openMenu: (e: React.UIEvent, state?: any) => void,
+          closeMenu: () => void,
+        ) => ReactNode
+        container?: RefObject<HTMLElement>
+        alignment?: "left" | "top" | "center" | "bottom" | "right"
+        placement?: "vertical" | "horizontal"
+        defaultPlacement?: "top" | "bottom" | "left" | "right"
+        allowBeyondContainer?: boolean
+        noPointerLogic?: boolean
+        keyboardNav?: boolean
+        navDirection?: "vertical" | "both"
+        menuAttr?: Record<string, any>
+        offset?: number
+        crossOffset?: number
+        escapeToClose?: boolean
+        onOpened?: () => void
+        onClosed?: () => void
+      }>,
     ) => JSX.Element | null
     /**
      * Component for loading more items in paginated lists
@@ -2964,6 +3096,147 @@ export interface Orca {
       } & React.HTMLAttributes<HTMLDivElement>,
     ) => JSX.Element | null
     /**
+     * Provides a popup menu for tag selection and creation.
+     * Allows users to search, select existing tags, or create new ones.
+     *
+     * @example
+     * ```tsx
+     * // Basic usage
+     * <orca.components.TagPopup
+     *   blockId={123}
+     *   closeMenu={() => setMenuVisible(false)}
+     *   onTagClick={(tag) => console.log(`Selected tag: ${tag}`)}
+     * >
+     *   {(open) => (
+     *     <orca.components.Button variant="outline" onClick={open}>
+     *       Add Tag
+     *     </orca.components.Button>
+     *   )}
+     * </orca.components.TagPopup>
+     *
+     * // Custom placeholder text
+     * <orca.components.TagPopup
+     *   blockId={456}
+     *   closeMenu={handleClose}
+     *   onTagClick={handleTagSelect}
+     *   placeholder="Search or create a new tag..."
+     *   container={containerRef}
+     * >
+     *   {(open) => (
+     *     <span onClick={open}>Manage Tags</span>
+     *   )}
+     * </orca.components.TagPopup>
+     * ```
+     */
+    TagPopup: (
+      props: {
+        blockId: DbId
+        closeMenu: () => void
+        onTagClick: (alias: string) => void | Promise<void>
+        placeholder?: string
+        children: (
+          openMenu: (e: React.UIEvent, state?: any) => void,
+          closeMenu: () => void,
+        ) => ReactNode
+      } & Partial<{
+        className?: string
+        style?: CSSProperties
+        menu: (close: () => void, state?: any) => ReactNode
+        children: (
+          openMenu: (e: React.UIEvent, state?: any) => void,
+          closeMenu: () => void,
+        ) => ReactNode
+        container?: RefObject<HTMLElement>
+        alignment?: "left" | "top" | "center" | "bottom" | "right"
+        placement?: "vertical" | "horizontal"
+        defaultPlacement?: "top" | "bottom" | "left" | "right"
+        allowBeyondContainer?: boolean
+        noPointerLogic?: boolean
+        keyboardNav?: boolean
+        navDirection?: "vertical" | "both"
+        menuAttr?: Record<string, any>
+        offset?: number
+        crossOffset?: number
+        escapeToClose?: boolean
+        onOpened?: () => void
+        onClosed?: () => void
+      }>,
+    ) => JSX.Element | null
+    /**
+     * Provides an editor interface for managing and configuring tag properties.
+     * Allows users to add, edit, and delete tag properties, set property types and values.
+     *
+     * @example
+     * ```tsx
+     * // Basic usage
+     * <orca.components.TagPropsEditor
+     *   blockId={123}
+     * >
+     *   {(open) => (
+     *     <orca.components.Button variant="outline" onClick={open}>
+     *       Edit Tag Properties
+     *     </orca.components.Button>
+     *   )}
+     * </orca.components.TagPropsEditor>
+     *
+     * // With custom container
+     * <orca.components.TagPropsEditor
+     *   blockId={456}
+     *   container={containerRef}
+     * >
+     *   {(open) => (
+     *     <span onClick={open}>Configure Properties</span>
+     *   )}
+     * </orca.components.TagPropsEditor>
+     *
+     * // Combined with other components
+     * <div className="tag-controls">
+     *   <orca.components.TagPropsEditor blockId={789}>
+     *     {(open) => (
+     *       <orca.components.Button
+     *         variant="plain"
+     *         onClick={open}
+     *         className="property-button"
+     *       >
+     *         <i className="ti ti-settings" />
+     *       </orca.components.Button>
+     *     )}
+     *   </orca.components.TagPropsEditor>
+     * </div>
+     * ```
+     */
+    TagPropsEditor: (
+      props: {
+        blockId: DbId
+        children: (
+          openMenu: (e: React.UIEvent, state?: any) => void,
+          closeMenu: () => void,
+        ) => ReactNode
+      } & Partial<{
+        className?: string
+        style?: CSSProperties
+        menu: (close: () => void, state?: any) => ReactNode
+        children: (
+          openMenu: (e: React.UIEvent, state?: any) => void,
+          closeMenu: () => void,
+        ) => ReactNode
+        container?: RefObject<HTMLElement>
+        alignment?: "left" | "top" | "center" | "bottom" | "right"
+        placement?: "vertical" | "horizontal"
+        defaultPlacement?: "top" | "bottom" | "left" | "right"
+        allowBeyondContainer?: boolean
+        noPointerLogic?: boolean
+        keyboardNav?: boolean
+        navDirection?: "vertical" | "both"
+        menuAttr?: Record<string, any>
+        offset?: number
+        crossOffset?: number
+        escapeToClose?: boolean
+        onOpened?: () => void
+        onClosed?: () => void
+      }>,
+    ) => JSX.Element | null
+    /**
      * Tooltip component
      *
      * @example
@@ -3425,6 +3698,8 @@ export type APIMsg =
   | "upload-asset-binary"
   /** Upload multiple asset files to the repository. */
   | "upload-assets"
+  /** Perform OCR on an image. */
+  | "image-ocr"
   | string
 
 // Panels
@@ -3755,8 +4030,15 @@ export type BlockMenuCommand =
  * Adds custom actions to tag right-click menus.
  */
 export type TagMenuCommand = {
-  /** Function to render the menu item, receiving the tag block and close function */
-  render: (tagBlock: Block, close: () => void) => React.ReactElement
+  /**
+   * Function to render the menu item, receiving the tag block, the close function
+   * and the tag reference if called on a tag instance.
+   */
+  render: (
+    tagBlock: Block,
+    close: () => void,
+    tagRef?: BlockRef,
+  ) => React.ReactElement
 }
 
 // Blocks
@@ -3874,6 +4156,14 @@ export type BlockForConversion = {
   /** IDs of child blocks */
   children?: DbId[]
 }
+
+/** Block rendering modes */
+export type BlockRenderingMode =
+  | "normal"
+  | "relative"
+  | "simple"
+  | "simple-children"
+  | "readonly"
 
 // Query
 /**

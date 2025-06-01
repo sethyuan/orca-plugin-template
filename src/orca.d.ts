@@ -3,6 +3,7 @@ declare global {
   interface Window {
     orca: Orca
     React: React
+    createRoot: Function
     Valtio: any
   }
 }
@@ -1768,16 +1769,6 @@ export interface Orca {
      *   blockId={123}
      *   blockLevel={0}
      *   indentLevel={0}
-     * />
-     *
-     * // Read-only block with breadcrumb
-     * <orca.components.Block
-     *   panelId="panel-1"
-     *   blockId={456}
-     *   blockLevel={1}
-     *   indentLevel={2}
-     *   withBreadcrumb
-     *   renderingMode="readonly"
      * />
      * ```
      */
@@ -3611,6 +3602,64 @@ export interface Orca {
   }
 
   /**
+   * Utility functions.
+   *
+   * These methods help plugins and extensions interact with the editor's selection and cursor state,
+   * enabling advanced text manipulation and integration with Orca's block-based editing model.
+   */
+  utils: {
+    /**
+     * Converts a DOM Selection object into Orca's internal CursorData format.
+     *
+     * @param selection - The DOM Selection object (e.g., from window.getSelection())
+     * @returns The corresponding CursorData object, or null if the selection is invalid or outside the editor.
+     *
+     * @example
+     * ```ts
+     * const selection = window.getSelection();
+     * const cursorData = orca.utils.getCursorDataFromSelection(selection);
+     * if (cursorData) {
+     *   // Use cursorData for editor commands
+     * }
+     * ```
+     */
+    getCursorDataFromSelection: (
+      selection: Selection | null,
+    ) => CursorData | null
+
+    /**
+     * Converts a DOM Range object into Orca's internal CursorData format.
+     *
+     * @param range - The DOM Range object (e.g., from selection.getRangeAt(0))
+     * @returns The corresponding CursorData object, or null if the range is invalid or outside the editor.
+     *
+     * @example
+     * ```ts
+     * const selection = window.getSelection();
+     * if (selection && selection.rangeCount > 0) {
+     *   const range = selection.getRangeAt(0);
+     *   const cursorData = orca.utils.getCursorDataFromRange(range);
+     * }
+     * ```
+     */
+    getCursorDataFromRange: (range: Range | undefined) => CursorData | null
+
+    /**
+     * Sets the editor's selection and caret position based on Orca's CursorData.
+     *
+     * @param cursorData - The CursorData object specifying the desired selection/cursor position.
+     * @returns A Promise that resolves when the selection has been updated.
+     *
+     * @example
+     * ```ts
+     * // Move the caret to a specific block and offset
+     * await orca.utils.setSelectionFromCursorData(cursorData);
+     * ```
+     */
+    setSelectionFromCursorData: (cursorData: CursorData) => Promise<void>
+  }
+
+  /**
    * Display a notification to the user. Notifications appear in the bottom right corner of the application
    * and can be used to inform users about events, actions, or state changes.
    *
@@ -4163,7 +4212,6 @@ export type BlockRenderingMode =
   | "relative"
   | "simple"
   | "simple-children"
-  | "readonly"
 
 // Query
 /**

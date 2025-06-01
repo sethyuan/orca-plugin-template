@@ -1328,16 +1328,6 @@ Renders a block with all its content and children
   blockLevel={0}
   indentLevel={0}
 />
-
-// Read-only block with breadcrumb
-<orca.components.Block
-  panelId="panel-1"
-  blockId={456}
-  blockLevel={1}
-  indentLevel={2}
-  withBreadcrumb
-  renderingMode="readonly"
-/>
 ```
 
 ###### BlockBreadcrumb()
@@ -5626,6 +5616,102 @@ orca.toolbar.registerToolbarButton("myplugin.formatButton", {
 })
 ```
 
+##### utils
+
+> **utils**: `object`
+
+Utility functions.
+
+These methods help plugins and extensions interact with the editor's selection and cursor state,
+enabling advanced text manipulation and integration with Orca's block-based editing model.
+
+###### getCursorDataFromRange()
+
+> **getCursorDataFromRange**: (`range`) => `null` \| [`CursorData`](#cursordata)
+
+Converts a DOM Range object into Orca's internal CursorData format.
+
+###### Parameters
+
+###### range
+
+The DOM Range object (e.g., from selection.getRangeAt(0))
+
+`undefined` | `Range`
+
+###### Returns
+
+`null` \| [`CursorData`](#cursordata)
+
+The corresponding CursorData object, or null if the range is invalid or outside the editor.
+
+###### Example
+
+```ts
+const selection = window.getSelection();
+if (selection && selection.rangeCount > 0) {
+  const range = selection.getRangeAt(0);
+  const cursorData = orca.utils.getCursorDataFromRange(range);
+}
+```
+
+###### getCursorDataFromSelection()
+
+> **getCursorDataFromSelection**: (`selection`) => `null` \| [`CursorData`](#cursordata)
+
+Converts a DOM Selection object into Orca's internal CursorData format.
+
+###### Parameters
+
+###### selection
+
+The DOM Selection object (e.g., from window.getSelection())
+
+`null` | `Selection`
+
+###### Returns
+
+`null` \| [`CursorData`](#cursordata)
+
+The corresponding CursorData object, or null if the selection is invalid or outside the editor.
+
+###### Example
+
+```ts
+const selection = window.getSelection();
+const cursorData = orca.utils.getCursorDataFromSelection(selection);
+if (cursorData) {
+  // Use cursorData for editor commands
+}
+```
+
+###### setSelectionFromCursorData()
+
+> **setSelectionFromCursorData**: (`cursorData`) => `Promise`\<`void`\>
+
+Sets the editor's selection and caret position based on Orca's CursorData.
+
+###### Parameters
+
+###### cursorData
+
+[`CursorData`](#cursordata)
+
+The CursorData object specifying the desired selection/cursor position.
+
+###### Returns
+
+`Promise`\<`void`\>
+
+A Promise that resolves when the selection has been updated.
+
+###### Example
+
+```ts
+// Move the caret to a specific block and offset
+await orca.utils.setSelectionFromCursorData(cursorData);
+```
+
 #### Methods
 
 ##### invokeBackend()
@@ -6521,7 +6607,7 @@ Simplified type for block reference data.
 
 ### BlockRenderingMode
 
-> **BlockRenderingMode** = `"normal"` \| `"relative"` \| `"simple"` \| `"simple-children"` \| `"readonly"`
+> **BlockRenderingMode** = `"normal"` \| `"relative"` \| `"simple"` \| `"simple-children"`
 
 Block rendering modes
 

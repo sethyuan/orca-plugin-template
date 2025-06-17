@@ -5625,6 +5625,37 @@ Utility functions.
 These methods help plugins and extensions interact with the editor's selection and cursor state,
 enabling advanced text manipulation and integration with Orca's block-based editing model.
 
+###### getAssetPath()
+
+> **getAssetPath**: (`assetPath`) => `string`
+
+Resolves the absolute URL or file path for an asset used by a plugin or the application.
+You can override it to provide a mapping.
+
+###### Parameters
+
+###### assetPath
+
+`string`
+
+The absolute path to the asset.
+
+###### Returns
+
+`string`
+
+The absolute URL or file path to the asset, suitable for use in image, video or other resources.
+
+###### Example
+
+```ts
+// Get the full path to a plugin image asset
+const iconUrl = orca.utils.getAssetPath(iconSrc)
+
+// Use in a React component
+<img src={orca.utils.getAssetPath(iconSrc)} alt="Logo" />
+```
+
 ###### getCursorDataFromRange()
 
 > **getCursorDataFromRange**: (`range`) => `null` \| [`CursorData`](#cursordata)
@@ -5852,6 +5883,92 @@ Each key represents a setting name with its configuration.
 
 ***
 
+### QueryBlock
+
+Query condition that matches blocks according their properties.
+
+#### Properties
+
+##### created?
+
+> `optional` **created**: `object`
+
+Whether to match blocks with a specific creation date
+
+###### op?
+
+> `optional` **op**: `2` \| `1` \| `7` \| `8` \| `9` \| `10`
+
+###### value?
+
+> `optional` **value**: `Date` \| [`QueryJournalDate`](#queryjournaldate)
+
+##### hasBackRefs?
+
+> `optional` **hasBackRefs**: `boolean`
+
+Whether to match blocks with back references
+
+##### hasChild?
+
+> `optional` **hasChild**: `boolean`
+
+Whether to match blocks with a child
+
+##### hasParent?
+
+> `optional` **hasParent**: `boolean`
+
+Whether to match blocks with a parent
+
+##### hasTags?
+
+> `optional` **hasTags**: `boolean`
+
+Whether to match blocks with tags
+
+##### includeDescendants?
+
+> `optional` **includeDescendants**: `boolean`
+
+Whether to include descendant blocks in results
+
+##### kind
+
+> **kind**: `9`
+
+Kind identifier for block queries (9)
+
+##### modified?
+
+> `optional` **modified**: `object`
+
+Whether to match blocks with a specific modification date
+
+###### op?
+
+> `optional` **op**: `2` \| `1` \| `7` \| `8` \| `9` \| `10`
+
+###### value?
+
+> `optional` **value**: `Date` \| [`QueryJournalDate`](#queryjournaldate)
+
+##### types?
+
+> `optional` **types**: `object`
+
+The block types to match or not match
+
+###### op?
+
+> `optional` **op**: `5` \| `6`
+
+###### value?
+
+> `optional` **value**: `string`[]
+
+***
+
 ### QueryDescription
 
 Describes a query for searching and filtering blocks.
@@ -5969,6 +6086,12 @@ Whether to include descendant blocks in results
 > **kind**: `1` \| `2`
 
 Kind of group: 1 for AND, 2 for OR
+
+##### subConditions?
+
+> `optional` **subConditions**: [`QueryGroup`](#querygroup)
+
+Optional conditions that apply to descendant blocks
 
 ***
 
@@ -6768,7 +6891,7 @@ Matches if an array value includes the specified value.
 
 ### QueryItem
 
-> **QueryItem** = [`QueryGroup`](#querygroup) \| [`QueryTag`](#querytag) \| [`QueryNoTag`](#querynotag) \| [`QueryJournal`](#queryjournal) \| [`QueryRef`](#queryref) \| [`QueryNoRef`](#querynoref) \| [`QueryText`](#querytext)
+> **QueryItem** = [`QueryGroup`](#querygroup) \| [`QueryTag`](#querytag) \| [`QueryNoTag`](#querynotag) \| [`QueryJournal`](#queryjournal) \| [`QueryRef`](#queryref) \| [`QueryNoRef`](#querynoref) \| [`QueryText`](#querytext) \| [`QueryBlock`](#queryblock)
 
 Union type representing all possible query condition items.
 Each item represents a different type of condition that can be used in queries.
@@ -6799,6 +6922,15 @@ Used for dates like "2 days ago" or "next week".
 
 Constant for the AND query group type.
 All conditions must match for the group to match.
+
+***
+
+### QueryKindBlock
+
+> **QueryKindBlock** = `9`
+
+Constant for the block query type.
+Matches blocks according to their properties.
 
 ***
 

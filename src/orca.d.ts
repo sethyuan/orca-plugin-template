@@ -3657,6 +3657,24 @@ export interface Orca {
      * ```
      */
     setSelectionFromCursorData: (cursorData: CursorData) => Promise<void>
+
+    /**
+     * Resolves the absolute URL or file path for an asset used by a plugin or the application.
+     * You can override it to provide a mapping.
+     *
+     * @param assetPath - The absolute path to the asset.
+     * @returns The absolute URL or file path to the asset, suitable for use in image, video or other resources.
+     *
+     * @example
+     * ```ts
+     * // Get the full path to a plugin image asset
+     * const iconUrl = orca.utils.getAssetPath(iconSrc)
+     *
+     * // Use in a React component
+     * <img src={orca.utils.getAssetPath(iconSrc)} alt="Logo" />
+     * ```
+     */
+    getAssetPath: (assetPath: string) => string
   }
 
   /**
@@ -4262,6 +4280,7 @@ export type QueryItem =
   | QueryRef
   | QueryNoRef
   | QueryText
+  | QueryBlock
 
 /**
  * A group of query conditions combined with a logical operator.
@@ -4274,6 +4293,8 @@ export interface QueryGroup {
   conditions: QueryItem[]
   /** Whether to include descendant blocks in results */
   includeDescendants?: boolean
+  /** Optional conditions that apply to descendant blocks */
+  subConditions?: QueryGroup
 }
 
 /**
@@ -4360,6 +4381,39 @@ export interface QueryText {
   text: string
   /** Whether to perform raw text search (no stemming/normalization) */
   raw?: boolean
+  /** Whether to include descendant blocks in results */
+  includeDescendants?: boolean
+}
+
+/**
+ * Query condition that matches blocks according their properties.
+ */
+export interface QueryBlock {
+  /** Kind identifier for block queries (9) */
+  kind: QueryKindBlock
+  /** The block types to match or not match */
+  types?: {
+    op?: QueryHas | QueryNotHas
+    value?: string[]
+  }
+  /** Whether to match blocks with a parent */
+  hasParent?: boolean
+  /** Whether to match blocks with a child */
+  hasChild?: boolean
+  /** Whether to match blocks with tags */
+  hasTags?: boolean
+  /** Whether to match blocks with back references */
+  hasBackRefs?: boolean
+  /** Whether to match blocks with a specific creation date */
+  created?: {
+    op?: QueryEq | QueryNotEq | QueryGt | QueryLt | QueryGe | QueryLe
+    value?: Date | QueryJournalDate
+  }
+  /** Whether to match blocks with a specific modification date */
+  modified?: {
+    op?: QueryEq | QueryNotEq | QueryGt | QueryLt | QueryGe | QueryLe
+    value?: Date | QueryJournalDate
+  }
   /** Whether to include descendant blocks in results */
   includeDescendants?: boolean
 }
@@ -4460,6 +4514,12 @@ export type QueryKindNoRef = 7
  * Matches blocks containing specific text.
  */
 export type QueryKindText = 8
+
+/**
+ * Constant for the block query type.
+ * Matches blocks according to their properties.
+ */
+export type QueryKindBlock = 9
 
 /**
  * Operation constant: equals.

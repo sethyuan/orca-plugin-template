@@ -112,6 +112,10 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 
 > `readonly` **MapProvider**: `15` = `15`
 
+##### OutlineTag
+
+> `readonly` **OutlineTag**: `45` = `45`
+
 ##### Repos
 
 > `readonly` **Repos**: `2` = `2`
@@ -132,6 +136,10 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 
 > `readonly` **S3Endpoint**: `32` = `32`
 
+##### S3ForcePathStyle
+
+> `readonly` **S3ForcePathStyle**: `44` = `44`
+
 ##### S3Region
 
 > `readonly` **S3Region**: `31` = `31`
@@ -147,6 +155,10 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 ##### SchemaVersion
 
 > `readonly` **SchemaVersion**: `1` = `1`
+
+##### ShowTagPropsOnFocus
+
+> `readonly` **ShowTagPropsOnFocus**: `43` = `43`
 
 ##### SidebarOpened
 
@@ -279,6 +291,10 @@ These keys are used to store settings that are specific to a single repo.
 
 > `readonly` **HourSystem**: `9` = `9`
 
+##### JournalCustomQueries
+
+> `readonly` **JournalCustomQueries**: `1004` = `1004`
+
 ##### JournalDateFormat
 
 > `readonly` **JournalDateFormat**: `12` = `12`
@@ -298,6 +314,10 @@ These keys are used to store settings that are specific to a single repo.
 ##### MapProvider
 
 > `readonly` **MapProvider**: `15` = `15`
+
+##### OutlineTag
+
+> `readonly` **OutlineTag**: `45` = `45`
 
 ##### PanelLayouts
 
@@ -323,6 +343,10 @@ These keys are used to store settings that are specific to a single repo.
 
 > `readonly` **S3Endpoint**: `32` = `32`
 
+##### S3ForcePathStyle
+
+> `readonly` **S3ForcePathStyle**: `44` = `44`
+
 ##### S3Region
 
 > `readonly` **S3Region**: `31` = `31`
@@ -338,6 +362,10 @@ These keys are used to store settings that are specific to a single repo.
 ##### SchemaVersion
 
 > `readonly` **SchemaVersion**: `1` = `1`
+
+##### ShowTagPropsOnFocus
+
+> `readonly` **ShowTagPropsOnFocus**: `43` = `43`
 
 ##### SidebarOpened
 

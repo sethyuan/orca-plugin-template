@@ -1540,10 +1540,6 @@ Core component for block rendering with common UI elements
 
 `string`
 
-###### withBreadcrumb?
-
-`boolean`
-
 ###### Returns
 
 `null` \| `Element`
@@ -1570,7 +1566,6 @@ Core component for block rendering with common UI elements
   rndId="code-rand-id"
   blockLevel={1}
   indentLevel={2}
-  withBreadcrumb={true}
   reprClassName="orca-repr-code"
   contentClassName="orca-repr-code-content"
   contentAttrs={{ contentEditable: false }}
@@ -5897,7 +5892,7 @@ Whether to match blocks with a specific creation date
 
 ###### op?
 
-> `optional` **op**: `2` \| `1` \| `7` \| `8` \| `9` \| `10`
+> `optional` **op**: `2` \| `1` \| `7` \| `8` \| `10` \| `9`
 
 ###### value?
 
@@ -5947,7 +5942,87 @@ Whether to match blocks with a specific modification date
 
 ###### op?
 
-> `optional` **op**: `2` \| `1` \| `7` \| `8` \| `9` \| `10`
+> `optional` **op**: `2` \| `1` \| `7` \| `8` \| `10` \| `9`
+
+###### value?
+
+> `optional` **value**: `Date` \| [`QueryJournalDate`](#queryjournaldate)
+
+##### types?
+
+> `optional` **types**: `object`
+
+The block types to match or not match
+
+###### op?
+
+> `optional` **op**: `5` \| `6`
+
+###### value?
+
+> `optional` **value**: `string`[]
+
+***
+
+### QueryBlock2
+
+Query condition that matches blocks according their properties.
+
+#### Properties
+
+##### created?
+
+> `optional` **created**: `object`
+
+Whether to match blocks with a specific creation date
+
+###### op?
+
+> `optional` **op**: `2` \| `1` \| `7` \| `8` \| `10` \| `9`
+
+###### value?
+
+> `optional` **value**: `Date` \| [`QueryJournalDate`](#queryjournaldate)
+
+##### hasBackRefs?
+
+> `optional` **hasBackRefs**: `boolean`
+
+Whether to match blocks with back references
+
+##### hasChild?
+
+> `optional` **hasChild**: `boolean`
+
+Whether to match blocks with a child
+
+##### hasParent?
+
+> `optional` **hasParent**: `boolean`
+
+Whether to match blocks with a parent
+
+##### hasTags?
+
+> `optional` **hasTags**: `boolean`
+
+Whether to match blocks with tags
+
+##### kind
+
+> **kind**: `9`
+
+Kind identifier for block queries (9)
+
+##### modified?
+
+> `optional` **modified**: `object`
+
+Whether to match blocks with a specific modification date
+
+###### op?
+
+> `optional` **op**: `2` \| `1` \| `7` \| `8` \| `10` \| `9`
 
 ###### value?
 
@@ -6062,6 +6137,99 @@ Filters results to blocks with a specific tag
 
 ***
 
+### QueryDescription2
+
+Describes a query for searching and filtering blocks.
+Used to construct complex queries that can combine multiple conditions.
+
+#### Properties
+
+##### asCalendar?
+
+> `optional` **asCalendar**: `object`
+
+Calendar view configuration if results should be displayed in calendar format
+
+###### end
+
+> **end**: `Date`
+
+End date for the calendar range
+
+###### field
+
+> **field**: `"journal"` \| `"created"` \| `"modified"`
+
+Field to use for calendar date (created/modified/journal date)
+
+###### start
+
+> **start**: `Date`
+
+Start date for the calendar range
+
+##### asTable?
+
+> `optional` **asTable**: `boolean`
+
+Whether to format results as a table
+
+##### excludeId?
+
+> `optional` **excludeId**: `number`
+
+Optional block ID to exclude from results
+
+##### group?
+
+> `optional` **group**: `string`
+
+Specifies which group to return results for
+
+##### groupBy?
+
+> `optional` **groupBy**: `string`
+
+Field to group results by
+
+##### page?
+
+> `optional` **page**: `number`
+
+For paginated results, the page number (0-based)
+
+##### pageSize?
+
+> `optional` **pageSize**: `number`
+
+For paginated results, the number of items per page
+
+##### q?
+
+> `optional` **q**: [`QueryGroup2`](#querygroup2)
+
+The main query group with conditions
+
+##### sort?
+
+> `optional` **sort**: [`QuerySort`](#querysort)[]
+
+Array of sort specifications for ordering results
+
+##### stats?
+
+> `optional` **stats**: [`QueryStat`](#querystat)[]
+
+Statistical calculations to perform on results
+
+##### tagName?
+
+> `optional` **tagName**: `string`
+
+Filters results to blocks with a specific tag
+
+***
+
 ### QueryGroup
 
 A group of query conditions combined with a logical operator.
@@ -6095,6 +6263,33 @@ Optional conditions that apply to descendant blocks
 
 ***
 
+### QueryGroup2
+
+A group of query conditions combined with a logical operator.
+Used to create complex queries with multiple conditions.
+
+#### Properties
+
+##### conditions
+
+> **conditions**: [`QueryItem2`](#queryitem2)[]
+
+Array of conditions within this group
+
+##### kind
+
+> **kind**: `100` \| `101` \| `102` \| `103` \| `104` \| `105`
+
+Kind of group: self/ancestor/descendant
+
+##### negate?
+
+> `optional` **negate**: `boolean`
+
+Whether to negate the conditions in this group
+
+***
+
 ### QueryJournal
 
 Query condition that matches journal blocks in a date range.
@@ -6112,6 +6307,32 @@ End date for the journal range
 > `optional` **includeDescendants**: `boolean`
 
 Whether to include descendant blocks in results
+
+##### kind
+
+> **kind**: `3`
+
+Kind identifier for journal queries (3)
+
+##### start
+
+> **start**: [`QueryJournalDate`](#queryjournaldate)
+
+Start date for the journal range
+
+***
+
+### QueryJournal2
+
+Query condition that matches journal blocks in a date range.
+
+#### Properties
+
+##### end
+
+> **end**: [`QueryJournalDate`](#queryjournaldate)
+
+End date for the journal range
 
 ##### kind
 
@@ -6220,6 +6441,26 @@ Kind identifier for reference queries (6)
 
 ***
 
+### QueryRef2
+
+Query condition that matches blocks referencing a specific block.
+
+#### Properties
+
+##### blockId?
+
+> `optional` **blockId**: `number`
+
+ID of the block that should be referenced
+
+##### kind
+
+> **kind**: `6`
+
+Kind identifier for reference queries (6)
+
+***
+
 ### QueryTag
 
 Query condition that matches blocks with a specific tag.
@@ -6232,6 +6473,33 @@ Can also match based on tag properties.
 > `optional` **includeDescendants**: `boolean`
 
 Whether to include descendant blocks in results
+
+##### kind
+
+> **kind**: `4`
+
+Kind identifier for tag queries (4)
+
+##### name
+
+> **name**: `string`
+
+The tag name to match
+
+##### properties?
+
+> `optional` **properties**: [`QueryTagProperty`](#querytagproperty)[]
+
+Optional property conditions for the tag
+
+***
+
+### QueryTag2
+
+Query condition that matches blocks with a specific tag.
+Can also match based on tag properties.
+
+#### Properties
 
 ##### kind
 
@@ -6267,7 +6535,7 @@ Name of the tag property
 
 ##### op?
 
-> `optional` **op**: `2` \| `4` \| `1` \| `5` \| `3` \| `6` \| `7` \| `8` \| `9` \| `10` \| `11` \| `12`
+> `optional` **op**: `2` \| `4` \| `1` \| `5` \| `3` \| `6` \| `7` \| `8` \| `10` \| `9` \| `11` \| `12`
 
 Operation to perform (equals, not equals, etc.)
 
@@ -6291,6 +6559,26 @@ Value to compare against
 
 ***
 
+### QueryTask
+
+Query condition that matches task blocks
+
+#### Properties
+
+##### completed?
+
+> `optional` **completed**: `boolean`
+
+Whether the task is completed
+
+##### kind
+
+> **kind**: `11`
+
+Kind identifier for task queries (11)
+
+***
+
 ### QueryText
 
 Query condition that matches blocks containing specific text.
@@ -6302,6 +6590,32 @@ Query condition that matches blocks containing specific text.
 > `optional` **includeDescendants**: `boolean`
 
 Whether to include descendant blocks in results
+
+##### kind
+
+> **kind**: `8`
+
+Kind identifier for text queries (8)
+
+##### raw?
+
+> `optional` **raw**: `boolean`
+
+Whether to perform raw text search (no stemming/normalization)
+
+##### text
+
+> **text**: `string`
+
+The text to search for
+
+***
+
+### QueryText2
+
+Query condition that matches blocks containing specific text.
+
+#### Properties
 
 ##### kind
 
@@ -6421,7 +6735,7 @@ Group name for organizing commands in the slash menu
 
 ###### Inherited from
 
-[`SlashCommand`](#slashcommand).[`group`](#group-1)
+[`SlashCommand`](#slashcommand).[`group`](#group-2)
 
 ##### icon
 
@@ -6592,7 +6906,7 @@ Called after a command has been executed.
 
 ### APIMsg
 
-> **APIMsg** = `"get-aliased-blocks"` \| `"get-aliases"` \| `"get-aliases-ids"` \| `"get-block"` \| `"get-block-by-alias"` \| `"get-blockid-by-alias"` \| `"get-blocks"` \| `"get-blocks-with-tags"` \| `"get-block-tree"` \| `"get-children-tags"` \| `"get-children-tag-blocks"` \| `"get-journal-block"` \| `"get-tags"` \| `"query"` \| `"search-aliases"` \| `"search-blocks-by-text"` \| `"set-app-config"` \| `"set-config"` \| `"shell-open"` \| `"show-in-folder"` \| `"upload-asset-binary"` \| `"upload-assets"` \| `"image-ocr"` \| `string`
+> **APIMsg** = `"get-aliased-blocks"` \| `"get-aliases"` \| `"get-aliases-ids"` \| `"get-block"` \| `"get-block-by-alias"` \| `"get-blockid-by-alias"` \| `"get-blocks"` \| `"get-blocks-with-tags"` \| `"get-block-tree"` \| `"get-children-tags"` \| `"get-children-tag-blocks"` \| `"get-journal-block"` \| `"get-remindings"` \| `"get-tags"` \| `"query"` \| `"search-aliases"` \| `"search-blocks-by-text"` \| `"set-app-config"` \| `"set-config"` \| `"shell-open"` \| `"show-in-folder"` \| `"upload-asset-binary"` \| `"upload-assets"` \| `"image-ocr"` \| `string`
 
 Supported backend API message types for communicating with the Orca backend.
 These message types are used with the `invokeBackend` method to perform
@@ -6647,18 +6961,18 @@ Content fragments in the block
 
 ### BlockMenuCommand
 
-> **BlockMenuCommand** = \{ `render`: (`blockId`, `rootBlockId`, `close`) => `React.ReactElement`; `worksOnMultipleBlocks`: `false`; \} \| \{ `render`: (`blockIds`, `rootBlockId`, `close`) => `React.ReactElement`; `worksOnMultipleBlocks`: `true`; \}
+> **BlockMenuCommand** = \{ `render`: (`blockId`, `rootBlockId`, `close`) => `React.ReactNode`; `worksOnMultipleBlocks`: `false`; \} \| \{ `render`: (`blockIds`, `rootBlockId`, `close`) => `React.ReactNode`; `worksOnMultipleBlocks`: `true`; \}
 
 Command configuration for the block context menu.
 Can be configured to work with single blocks or multiple selected blocks.
 
 #### Type declaration
 
-\{ `render`: (`blockId`, `rootBlockId`, `close`) => `React.ReactElement`; `worksOnMultipleBlocks`: `false`; \}
+\{ `render`: (`blockId`, `rootBlockId`, `close`) => `React.ReactNode`; `worksOnMultipleBlocks`: `false`; \}
 
 ##### render()
 
-> **render**: (`blockId`, `rootBlockId`, `close`) => `React.ReactElement`
+> **render**: (`blockId`, `rootBlockId`, `close`) => `React.ReactNode`
 
 Function to render the menu item, receiving the block ID and context
 
@@ -6678,7 +6992,7 @@ Function to render the menu item, receiving the block ID and context
 
 ###### Returns
 
-`React.ReactElement`
+`React.ReactNode`
 
 ##### worksOnMultipleBlocks
 
@@ -6686,11 +7000,11 @@ Function to render the menu item, receiving the block ID and context
 
 Indicates this command works only on a single block
 
-\{ `render`: (`blockIds`, `rootBlockId`, `close`) => `React.ReactElement`; `worksOnMultipleBlocks`: `true`; \}
+\{ `render`: (`blockIds`, `rootBlockId`, `close`) => `React.ReactNode`; `worksOnMultipleBlocks`: `true`; \}
 
 ##### render()
 
-> **render**: (`blockIds`, `rootBlockId`, `close`) => `React.ReactElement`
+> **render**: (`blockIds`, `rootBlockId`, `close`) => `React.ReactNode`
 
 Function to render the menu item, receiving an array of block IDs and context
 
@@ -6710,7 +7024,7 @@ Function to render the menu item, receiving an array of block IDs and context
 
 ###### Returns
 
-`React.ReactElement`
+`React.ReactNode`
 
 ##### worksOnMultipleBlocks
 
@@ -6891,7 +7205,16 @@ Matches if an array value includes the specified value.
 
 ### QueryItem
 
-> **QueryItem** = [`QueryGroup`](#querygroup) \| [`QueryTag`](#querytag) \| [`QueryNoTag`](#querynotag) \| [`QueryJournal`](#queryjournal) \| [`QueryRef`](#queryref) \| [`QueryNoRef`](#querynoref) \| [`QueryText`](#querytext) \| [`QueryBlock`](#queryblock)
+> **QueryItem** = [`QueryGroup`](#querygroup) \| [`QueryText`](#querytext) \| [`QueryTag`](#querytag) \| [`QueryRef`](#queryref) \| [`QueryJournal`](#queryjournal) \| [`QueryBlock`](#queryblock) \| `QueryNoText` \| [`QueryNoTag`](#querynotag) \| [`QueryNoRef`](#querynoref)
+
+Union type representing all possible query condition items.
+Each item represents a different type of condition that can be used in queries.
+
+***
+
+### QueryItem2
+
+> **QueryItem2** = [`QueryGroup2`](#querygroup2) \| [`QueryText2`](#querytext2) \| [`QueryTag2`](#querytag2) \| [`QueryRef2`](#queryref2) \| [`QueryJournal2`](#queryjournal2) \| [`QueryBlock2`](#queryblock2) \| [`QueryTask`](#querytask)
 
 Union type representing all possible query condition items.
 Each item represents a different type of condition that can be used in queries.
@@ -6916,6 +7239,22 @@ Used for dates like "2 days ago" or "next week".
 
 ***
 
+### QueryKindAncestorAnd
+
+> **QueryKindAncestorAnd** = `102`
+
+Constant for the ancestor AND group type.
+
+***
+
+### QueryKindAncestorOr
+
+> **QueryKindAncestorOr** = `103`
+
+Constant for the ancestor OR group type.
+
+***
+
 ### QueryKindAnd
 
 > **QueryKindAnd** = `1`
@@ -6931,6 +7270,22 @@ All conditions must match for the group to match.
 
 Constant for the block query type.
 Matches blocks according to their properties.
+
+***
+
+### QueryKindDescendantAnd
+
+> **QueryKindDescendantAnd** = `104`
+
+Constant for the descendant AND group type.
+
+***
+
+### QueryKindDescendantOr
+
+> **QueryKindDescendantOr** = `105`
+
+Constant for the descendant OR group type.
 
 ***
 
@@ -6961,6 +7316,15 @@ Matches blocks without specific tags.
 
 ***
 
+### QueryKindNoText
+
+> **QueryKindNoText** = `10`
+
+Constant for the no-text query type.
+Matches blocks without specific text.
+
+***
+
 ### QueryKindOr
 
 > **QueryKindOr** = `2`
@@ -6979,12 +7343,37 @@ Matches blocks referencing other blocks.
 
 ***
 
+### QueryKindSelfAnd
+
+> **QueryKindSelfAnd** = `100`
+
+Constant for the self AND group type.
+
+***
+
+### QueryKindSelfOr
+
+> **QueryKindSelfOr** = `101`
+
+Constant for the self OR group type.
+
+***
+
 ### QueryKindTag
 
 > **QueryKindTag** = `4`
 
 Constant for the tag query type.
 Matches blocks with specific tags.
+
+***
+
+### QueryKindTask
+
+> **QueryKindTask** = `11`
+
+Constant for the task query type.
+Matches blocks that are tasks, optionally filtering by completion status.
 
 ***
 

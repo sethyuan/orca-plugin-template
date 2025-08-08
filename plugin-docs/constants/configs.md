@@ -72,6 +72,10 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 
 > `readonly` **ColorPickerColors**: `39` = `39`
 
+##### CompactTagProps
+
+> `readonly` **CompactTagProps**: `47` = `47`
+
 ##### DefaultSortField
 
 > `readonly` **DefaultSortField**: `17` = `17`
@@ -115,6 +119,14 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 ##### OutlineTag
 
 > `readonly` **OutlineTag**: `45` = `45`
+
+##### ReduceTooltips
+
+> `readonly` **ReduceTooltips**: `48` = `48`
+
+##### ReminderAlertOffsets
+
+> `readonly` **ReminderAlertOffsets**: `46` = `46`
 
 ##### Repos
 
@@ -263,6 +275,10 @@ These keys are used to store settings that are specific to a single repo.
 
 > `readonly` **ColorPickerColors**: `39` = `39`
 
+##### CompactTagProps
+
+> `readonly` **CompactTagProps**: `47` = `47`
+
 ##### DefaultSortField
 
 > `readonly` **DefaultSortField**: `17` = `17`
@@ -322,6 +338,14 @@ These keys are used to store settings that are specific to a single repo.
 ##### PanelLayouts
 
 > `readonly` **PanelLayouts**: `1002` = `1002`
+
+##### ReduceTooltips
+
+> `readonly` **ReduceTooltips**: `48` = `48`
+
+##### ReminderAlertOffsets
+
+> `readonly` **ReminderAlertOffsets**: `46` = `46`
 
 ##### Repos
 

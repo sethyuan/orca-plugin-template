@@ -8,6 +8,38 @@
 
 This document will guide you through all available backend API calls, which can be invoked using `orca.invokeBackend`.
 
+## export-png
+
+Exports the specified block as a PNG image file.
+
+Parameters:
+
+- repoId - Repository identifier (string).
+- blockId - The ID of the block (DbId / number).
+- proposedWidth - Proposed width (number, in pixels) for the exported image.
+- force2x - Controls whether the output image has high resolution.
+
+Returns:
+
+On success returns a tuple `[true, string]` where the second element is the exported file path; on failure returns `[false, Error]` or an Error-like value.
+
+Example:
+
+```ts
+// Request backend to export a block as PNG with a width of 1200px
+const [ok, result] = await orca.invokeBackend(
+  "export-png",
+  "my-repo",
+  12345,
+  1200,
+)
+if (ok) {
+  console.log("Exported PNG:", result) // result = path to saved PNG
+} else {
+  console.error("Export failed:", result)
+}
+```
+
 ## get-aliased-blocks
 
 Retrieves all blocks with the specified alias.

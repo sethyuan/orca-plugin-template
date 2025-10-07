@@ -76,6 +76,10 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 
 > `readonly` **CompactTagProps**: `47` = `47`
 
+##### CompressImages
+
+> `readonly` **CompressImages**: `49` = `49`
+
 ##### DefaultSortField
 
 > `readonly` **DefaultSortField**: `17` = `17`
@@ -83,6 +87,10 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 ##### DefaultSortOrder
 
 > `readonly` **DefaultSortOrder**: `18` = `18`
+
+##### EnableBlockRefPreview
+
+> `readonly` **EnableBlockRefPreview**: `51` = `51`
 
 ##### FirstDayOfWeek
 
@@ -115,6 +123,10 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 ##### MapProvider
 
 > `readonly` **MapProvider**: `15` = `15`
+
+##### MCPServerToken
+
+> `readonly` **MCPServerToken**: `50` = `50`
 
 ##### OutlineTag
 
@@ -279,6 +291,10 @@ These keys are used to store settings that are specific to a single repo.
 
 > `readonly` **CompactTagProps**: `47` = `47`
 
+##### CompressImages
+
+> `readonly` **CompressImages**: `49` = `49`
+
 ##### DefaultSortField
 
 > `readonly` **DefaultSortField**: `17` = `17`
@@ -286,6 +302,10 @@ These keys are used to store settings that are specific to a single repo.
 ##### DefaultSortOrder
 
 > `readonly` **DefaultSortOrder**: `18` = `18`
+
+##### EnableBlockRefPreview
+
+> `readonly` **EnableBlockRefPreview**: `51` = `51`
 
 ##### Favorites
 
@@ -311,6 +331,10 @@ These keys are used to store settings that are specific to a single repo.
 
 > `readonly` **JournalCustomQueries**: `1004` = `1004`
 
+##### JournalCustomQueriesOrder
+
+> `readonly` **JournalCustomQueriesOrder**: `1005` = `1005`
+
 ##### JournalDateFormat
 
 > `readonly` **JournalDateFormat**: `12` = `12`
@@ -330,6 +354,10 @@ These keys are used to store settings that are specific to a single repo.
 ##### MapProvider
 
 > `readonly` **MapProvider**: `15` = `15`
+
+##### MCPServerToken
+
+> `readonly` **MCPServerToken**: `50` = `50`
 
 ##### OutlineTag
 

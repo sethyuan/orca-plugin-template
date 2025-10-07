@@ -422,6 +422,18 @@ export interface Orca {
     tagMenuCommands: Record<string, TagMenuCommand | undefined>;
 
     /**
+     * Registry of editor sidetools that appear in the block editor's sidebar.
+     * These tools provide additional functionality in the editor sidebar.
+     *
+     * @example
+     * ```ts
+     * // Check if a specific editor sidetool is registered
+     * const hasTocTool = !!orca.state.editorSidetools["myplugin.toc"]
+     * ```
+     */
+    editorSidetools: Record<string, EditorSidetool | undefined>;
+
+    /**
      * The currently active tab in the sidebar.
      * This indicates which sidebar section is currently displayed.
      *
@@ -1928,7 +1940,7 @@ export interface Orca {
       contentAttrs?: Record<string, any>;
       contentJsx: React.ReactNode;
       childrenJsx: React.ReactNode;
-      dropppable?: boolean;
+      droppable?: boolean;
     }) => JSX.Element | null;
     /**
      * Renders a generic breadcrumb navigation
@@ -2299,7 +2311,7 @@ export interface Orca {
      *     </orca.components.Menu>
      *   )}
      * >
-     *   <i className="ti ti-info" />
+     *   <i className="ti ti-info-circle" />
      * </orca.components.HoverContextMenu>
      * ```
      */
@@ -3606,6 +3618,76 @@ export interface Orca {
      */
     unregisterTagMenuCommand(id: string): void;
   };
+  /**
+   * Editor sidetools API for adding custom tools to the block editor's sidebar.
+   * This allows plugins to add custom utilities and functionality in the editor sidebar.
+   *
+   * @example
+   * ```ts
+   * // Register a custom sidetool
+   * orca.editorSidetools.registerEditorSidetool("myplugin.outlineViewer", {
+   *   render: (rootBlockId, panelId) => (
+   *     <Tooltip
+   *       text={t("Outline Viewer")}
+   *       shortcut={orca.state.shortcuts["toggleOutlineViewer"]}
+   *       placement="horizontal"
+   *     >
+   *       <Button
+   *         className={`orca-block-editor-sidetools-btn ${isViewerOpened ? "orca-opened" : ""}`}
+   *         variant="plain"
+   *         onClick={toggleOutlineViewer}
+   *       >
+   *         <i className="ti ti-align-justified" />
+   *       </Button>
+   *     </Tooltip>
+   *   )
+   * })
+   * ```
+   */
+  editorSidetools: {
+    /**
+     * Registers a custom tool in the editor sidebar.
+     *
+     * @param id - A unique identifier for the sidetool
+     * @param tool - The sidetool configuration with a render function
+     *
+     * @example
+     * ```tsx
+     * // Register a custom sidetool
+     * orca.editorSidetools.registerEditorSidetool("myplugin.outlineViewer", {
+     *   render: (rootBlockId, panelId) => (
+     *     <Tooltip
+     *       text={t("Outline Viewer")}
+     *       shortcut={orca.state.shortcuts["toggleOutlineViewer"]}
+     *       placement="horizontal"
+     *     >
+     *       <Button
+     *         className={`orca-block-editor-sidetools-btn ${isViewerOpened ? "orca-opened" : ""}`}
+     *         variant="plain"
+     *         onClick={toggleOutlineViewer}
+     *       >
+     *         <i className="ti ti-align-justified" />
+     *       </Button>
+     *     </Tooltip>
+     *   )
+     * })
+     * ```
+     */
+    registerEditorSidetool(id: string, tool: EditorSidetool): void;
+
+    /**
+     * Unregisters a previously registered editor sidetool.
+     *
+     * @param id - The identifier of the editor sidetool to unregister
+     *
+     * @example
+     * ```ts
+     * // When unloading the plugin
+     * orca.editorSidetools.unregisterEditorSidetool("myplugin.outlineViewer")
+     * ```
+     */
+    unregisterEditorSidetool(id: string): void;
+  };
 
   /**
    * Utility functions.
@@ -3727,6 +3809,8 @@ export interface Orca {
  * various operations on blocks, tags, journals, and other repository data.
  */
 export type APIMsg =
+  /** Exports the specified block as a PNG image. */
+  | "export-png"
   /** Retrieves all blocks with the specified alias. */
   | "get-aliased-blocks"
   /** Retrieves all aliases in the repository. */
@@ -3747,14 +3831,10 @@ export type APIMsg =
   | "get-block-tree"
   /** Retrieves child tags of a parent tag block. */
   | "get-children-tags"
-  /** Retrieves blocks associated with child tags of a parent tag. */
-  | "get-children-tag-blocks"
   /** Retrieves the journal block for a specific date. */
   | "get-journal-block"
   /** Retrieves all remindings for a specific date range */
   | "get-remindings"
-  /** Retrieves all tags in the repository. */
-  | "get-tags"
   /** Executes a complex query to search and filter blocks. */
   | "query"
   /** Searches for aliases containing specific text. */
@@ -4116,6 +4196,18 @@ export type TagMenuCommand = {
   ) => React.ReactElement;
 };
 
+// Editor Sidetool
+/**
+ * Configuration for an editor sidetool that appears in the block editor's sidebar.
+ * Sidetools provide additional functionality and utilities in the editor sidebar.
+ */
+export type EditorSidetool = {
+  /**
+   * Function to render the sidetool, receiving the root block ID and panel ID.
+   */
+  render: (rootBlockId: DbId, panelId: string) => React.ReactNode;
+};
+
 // Blocks
 /**
  * Database ID type used to uniquely identify blocks and other entities in the database.
@@ -4233,11 +4325,7 @@ export type BlockForConversion = {
 };
 
 /** Block rendering modes */
-export type BlockRenderingMode =
-  | "normal"
-  | "relative"
-  | "simple"
-  | "simple-children";
+export type BlockRenderingMode = "normal" | "simple" | "simple-children";
 
 // Query
 /**
@@ -4560,6 +4648,12 @@ export type QueryKindNoText = 10;
 export type QueryKindTask = 11;
 
 /**
+ * Constant for the block match query type.
+ * Matches specific blocks by their ID.
+ */
+export type QueryKindBlockMatch = 12;
+
+/**
  * Operation constant: equals.
  * Matches if a value is equal to the specified value.
  */
@@ -4690,6 +4784,7 @@ export type QueryItem2 =
   | QueryRef2
   | QueryJournal2
   | QueryBlock2
+  | QueryBlockMatch2
   | QueryTask;
 
 /**
@@ -4697,14 +4792,15 @@ export type QueryItem2 =
  * Used to create complex queries with multiple conditions.
  */
 export interface QueryGroup2 {
-  /** Kind of group: self/ancestor/descendant */
+  /** Kind of group: self/ancestor/descendant/chain */
   kind:
     | QueryKindSelfAnd
     | QueryKindSelfOr
     | QueryKindAncestorAnd
     | QueryKindAncestorOr
     | QueryKindDescendantAnd
-    | QueryKindDescendantOr;
+    | QueryKindDescendantOr
+    | QueryKindChainAnd;
   /** Array of conditions within this group */
   conditions: QueryItem2[];
   /** Whether to negate the conditions in this group */
@@ -4789,6 +4885,16 @@ export interface QueryBlock2 {
   };
 }
 
+/**
+ * Query condition that matches specific blocks by their ID.
+ */
+export interface QueryBlockMatch2 {
+  /** Kind identifier for block match queries (12) */
+  kind: QueryKindBlockMatch;
+  /** ID of the specific block to match */
+  blockId?: DbId;
+}
+
 /** Constant for the self AND group type. */
 export type QueryKindSelfAnd = 100;
 
@@ -4806,6 +4912,9 @@ export type QueryKindDescendantAnd = 104;
 
 /** Constant for the descendant OR group type. */
 export type QueryKindDescendantOr = 105;
+
+/** Constant for the chain AND group type. */
+export type QueryKindChainAnd = 106;
 
 // Misc
 /**

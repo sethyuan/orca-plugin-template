@@ -8,6 +8,40 @@
 
 This document will guide you through all available backend API calls, which can be invoked using `orca.invokeBackend`.
 
+## change-tag-property-choice
+
+Changes a single/multi choice property value across all blocks that use it.
+
+Parameters:
+
+- tagBlockId - The ID of the tag block (DbId / number).
+- propName - The property name (string).
+- oldChoice - The current choice value to replace (string).
+- newChoice - The new choice value (string).
+
+Returns:
+
+An array of updated blocks that had the choice value changed.
+
+Example:
+
+```ts
+// Change a choice value from "In Progress" to "In Development"
+// for all blocks using this tag property
+const updatedBlocks = await orca.invokeBackend(
+  "change-tag-property-choice",
+  tagBlockId,
+  "status",
+  "In Progress",
+  "In Development",
+)
+
+// Update frontend state with the modified blocks
+for (const block of updatedBlocks) {
+  orca.state.blocks[block.id] = block
+}
+```
+
 ## export-png
 
 Exports the specified block as a PNG image file.

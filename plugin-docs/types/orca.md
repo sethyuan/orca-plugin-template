@@ -497,7 +497,7 @@ orca.blockMenuCommands.registerBlockMenuCommand("myplugin.exportBlock", {
   )
 })
 
-// Command that works on multiple blocks
+// Command that works on multiple selected blocks
 orca.blockMenuCommands.registerBlockMenuCommand("myplugin.mergeBlocks", {
   worksOnMultipleBlocks: true,
   render: (blockIds, rootBlockId, close) => (
@@ -534,7 +534,7 @@ The identifier of the block menu command to unregister
 ###### Example
 
 ```ts
-// When unloading the plugin
+// When unloading a plugin
 orca.blockMenuCommands.unregisterBlockMenuCommand("myplugin.exportBlock")
 ```
 
@@ -1796,7 +1796,7 @@ Displays a confirmation dialog
     close();
   }}
 >
-  {(open, close) => (
+  {(open) => (
     <orca.components.Button variant="dangerous" onClick={open}>
       Delete
     </orca.components.Button>
@@ -3591,7 +3591,7 @@ The identifier of the editor sidetool to unregister
 ###### Example
 
 ```ts
-// When unloading the plugin
+// When unloading a plugin
 orca.editorSidetools.unregisterEditorSidetool("myplugin.outlineViewer")
 ```
 
@@ -4598,7 +4598,7 @@ Renderer management API, used to register custom block and inline content render
 
 ###### registerBlock()
 
-> **registerBlock**(`type`, `isEditable`, `renderer`, `assetFields`?): `void`
+> **registerBlock**(`type`, `isEditable`, `renderer`, `assetFields`?, `useChildren`?): `void`
 
 Registers a custom block renderer.
 
@@ -4629,6 +4629,16 @@ The React component that renders the block
 Optional array of property names that may contain asset references
                     (used for proper asset handling during import/export)
 
+###### useChildren?
+
+`boolean` = `false`
+
+Whether this block type uses the children for rendering.
+                     When true, the block's children will be passed to the renderer component
+                     for custom rendering instead of being rendered by the default children renderer.
+                     This is useful for blocks that need to control how their children are displayed
+                     (e.g., custom layouts, tabs, or accordion blocks).
+
 ###### Returns
 
 `void`
@@ -4651,6 +4661,15 @@ orca.renderers.registerBlock(
   true,
   AttachmentBlock,
   ["url", "thumbnailUrl"]
+)
+
+// Register a block renderer that uses children for custom layout
+orca.renderers.registerBlock(
+  "myplugin.tabs",
+  false,
+  TabsBlock,
+  undefined,
+  true  // useChildren flag
 )
 ```
 
@@ -4911,7 +4930,7 @@ The identifier of the slash command to unregister
 ###### Example
 
 ```ts
-// When unloading the plugin
+// When unloading a plugin
 orca.slashCommands.unregisterSlashCommand("myplugin.insertChart")
 ```
 
@@ -5461,7 +5480,7 @@ The identifier of the tag menu command to unregister
 ###### Example
 
 ```ts
-// When unloading the plugin
+// When unloading a plugin
 orca.tagMenuCommands.unregisterTagMenuCommand("myplugin.exportTaggedBlocks")
 ```
 
@@ -7042,7 +7061,7 @@ Called after a command has been executed.
 
 ### APIMsg
 
-> **APIMsg** = `"export-png"` \| `"get-aliased-blocks"` \| `"get-aliases"` \| `"get-aliases-ids"` \| `"get-block"` \| `"get-block-by-alias"` \| `"get-blockid-by-alias"` \| `"get-blocks"` \| `"get-blocks-with-tags"` \| `"get-block-tree"` \| `"get-children-tags"` \| `"get-journal-block"` \| `"get-remindings"` \| `"query"` \| `"search-aliases"` \| `"search-blocks-by-text"` \| `"set-app-config"` \| `"set-config"` \| `"shell-open"` \| `"show-in-folder"` \| `"upload-asset-binary"` \| `"upload-assets"` \| `"image-ocr"` \| `string`
+> **APIMsg** = `"change-tag-property-choice"` \| `"export-png"` \| `"get-aliased-blocks"` \| `"get-aliases"` \| `"get-aliases-ids"` \| `"get-block"` \| `"get-block-by-alias"` \| `"get-blockid-by-alias"` \| `"get-blocks"` \| `"get-blocks-with-tags"` \| `"get-block-tree"` \| `"get-children-tags"` \| `"get-journal-block"` \| `"get-remindings"` \| `"query"` \| `"search-aliases"` \| `"search-blocks-by-text"` \| `"set-app-config"` \| `"set-config"` \| `"shell-open"` \| `"show-in-folder"` \| `"upload-asset-binary"` \| `"upload-assets"` \| `"image-ocr"` \| `string`
 
 Supported backend API message types for communicating with the Orca backend.
 These message types are used with the `invokeBackend` method to perform

@@ -1951,6 +1951,62 @@ export interface Orca {
       droppable?: boolean
     }) => JSX.Element | null
     /**
+     * Displays a block preview in a popup on hover
+     *
+     * When hovering over the child element, a popup appears showing a preview of the referenced block.
+     * The preview can be made interactive by pressing the configured keyboard shortcut,
+     * allowing users to edit the block content directly in the preview.
+     *
+     * @example
+     * ```tsx
+     * // Basic block preview on link hover
+     * <BlockPreviewPopup blockId={123}>
+     *   <a href="#block-123">Block Reference</a>
+     * </BlockPreviewPopup>
+     *
+     * // With custom delay and event handlers
+     * <BlockPreviewPopup
+     *   blockId={456}
+     *   delay={500}
+     *   onClose={() => console.log("Preview closed")}
+     *   className="custom-preview"
+     * >
+     *   <span>Hover me for block preview</span>
+     * </BlockPreviewPopup>
+     *
+     * // Programmatically controlled visibility
+     * <BlockPreviewPopup
+     *   blockId={789}
+     *   visible={isPreviewOpen}
+     *   onClosed={() => setPreviewOpen(false)}
+     * >
+     *   <button>Show Preview</button>
+     * </BlockPreviewPopup>
+     * ```
+     */
+    BlockPreviewPopup: (
+      props: {
+        /** The ID of the block to display in the preview */
+        blockId: DbId
+        /** Delay in milliseconds before showing the preview on hover (default: 200) */
+        delay?: number
+        /** Reference element to anchor the popup positioning */
+        refElement?: React.RefObject<HTMLElement>
+        /** Whether the preview popup is visible (controlled mode) */
+        visible?: boolean
+        /** Callback fired when the preview should close */
+        onClose?: () => void
+        /** Callback fired after the preview has finished closing animation */
+        onClosed?: () => void
+        /** CSS class name for the popup container */
+        className?: string
+        /** Inline styles for the popup container */
+        style?: React.CSSProperties
+        /** The child element that triggers the preview on hover */
+        children?: React.ReactElement
+      } & React.HTMLAttributes<HTMLDivElement>,
+    ) => JSX.Element | null
+    /**
      * Renders a generic breadcrumb navigation
      *
      * @example
@@ -4518,6 +4574,8 @@ export interface QueryBlock {
   hasTags?: boolean
   /** Whether to match blocks with back references */
   hasBackRefs?: boolean
+  /** Whether to match blocks with aliases */
+  hasAliases?: boolean
   /** Whether to match blocks with a specific creation date */
   created?: {
     op?: QueryEq | QueryNotEq | QueryGt | QueryLt | QueryGe | QueryLe
@@ -4879,8 +4937,13 @@ export interface QueryBlock2 {
   hasChild?: boolean
   /** Whether to match blocks with tags */
   hasTags?: boolean
-  /** Whether to match blocks with back references */
-  hasBackRefs?: boolean
+  /** Whether to match blocks with aliases */
+  hasAliases?: boolean
+  /** Whether to match blocks with a specific number of back references */
+  backRefs?: {
+    op?: QueryEq | QueryNotEq | QueryGt | QueryLt | QueryGe | QueryLe
+    value?: number
+  }
   /** Whether to match blocks with a specific creation date */
   created?: {
     op?: QueryEq | QueryNotEq | QueryGt | QueryLt | QueryGe | QueryLe
@@ -4935,3 +4998,9 @@ export interface IdContent {
   /** The block's content fragments, or null if no content */
   content: ContentFragment[] | null
 }
+
+/**
+ * Type representing a choice with an optional color.
+ * Can be a string or an object with name and optional color.
+ */
+export type Choice = { n: string; c?: string } | string

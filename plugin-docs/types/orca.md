@@ -1425,6 +1425,54 @@ Renders a block's children
 />
 ```
 
+###### BlockPreviewPopup()
+
+> **BlockPreviewPopup**: (`props`) => `null` \| `Element`
+
+Displays a block preview in a popup on hover
+
+When hovering over the child element, a popup appears showing a preview of the referenced block.
+The preview can be made interactive by pressing the configured keyboard shortcut,
+allowing users to edit the block content directly in the preview.
+
+###### Parameters
+
+###### props
+
+`object` & `HTMLAttributes`\<`HTMLDivElement`\>
+
+###### Returns
+
+`null` \| `Element`
+
+###### Example
+
+```tsx
+// Basic block preview on link hover
+<BlockPreviewPopup blockId={123}>
+  <a href="#block-123">Block Reference</a>
+</BlockPreviewPopup>
+
+// With custom delay and event handlers
+<BlockPreviewPopup
+  blockId={456}
+  delay={500}
+  onClose={() => console.log("Preview closed")}
+  className="custom-preview"
+>
+  <span>Hover me for block preview</span>
+</BlockPreviewPopup>
+
+// Programmatically controlled visibility
+<BlockPreviewPopup
+  blockId={789}
+  visible={isPreviewOpen}
+  onClosed={() => setPreviewOpen(false)}
+>
+  <button>Show Preview</button>
+</BlockPreviewPopup>
+```
+
 ###### BlockSelect()
 
 > **BlockSelect**: (`props`) => `null` \| `Element`
@@ -6033,6 +6081,12 @@ Whether to match blocks with a specific creation date
 
 > `optional` **value**: `Date` \| [`QueryJournalDate`](#queryjournaldate)
 
+##### hasAliases?
+
+> `optional` **hasAliases**: `boolean`
+
+Whether to match blocks with aliases
+
 ##### hasBackRefs?
 
 > `optional` **hasBackRefs**: `boolean`
@@ -6105,6 +6159,20 @@ Query condition that matches blocks according their properties.
 
 #### Properties
 
+##### backRefs?
+
+> `optional` **backRefs**: `object`
+
+Whether to match blocks with a specific number of back references
+
+###### op?
+
+> `optional` **op**: `2` \| `1` \| `7` \| `8` \| `10` \| `9`
+
+###### value?
+
+> `optional` **value**: `number`
+
 ##### created?
 
 > `optional` **created**: `object`
@@ -6119,11 +6187,11 @@ Whether to match blocks with a specific creation date
 
 > `optional` **value**: `Date` \| [`QueryJournalDate`](#queryjournaldate)
 
-##### hasBackRefs?
+##### hasAliases?
 
-> `optional` **hasBackRefs**: `boolean`
+> `optional` **hasAliases**: `boolean`
 
-Whether to match blocks with back references
+Whether to match blocks with aliases
 
 ##### hasChild?
 
@@ -7202,6 +7270,15 @@ Simplified type for block reference data.
 > **BlockRenderingMode** = `"normal"` \| `"simple"` \| `"simple-children"`
 
 Block rendering modes
+
+***
+
+### Choice
+
+> **Choice** = \{ `c`: `string`; `n`: `string`; \} \| `string`
+
+Type representing a choice with an optional color.
+Can be a string or an object with name and optional color.
 
 ***
 

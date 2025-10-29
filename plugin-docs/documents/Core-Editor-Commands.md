@@ -179,6 +179,7 @@ await orca.commands.invokeEditorCommand(
 - `blockIds: DbId[]`: An array of block IDs (numbers) to copy.
 - `refBlockId: DbId | null`: The ID (number) of the reference block.
 - `position: "before" | "after" | "firstChild" | "lastChild | null"`: The target position relative to `refBlockId`.
+- `processVars?: boolean`: Optional flag to process variables during copying (defaults to `false`).
 - **Usage**: Duplicates blocks and their descendants.
 
 ```typescript
@@ -193,12 +194,37 @@ const newBlocks = await orca.commands.invokeEditorCommand(
 )
 ```
 
+### `core.editor.crossRepoCopyBlocks`
+
+- **Description**: Copies blocks from another repository to the current repository.
+- **Parameters**:
+- `sourceRepoId: string`: The ID of the source repository.
+- `blockIds: DbId[]`: An array of block IDs to copy from the source repository.
+- `refBlockId: DbId | null`: The ID of the reference block in the target repository.
+- `position: "before" | "after" | "firstChild" | "lastChild" | null`: The target position relative to `refBlockId`.
+- **Usage**: Imports blocks from another repository and inserts them at the specified position.
+
+```typescript
+const sourceRepoId = "external-repo-id"
+const blockIdsToCopy: DbId[] = [201]
+const targetRefBlockId: DbId = 202
+await orca.commands.invokeEditorCommand(
+  "core.editor.crossRepoCopyBlocks",
+  null,
+  sourceRepoId,
+  blockIdsToCopy,
+  targetRefBlockId,
+  "after",
+)
+```
+
 ### `core.editor.createAlias`
 
 - **Description**: Creates an alias (a named reference) for the specified block.
 - **Parameters**:
 - `name: string`: The desired alias name.
 - `blockId: DbId`: The ID (number) of the block to alias.
+- `asPage?: boolean`: Optional flag to create the block as a page alias (defaults to `false`).
 - **Usage**: Allows referencing a block by a human-readable name. Returns an error object if the alias name is already taken.
 
 ```typescript
@@ -209,6 +235,7 @@ const error = await orca.commands.invokeEditorCommand(
   null,
   aliasName,
   blockIdToAlias,
+  false,
 )
 if (error) {
   console.error("Failed to create alias:", error)
@@ -436,6 +463,25 @@ await orca.commands.invokeEditorCommand(
 )
 ```
 
+### `core.editor.migrateReferencesAndAliases`
+
+- **Description**: Migrates all references and aliases from one block to another block.
+- **Parameters**:
+- `from: DbId`: The ID of the source block whose references and aliases should be migrated.
+- `to: DbId`: The ID of the target block to migrate references and aliases to.
+- **Usage**: Useful for merging or consolidating blocks by moving all their references and aliases to another block.
+
+```typescript
+const sourceBlockId: DbId = 501
+const targetBlockId: DbId = 502
+await orca.commands.invokeEditorCommand(
+  "core.editor.migrateReferencesAndAliases",
+  cursor,
+  sourceBlockId,
+  targetBlockId,
+)
+```
+
 ## Creation Commands
 
 These commands help you create various types of content blocks.
@@ -515,6 +561,31 @@ await orca.commands.invokeEditorCommand(
   blockId,
   "deadline",
   [{ name: "date", value: "2023-12-31" }],
+)
+```
+
+### `core.duplicateTag`
+
+- **Description**: Duplicates the specified tag with a new name.
+- **Parameters**:
+- `tagBlockId: DbId`: The ID of the tag block to duplicate.
+- `newName?: string`: Optional new name for the duplicated tag. If not provided, appends an underscore to the original name.
+- **Usage**: Creates a copy of a tag with a new alias, useful for template management.
+
+```typescript
+// Duplicate a tag with automatic naming
+const newTagId = await orca.commands.invokeEditorCommand(
+  "core.duplicateTag",
+  null,
+  tagBlockId,
+)
+
+// Duplicate with a specific name
+const newTagId = await orca.commands.invokeEditorCommand(
+  "core.duplicateTag",
+  null,
+  tagBlockId,
+  "custom-tag-name",
 )
 ```
 
@@ -676,6 +747,28 @@ await orca.commands.invokeEditorCommand("core.editor.insertTable", cursor)
 
 ```typescript
 await orca.commands.invokeEditorCommand("core.editor.insertQuote", cursor)
+```
+
+### `core.editor.insertPDF`
+
+- **Description**: Inserts a PDF block.
+- **Parameters**:
+- `id?: DbId`: Optional block ID to insert at or modify.
+- **Usage**: Embeds a PDF from a URL or local path.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.insertPDF", cursor)
+```
+
+### `core.editor.insertHR`
+
+- **Description**: Inserts a horizontal line (hr) block.
+- **Parameters**:
+- `id?: DbId`: Optional block ID to insert at or modify.
+- **Usage**: Creates a visual separator block and automatically creates a new block after it.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.insertHR", cursor)
 ```
 
 ## Deletion Commands
@@ -944,6 +1037,28 @@ await orca.commands.invokeEditorCommand(
 )
 ```
 
+### `core.editor.formatUderlineCustomColor`
+
+- **Description**: Formats the selected text with an underline in a custom color.
+- **Parameters**:
+  - `color?: string`: Optional color value. If not provided, shows a color picker.
+- **Usage**: Applies an underline with custom color to selected text.
+
+```typescript
+// With color picker
+await orca.commands.invokeEditorCommand(
+  "core.editor.formatUderlineCustomColor",
+  cursor,
+)
+
+// With predefined color
+await orca.commands.invokeEditorCommand(
+  "core.editor.formatUderlineCustomColor",
+  cursor,
+  "#FF5500",
+)
+```
+
 ### `core.editor.formatUderlineWavyCustomColor` (note the typo in command name)
 
 - **Description**: Formats the selected text with a wavy underline with custom color.
@@ -1148,6 +1263,51 @@ await orca.commands.invokeEditorCommand("core.editor.formatSup", cursor)
 await orca.commands.invokeEditorCommand("core.editor.formatSub", cursor)
 ```
 
+### `core.editor.formatIncreaseFontSize`
+
+- **Description**: Increases the font size of the selected text.
+- **Usage**: Makes the selected text larger by one font size step.
+
+```typescript
+await orca.commands.invokeEditorCommand(
+  "core.editor.formatIncreaseFontSize",
+  cursor,
+)
+```
+
+### `core.editor.formatDecreaseFontSize`
+
+- **Description**: Decreases the font size of the selected text.
+- **Usage**: Makes the selected text smaller by one font size step.
+
+```typescript
+await orca.commands.invokeEditorCommand(
+  "core.editor.formatDecreaseFontSize",
+  cursor,
+)
+```
+
+### `core.editor.formatResetFontSize`
+
+- **Description**: Resets the font size of the selected text to the default size.
+- **Usage**: Removes any custom font size formatting from selected text.
+
+```typescript
+await orca.commands.invokeEditorCommand(
+  "core.editor.formatResetFontSize",
+  cursor,
+)
+```
+
+### `core.editor.copyFormatting`
+
+- **Description**: Copies the formatting from the current selection to be applied to future selections (format painter).
+- **Usage**: Select text with formatting, invoke this command, then select another text to apply the same formatting.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.copyFormatting", cursor)
+```
+
 ### `core.editor.convertSelectionIntoLink`
 
 - **Description**: Converts the currently selected text into a link.
@@ -1345,6 +1505,32 @@ await orca.commands.invokeEditorCommand("core.editor.insertFragments", cursor, [
 ])
 ```
 
+### `core.editor.toggleTask`
+
+- **Description**: Toggles the completion status of a task block.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID to toggle.
+- **Usage**: Marks task blocks as complete/incomplete.
+
+```typescript
+// Toggle task on current block
+await orca.commands.invokeEditorCommand("core.editor.toggleTask", cursor)
+
+// Toggle task on specific block
+await orca.commands.invokeEditorCommand("core.editor.toggleTask", null, blockId)
+```
+
+### `core.editor.makeAliased`
+
+- **Description**: Converts the selected block into an aliased block (a block with a named reference).
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID to convert.
+- **Usage**: Makes a block aliased so it can be referenced by name throughout the document.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.makeAliased", cursor)
+```
+
 ## Misc Commands
 
 These commands provide miscellaneous functionality for manipulating blocks and UI elements.
@@ -1435,6 +1621,18 @@ await orca.commands.invokeEditorCommand("core.editor.focusIn", cursor)
 
 // Focus in on a specific block
 await orca.commands.invokeEditorCommand("core.editor.focusIn", cursor, 123)
+```
+
+### `core.editor.focusOut`
+
+- **Description**: Exits the current focused block and moves back to its parent scope.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID to focus out from. If not provided, uses the current focused block.
+- **Usage**: Navigates up one level in the document hierarchy.
+
+```typescript
+// Focus out from the current block
+await orca.commands.invokeEditorCommand("core.editor.focusOut", cursor)
 ```
 
 ### `core.editor.openOnTheSide`
@@ -1649,4 +1847,120 @@ await orca.commands.invokeEditorCommand("core.editor.showAIMenu", cursor)
 ```typescript
 // Insert current time
 await orca.commands.invokeEditorCommand("core.editor.insertCurrentTime", cursor)
+```
+
+### `core.editor.copyBlockID`
+
+- **Description**: Copies the ID of the current block to the clipboard.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID. If not provided, uses the block at cursor position.
+- **Usage**: Gets the numeric block ID for use in formulas or references.
+
+```typescript
+// Copy the ID of the current block
+await orca.commands.invokeEditorCommand("core.editor.copyBlockID", cursor)
+```
+
+### `core.editor.export.md`
+
+- **Description**: Exports the current block as a Markdown file.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID. If not provided, uses the block at cursor position.
+- **Usage**: Creates a Markdown formatted file from the block's content.
+
+```typescript
+// Export current block as Markdown
+await orca.commands.invokeEditorCommand("core.editor.export.md", cursor)
+```
+
+### `core.editor.export.html`
+
+- **Description**: Exports the current block as an HTML file.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID. If not provided, uses the block at cursor position.
+- **Usage**: Creates an HTML formatted file from the block's content.
+
+```typescript
+// Export current block as HTML
+await orca.commands.invokeEditorCommand("core.editor.export.html", cursor)
+```
+
+### `core.editor.pasteHTML`
+
+- **Description**: Pastes HTML content from the clipboard, converting it to blocks.
+- **Usage**: Handles HTML clipboard content and converts it to appropriate block structures.
+
+```typescript
+// Paste HTML from clipboard
+await orca.commands.invokeEditorCommand("core.editor.pasteHTML", cursor)
+```
+
+### `core.editor.extractPage`
+
+- **Description**: Extracts the current block and opens it as a separate page/document.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID. If not provided, uses the block at cursor position.
+- **Usage**: Separates a block from its parent and opens it as an independent document.
+
+```typescript
+// Extract current block as page
+await orca.commands.invokeEditorCommand("core.editor.extractPage", cursor)
+```
+
+### `core.editor.inlinePage`
+
+- **Description**: Inlines a reference block's content directly into the current document.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID. If not provided, uses the block at cursor position.
+- **Usage**: Converts a page reference to inline content.
+
+```typescript
+// Inline a page reference
+await orca.commands.invokeEditorCommand("core.editor.inlinePage", cursor)
+```
+
+### `core.editor.toggleFold`
+
+- **Description**: Toggles the folding state of the current block (fold if expanded, unfold if folded).
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID. If not provided, uses the block at cursor position.
+- **Usage**: Switches the collapse/expand state of a block.
+
+```typescript
+// Toggle fold state for current block
+await orca.commands.invokeEditorCommand("core.editor.toggleFold", cursor)
+```
+
+### `core.editor.toggleTaskState`
+
+- **Description**: Toggles the completion state of a task block.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID. If not provided, uses the block at cursor position.
+- **Usage**: Marks a task as complete/incomplete. Similar to `toggleTask` but more explicit about task state.
+
+```typescript
+// Toggle task state
+await orca.commands.invokeEditorCommand("core.editor.toggleTaskState", cursor)
+```
+
+### `core.editor.showAliasEditor`
+
+- **Description**: Opens the alias editor for the current block.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID. If not provided, uses the block at cursor position.
+- **Usage**: Displays a dialog to create or edit the alias for a block.
+
+```typescript
+// Show alias editor for current block
+await orca.commands.invokeEditorCommand("core.editor.showAliasEditor", cursor)
+```
+
+### `core.editor.showTagInsertion`
+
+- **Description**: Shows a tag insertion menu at the current cursor position.
+- **Usage**: Displays options to select and insert tags into the current block.
+
+```typescript
+// Show tag insertion menu
+await orca.commands.invokeEditorCommand("core.editor.showTagInsertion", cursor)
 ```

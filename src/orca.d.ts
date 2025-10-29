@@ -4386,6 +4386,7 @@ export type BlockForConversion = {
   content?: ContentFragment[]
   /** IDs of child blocks */
   children?: DbId[]
+  sub?: [BlockForConversion, Repr, Block][]
 }
 
 /** Block rendering modes */

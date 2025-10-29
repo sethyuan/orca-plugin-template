@@ -282,28 +282,6 @@ const childTags = await orca.invokeBackend(
 )
 ```
 
-## get-children-tag-blocks
-
-Retrieves blocks associated with child tags of a parent tag.
-
-Parameters:
-
-- blockId - The ID of the parent tag block.
-
-Returns:
-
-An array of blocks containing child tags.
-
-Example:
-
-```ts
-// Get blocks tagged with any child tag of the parent tag
-const blocks = await orca.invokeBackend(
-  "get-children-tag-blocks",
-  parentTagBlockId,
-)
-```
-
 ## get-journal-block
 
 Retrieves the journal block for a specific date.
@@ -323,19 +301,30 @@ Example:
 const journalBlock = await orca.invokeBackend("get-journal-block", new Date())
 ```
 
-## get-tags
+## get-remindings
 
-Retrieves all tags in the repository.
+Retrieves all remindings for a specific date range.
+
+Parameters:
+
+- startDate - The start date.
+- endDate - The end date.
 
 Returns:
 
-An array of tags.
+An array of remindings within the specified date range.
 
 Example:
 
 ```ts
-// Get all available tags
-const tags = await orca.invokeBackend("get-tags")
+// Get remindings for a date range
+const startDate = new Date(2025, 0, 1)
+const endDate = new Date(2025, 11, 31)
+const remindings = await orca.invokeBackend(
+  "get-remindings",
+  startDate,
+  endDate,
+)
 ```
 
 ## image-ocr

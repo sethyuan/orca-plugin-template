@@ -14,15 +14,23 @@ Commands are invoked by calling the `orca.commands.invokeCommand` function.
 
 ## Commands
 
+### Global Commands
+
+- `core.global.toggleWindow`
+
+  - Description: Toggles the application window visibility
+  - Parameters: None
+
+- `core.global.quickNote`
+
+  - Description: Shows window and takes a quick note in today's journal
+  - Parameters: None
+
 ### Theme and UI Commands
 
 - `core.toggleThemeMode`
 
   - Description: Toggles between light and dark theme modes
-  - Parameters: None
-
-- `core.toggleClassicStyle`
-  - Description: Toggles classic style interface
   - Parameters: None
 
 ### Sidebar Commands
@@ -38,7 +46,23 @@ Commands are invoked by calling the `orca.commands.invokeCommand` function.
   - Parameters: None
 
 - `core.toggleSidebar`
+
   - Description: Toggles the sidebar's visibility
+  - Parameters: None
+
+- `core.sidebar.goFavorites`
+
+  - Description: Navigates to the favorites tab in the sidebar
+  - Parameters: None
+
+- `core.sidebar.goTags`
+
+  - Description: Navigates to the tags tab in the sidebar
+  - Parameters: None
+
+- `core.sidebar.goPages`
+
+  - Description: Navigates to the pages tab in the sidebar
   - Parameters: None
 
 ### Panel Management
@@ -118,8 +142,15 @@ Commands are invoked by calling the `orca.commands.invokeCommand` function.
   - Parameters: None
 
 - `core.openCommandPalette`
+
   - Description: Opens the command palette
   - Parameters: None
+
+- `core.openWebViewModal`
+
+  - Description: Opens the browser view modal
+  - Parameters:
+    - `url`: string (optional) - The URL to load in the WebView
 
 ### Editor Commands
 
@@ -201,6 +232,12 @@ Commands are invoked by calling the `orca.commands.invokeCommand` function.
   - Description: Cleans up unused assets
   - Parameters: None
 
+### Search and Index
+
+- `core.rebuildIndex`
+  - Description: Rebuilds the search index
+  - Parameters: None
+
 ### S3 Sync Commands
 
 - `core.s3.sync`
@@ -217,3 +254,9 @@ Commands are invoked by calling the `orca.commands.invokeCommand` function.
   - Parameters: None
 
 Additional layout commands are dynamically registered based on saved layouts in settings.
+
+### Preview Commands
+
+- `core.enableInteractivePreview`
+  - Description: Enables interactive preview mode
+  - Parameters: None

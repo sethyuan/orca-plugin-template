@@ -482,9 +482,8 @@ type Props = {
   blockLevel: number
   indentLevel: number
   mirrorId?: DbId
-  withBreadcrumb?: boolean
   initiallyCollapsed?: boolean
-  renderingMode?: "normal" | "simple" | "simple-children" | "readonly"
+  renderingMode?: "normal" | "simple" | "simple-children"
   keyword: string // Prop to receive from _repr
 }
 
@@ -495,7 +494,6 @@ export default function MapBlockRenderer({
   blockLevel,
   indentLevel,
   mirrorId,
-  withBreadcrumb,
   initiallyCollapsed,
   renderingMode,
   keyword, // Received from _repr
@@ -524,7 +522,6 @@ export default function MapBlockRenderer({
       mirrorId={mirrorId}
       blockLevel={blockLevel}
       indentLevel={indentLevel}
-      withBreadcrumb={withBreadcrumb}
       initiallyCollapsed={initiallyCollapsed}
       renderingMode={renderingMode}
       reprClassName="myplugin-repr-map" // Custom class for the block shell

@@ -355,6 +355,10 @@ These keys are used to store settings that are specific to a single repo.
 
 > `readonly` **FirstWeekHasDay**: `10` = `10`
 
+##### GoToBlocks
+
+> `readonly` **GoToBlocks**: `1006` = `1006`
+
 ##### HelpShown
 
 > `readonly` **HelpShown**: `30` = `30`

@@ -49,7 +49,6 @@ type Props = {
   blockLevel: number
   indentLevel: number
   mirrorId?: DbId
-  withBreadcrumb?: boolean
   initiallyCollapsed?: boolean
   renderingMode?: "normal" | "simple" | "simple-children" | "readonly"
   src: string
@@ -62,7 +61,6 @@ export default function CustomImageBlockRenderer({
   blockLevel,
   indentLevel,
   mirrorId,
-  withBreadcrumb,
   initiallyCollapsed,
   renderingMode,
   src, // received from _repr
@@ -91,7 +89,6 @@ export default function CustomImageBlockRenderer({
       mirrorId={mirrorId}
       blockLevel={blockLevel}
       indentLevel={indentLevel}
-      withBreadcrumb={withBreadcrumb}
       initiallyCollapsed={initiallyCollapsed}
       renderingMode={renderingMode}
       reprClassName="myplugin-repr-image"

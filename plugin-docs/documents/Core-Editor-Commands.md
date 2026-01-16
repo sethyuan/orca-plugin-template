@@ -291,7 +291,7 @@ await orca.commands.invokeEditorCommand(
   - `1` (`RefType.Inline`): An inline reference.
   - `2` (`RefType.Property`): A reference via a block property.
   - `3` (`RefType.RefData`): A reference via a reference data.
-  - `4` (`RefType.Whiteboard`): A reference via a whiteboard.
+  - `4` (`RefType.Media`): A reference via a media, like a whiteboard, pdf or epub.
 - `alias?: string`: An optional alias for this specific reference instance (often used with `RefType.Property`).
 - **Usage**: Establishes relationships between blocks, like properties or embeds.
 
@@ -1063,7 +1063,7 @@ await orca.commands.invokeEditorCommand(
 )
 ```
 
-### `core.editor.formatUderlineWavyCustomColor` (note the typo in command name)
+### `core.editor.formatUderlineWavyCustomColor`
 
 - **Description**: Formats the selected text with a wavy underline with custom color.
 - **Parameters**:

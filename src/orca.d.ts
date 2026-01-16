@@ -470,6 +470,19 @@ export interface Orca {
      * ```
      */
     filterInTags?: string
+
+    /**
+     * Optional filter for pages shown in the pages panel.
+     * When set, only pages that match this filter will be displayed.
+     *
+     * @example
+     * ```ts
+     * if (orca.state.filterInPages === "my-page") {
+     *   console.log("Pages panel is filtering to show only matching pages")
+     * }
+     * ```
+     */
+    filterInPages?: string
   }
 
   /**
@@ -1328,6 +1341,91 @@ export interface Orca {
      * ```
      */
     clearData(name: string): Promise<void>
+
+    /**
+     * Reads a file from the plugin's data directory in the current repository.
+     *
+     * @param name - The name of the plugin
+     * @param filePath - The path to the file relative to the plugin's data directory
+     * @param type - The expected return type, either "string" or "buffer" (defaults to "string")
+     * @returns A Promise that resolves to the file content as a string or ArrayBuffer, or null if not found
+     *
+     * @example
+     * ```ts
+     * // Read as string
+     * const config = await orca.plugins.readFile("my-plugin", "config.json")
+     *
+     * // Read as binary
+     * const imgData = await orca.plugins.readFile("my-plugin", "icon.png", "buffer")
+     * ```
+     */
+    readFile(
+      name: string,
+      filePath: string,
+      type?: "string" | "buffer",
+    ): Promise<string | ArrayBuffer | null>
+
+    /**
+     * Writes a file to the plugin's data directory in the current repository.
+     * Automatically creates parent directories if they don't exist.
+     *
+     * @param name - The name of the plugin
+     * @param filePath - The path to the file relative to the plugin's data directory
+     * @param data - The data to write, either a string or an ArrayBuffer
+     * @returns A Promise that resolves when the file is written
+     *
+     * @example
+     * ```ts
+     * await orca.plugins.writeFile("my-plugin", "notes.txt", "Hello Orca!")
+     * ```
+     */
+    writeFile(
+      name: string,
+      filePath: string,
+      data: string | ArrayBuffer,
+    ): Promise<void>
+
+    /**
+     * Removes a file from the plugin's data directory.
+     *
+     * @param name - The name of the plugin
+     * @param filePath - The path to the file relative to the plugin's data directory
+     * @returns A Promise that resolves when the file is removed
+     *
+     * @example
+     * ```ts
+     * await orca.plugins.removeFile("my-plugin", "temp-log.txt")
+     * ```
+     */
+    removeFile(name: string, filePath: string): Promise<void>
+
+    /**
+     * Lists all files in the plugin's data directory recursively.
+     *
+     * @param name - The name of the plugin
+     * @returns A Promise that resolves to an array of relative file paths
+     *
+     * @example
+     * ```ts
+     * const files = await orca.plugins.listFiles("my-plugin")
+     * console.log("Plugin files:", files)
+     * ```
+     */
+    listFiles(name: string): Promise<string[]>
+
+    /**
+     * Checks if a file exists in the plugin's data directory.
+     *
+     * @param name - The name of the plugin
+     * @param filePath - The path to the file relative to the plugin's data directory
+     * @returns A Promise that resolves to true if the file exists, false otherwise
+     *
+     * @example
+     * ```ts
+     * const exists = await orca.plugins.existsFile("my-plugin", "data.json")
+     * ```
+     */
+    existsFile(name: string, filePath: string): Promise<boolean>
   }
 
   /**
@@ -1391,6 +1489,19 @@ export interface Orca {
      * ```
      */
     removeCSSResources(role: string): void
+
+    /**
+     * 将 CSS 字符串注入到文档头部，并指定一个角色标识。
+     * @param css - 要注入的 CSS 字符串。
+     * @param role - 样式元素的角色标识，用于后续删除。
+     */
+    injectCSS(css: string, role: string): void
+
+    /**
+     * 从文档中删除所有具有指定角色标识的样式元素。
+     * @param role - 要删除的样式元素的角色标识。
+     */
+    removeCSS(role: string): void
   }
 
   /**
@@ -1806,6 +1917,7 @@ export interface Orca {
      */
     broadcast(type: string, ...args: any[]): void
   }
+
   /**
    * Pre-built UI components from Orca that can be used in plugin development.
    * These components follow Orca's design system and provide consistent UI patterns.
@@ -1997,7 +2109,29 @@ export interface Orca {
       >,
     ) => JSX.Element | null
     /**
-     * Core component for block rendering with common UI elements
+     * Core component for block rendering with common UI elements.
+     * It provides the standard block structure including the handle, folding caret, tags, and back-references.
+     *
+     * @param props.panelId - The ID of the panel containing this block
+     * @param props.blockId - The unique database ID of the block
+     * @param props.rndId - A unique identifier for this specific rendering instance
+     * @param props.mirrorId - Optional ID if this block is a mirror of another block
+     * @param props.blockLevel - The depth level of the block in the tree (0 for root)
+     * @param props.indentLevel - The visual indentation level
+     * @param props.initiallyCollapsed - Whether the block should be collapsed by default
+     * @param props.renderingMode - The mode to use for rendering ("normal", "simple", etc.)
+     * @param props.reprClassName - CSS class name for the representation container
+     * @param props.reprStyle - Inline styles for the representation container
+     * @param props.reprAttrs - Additional HTML attributes for the representation container
+     * @param props.contentTag - The HTML tag to use for the content container (defaults to "div")
+     * @param props.contentClassName - CSS class name for the content container
+     * @param props.contentStyle - Inline styles for the content container
+     * @param props.contentAttrs - Additional HTML attributes for the content container
+     * @param props.contentJsx - The main content to render inside the block
+     * @param props.childrenJsx - The rendered children blocks
+     * @param props.editable - Whether the block content is editable (defaults to true)
+     * @param props.droppable - Whether other blocks can be dropped onto this block (defaults to true)
+     * @param props.selfFoldable - Whether the block can be folded even if it has no children (defaults to false)
      *
      * @example
      * ```tsx
@@ -2037,7 +2171,8 @@ export interface Orca {
       indentLevel: number
       initiallyCollapsed?: boolean
       renderingMode?: BlockRenderingMode
-      reprClassName: string
+      reprClassName?: string
+      reprStyle?: React.CSSProperties
       reprAttrs?: Record<string, any>
       contentTag?: any
       contentClassName?: string
@@ -2045,7 +2180,9 @@ export interface Orca {
       contentAttrs?: Record<string, any>
       contentJsx: React.ReactNode
       childrenJsx: React.ReactNode
+      editable?: boolean
       droppable?: boolean
+      selfFoldable?: boolean
     }) => JSX.Element | null
     /**
      * Displays a block preview in a popup on hover
@@ -3546,6 +3683,34 @@ export interface Orca {
   }
 
   /**
+   * React contexts exposed for use in plugins.
+   */
+  contexts: {
+    /**
+     * Image viewer context for displaying images in a modal viewer.
+     *
+     * @example
+     * ```tsx
+     * const ImageViewerContext = orca.contexts.ImageViewerContext
+     * const { viewImages } = React.useContext(ImageViewerContext)
+     *
+     * const onImageClick = (e) => {
+     *   viewImages(["https://example.com/image.png"], e.currentTarget)
+     * }
+     * ```
+     */
+    ImageViewerContext: {
+      /**
+       * Opens the image viewer to display a list of images.
+       *
+       * @param images - An array of image URLs to display in the viewer.
+       * @param thumbnail - The source image element used for transition animation.
+       */
+      viewImages(images: string[], thumbnail: HTMLImageElement): void
+    }
+  }
+
+  /**
    * Headbar API for registering custom buttons in the application's header bar.
    *
    * @example
@@ -4927,6 +5092,12 @@ export type QueryKindTask = 11
 export type QueryKindBlockMatch = 12
 
 /**
+ * Constant for the content format query type.
+ * Matches blocks containing specific formatting in content.
+ */
+export type QueryKindFormat = 13
+
+/**
  * Operation constant: equals.
  * Matches if a value is equal to the specified value.
  */
@@ -5044,6 +5215,12 @@ export interface QueryDescription2 {
     /** End date for the calendar range */
     end: Date
   }
+  /** Random seed for stable random sorting across pagination */
+  randomSeed?: number
+  /** Whether to use the current page's date as the reference for relative dates */
+  useReferenceDate?: boolean
+  /** The reference date for relative dates (Unix timestamp) */
+  referenceDate?: number
 }
 
 /**
@@ -5059,6 +5236,7 @@ export type QueryItem2 =
   | QueryBlock2
   | QueryBlockMatch2
   | QueryTask
+  | QueryFormat2
 
 /**
  * A group of query conditions combined with a logical operator.
@@ -5175,6 +5353,18 @@ export interface QueryBlockMatch2 {
   kind: QueryKindBlockMatch
   /** ID of the specific block to match */
   blockId?: DbId
+}
+
+/**
+ * Query condition that matches content fragments with specific format.
+ */
+export interface QueryFormat2 {
+  /** Kind identifier for format queries (13) */
+  kind: QueryKindFormat
+  /** The format identifier (e.g., 'b', 'i', 'c') */
+  f: string
+  /** The format attributes for precise matching */
+  fa?: Record<string, any>
 }
 
 /** Constant for the self AND group type. */

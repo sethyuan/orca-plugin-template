@@ -4841,6 +4841,38 @@ A Promise that resolves when the file is removed
 await orca.plugins.removeFile("my-plugin", "temp-log.txt")
 ```
 
+###### removeFolder()
+
+> **removeFolder**(`name`, `folderPath`): `Promise`\<`void`\>
+
+Removes a folder from the plugin's data directory.
+
+###### Parameters
+
+###### name
+
+`string`
+
+The name of the plugin
+
+###### folderPath
+
+`string`
+
+The path to the folder relative to the plugin's data directory
+
+###### Returns
+
+`Promise`\<`void`\>
+
+A Promise that resolves when the folder is removed
+
+###### Example
+
+```ts
+await orca.plugins.removeFolder("my-plugin", "temp-folder")
+```
+
 ###### setData()
 
 > **setData**(`name`, `key`, `value`): `Promise`\<`void`\>
@@ -6432,6 +6464,58 @@ A Promise that resolves when the selection has been updated.
 await orca.utils.setSelectionFromCursorData(cursorData);
 ```
 
+###### showBlockPreview()
+
+> **showBlockPreview**: (`blockId`, `refElement?`, `rect?`, `interactive?`) => () => `void`
+
+Shows a preview popup for a specific block.
+
+###### Parameters
+
+###### blockId
+
+`number`
+
+The ID of the block to preview.
+
+###### refElement?
+
+`HTMLElement`
+
+Optional element to anchor the preview to.
+
+###### rect?
+
+`DOMRect`
+
+Optional bounding rectangle to anchor the preview to if refElement is not provided.
+
+###### interactive?
+
+`boolean`
+
+Whether the preview should be interactive (allow editing).
+
+###### Returns
+
+A function that, when called, will close the preview.
+
+> (): `void`
+
+###### Returns
+
+`void`
+
+###### Example
+
+```ts
+// Show a preview when hovering over a link
+const close = orca.utils.showBlockPreview(12345, linkElement)
+
+// Close it later
+close()
+```
+
 #### Methods
 
 ##### invokeBackend()
@@ -6710,11 +6794,23 @@ Whether to match blocks with aliases
 
 Whether to match blocks with a child
 
+##### hasContent?
+
+> `optional` **hasContent**: `boolean`
+
+Whether to match blocks with content
+
 ##### hasParent?
 
 > `optional` **hasParent**: `boolean`
 
 Whether to match blocks with a parent
+
+##### hasRefs?
+
+> `optional` **hasRefs**: `boolean`
+
+Whether to match blocks with outgoing references
 
 ##### hasTags?
 

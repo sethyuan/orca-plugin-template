@@ -8,13 +8,13 @@ export default defineConfig(({ command }) => {
     define: {
       "process.env": {
         NODE_ENV: JSON.stringify(
-          command === "build" ? "production" : "development"
+          command === "build" ? "production" : "development",
         ),
       },
     },
     build: {
       lib: {
-        entry: "src/main.ts",
+        entry: "src/main.tsx",
         fileName: "index",
         formats: ["es"],
       },

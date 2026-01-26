@@ -950,7 +950,7 @@ The identifier of the command to hook into
 
 The function to execute after the command completes. The first
 parameter is the command ID, followed by the arguments of the command
-being monitored.
+being monitored (excluding the cursor argument).
 
 ###### Returns
 
@@ -2834,6 +2834,48 @@ const buttonRef = useRef(null);
     <p>Here is more detailed content...</p>
   </div>
 </orca.components.Popup>
+```
+
+###### QueryConditionsBuilder()
+
+> **QueryConditionsBuilder**: (`props`) => `Element`
+
+A visual builder for creating and editing complex query conditions.
+It provides a user interface for constructing nested AND/OR logic, property filters,
+and other query criteria.
+
+###### Parameters
+
+###### props
+
+###### onChange
+
+(`newQuery`) => `void`
+
+Callback fired when the query conditions are modified.
+
+###### value
+
+[`QueryDescription2`](#querydescription2)
+
+The current query description object representing the conditions.
+
+###### Returns
+
+`Element`
+
+###### Example
+
+```tsx
+const [query, setQuery] = useState<QueryDescription2>({
+  type: "and",
+  conditions: []
+});
+
+<orca.components.QueryConditionsBuilder
+  value={query}
+  onChange={(newQuery) => setQuery(newQuery)}
+/>
 ```
 
 ###### Segmented()

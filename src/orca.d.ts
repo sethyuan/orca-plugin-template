@@ -774,7 +774,7 @@ export interface Orca {
      * @param id - The identifier of the command to hook into
      * @param fn - The function to execute after the command completes. The first
      * parameter is the command ID, followed by the arguments of the command
-     * being monitored.
+     * being monitored (excluding the cursor argument).
      *
      * @example
      * ```ts
@@ -1398,6 +1398,20 @@ export interface Orca {
      * ```
      */
     removeFile(name: string, filePath: string): Promise<void>
+
+    /**
+     * Removes a folder from the plugin's data directory.
+     *
+     * @param name - The name of the plugin
+     * @param folderPath - The path to the folder relative to the plugin's data directory
+     * @returns A Promise that resolves when the folder is removed
+     *
+     * @example
+     * ```ts
+     * await orca.plugins.removeFolder("my-plugin", "temp-folder")
+     * ```
+     */
+    removeFolder(name: string, folderPath: string): Promise<void>
 
     /**
      * Lists all files in the plugin's data directory recursively.
@@ -3250,6 +3264,30 @@ export interface Orca {
       } & React.HTMLAttributes<HTMLDivElement>,
     ) => JSX.Element | null
     /**
+     * A visual builder for creating and editing complex query conditions.
+     * It provides a user interface for constructing nested AND/OR logic, property filters,
+     * and other query criteria.
+     *
+     * @example
+     * ```tsx
+     * const [query, setQuery] = useState<QueryDescription2>({
+     *   type: "and",
+     *   conditions: []
+     * });
+     *
+     * <orca.components.QueryConditionsBuilder
+     *   value={query}
+     *   onChange={(newQuery) => setQuery(newQuery)}
+     * />
+     * ```
+     */
+    QueryConditionsBuilder: (props: {
+      /** The current query description object representing the conditions. */
+      value: QueryDescription2
+      /** Callback fired when the query conditions are modified. */
+      onChange: (newQuery: QueryDescription2) => void
+    }) => JSX.Element | null
+    /**
      * Segmented control for selecting from options
      *
      * @example
@@ -4178,6 +4216,31 @@ export interface Orca {
      * ```
      */
     getAssetPath: (assetPath: string) => string
+
+    /**
+     * Shows a preview popup for a specific block.
+     *
+     * @param blockId - The ID of the block to preview.
+     * @param refElement - Optional element to anchor the preview to.
+     * @param rect - Optional bounding rectangle to anchor the preview to if refElement is not provided.
+     * @param interactive - Whether the preview should be interactive (allow editing).
+     * @returns A function that, when called, will close the preview.
+     *
+     * @example
+     * ```ts
+     * // Show a preview when hovering over a link
+     * const close = orca.utils.showBlockPreview(12345, linkElement)
+     *
+     * // Close it later
+     * close()
+     * ```
+     */
+    showBlockPreview: (
+      blockId: DbId,
+      refElement?: HTMLElement,
+      rect?: DOMRect,
+      interactive?: boolean,
+    ) => () => void
   }
 
   /**
@@ -5328,6 +5391,10 @@ export interface QueryBlock2 {
   hasTags?: boolean
   /** Whether to match blocks with aliases */
   hasAliases?: boolean
+  /** Whether to match blocks with content */
+  hasContent?: boolean
+  /** Whether to match blocks with outgoing references */
+  hasRefs?: boolean
   /** Whether to match blocks with a specific number of back references */
   backRefs?: {
     op?: QueryEq | QueryNotEq | QueryGt | QueryLt | QueryGe | QueryLe

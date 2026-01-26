@@ -366,6 +366,8 @@ interface Block {
 }
 ```
 
+The `_repr` property is a special object that defines the block's type and stores additional metadata used by renderers and converters. It is stored as an object of type `Repr` named `_repr` within the block's `properties` array. When implementing custom block renderers, the fields within `_repr` are automatically passed as props to your React component.
+
 ### Panel
 
 Panels are the main organizational units of the UI:

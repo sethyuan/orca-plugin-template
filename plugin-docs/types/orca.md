@@ -4600,7 +4600,7 @@ await orca.plugins.enable("my-plugin")
 
 ###### existsFile()
 
-> **existsFile**(`name`, `filePath`): `Promise`\<`boolean`\>
+> **existsFile**(`name`, `filePath`, `pluginAsRoot?`): `Promise`\<`boolean`\>
 
 Checks if a file exists in the plugin's data directory.
 
@@ -4617,6 +4617,12 @@ The name of the plugin
 `string`
 
 The path to the file relative to the plugin's data directory
+
+###### pluginAsRoot?
+
+`boolean`
+
+Whether to use the plugin's directory as the root (defaults to false, which uses the repo's plugin data directory)
 
 ###### Returns
 
@@ -4692,7 +4698,7 @@ console.log("Stored data keys:", keys)
 
 ###### listFiles()
 
-> **listFiles**(`name`): `Promise`\<`string`[]\>
+> **listFiles**(`name`, `pluginAsRoot?`): `Promise`\<`string`[]\>
 
 Lists all files in the plugin's data directory recursively.
 
@@ -4703,6 +4709,12 @@ Lists all files in the plugin's data directory recursively.
 `string`
 
 The name of the plugin
+
+###### pluginAsRoot?
+
+`boolean`
+
+Whether to use the plugin's directory as the root (defaults to false, which uses the repo's plugin data directory)
 
 ###### Returns
 
@@ -4752,7 +4764,7 @@ A Promise that resolves when the plugin is loaded
 
 ###### readFile()
 
-> **readFile**(`name`, `filePath`, `type?`): `Promise`\<`string` \| `ArrayBuffer`\>
+> **readFile**(`name`, `filePath`, `type?`, `pluginAsRoot?`): `Promise`\<`string` \| `ArrayBuffer`\>
 
 Reads a file from the plugin's data directory in the current repository.
 
@@ -4775,6 +4787,12 @@ The path to the file relative to the plugin's data directory
 The expected return type, either "string" or "buffer" (defaults to "string")
 
 `"string"` | `"buffer"`
+
+###### pluginAsRoot?
+
+`boolean`
+
+Whether to use the plugin's directory as the root (defaults to false, which uses the repo's plugin data directory)
 
 ###### Returns
 
@@ -4853,7 +4871,7 @@ await orca.plugins.removeData("my-plugin", "cached-results")
 
 ###### removeFile()
 
-> **removeFile**(`name`, `filePath`): `Promise`\<`void`\>
+> **removeFile**(`name`, `filePath`, `pluginAsRoot?`): `Promise`\<`void`\>
 
 Removes a file from the plugin's data directory.
 
@@ -4871,6 +4889,12 @@ The name of the plugin
 
 The path to the file relative to the plugin's data directory
 
+###### pluginAsRoot?
+
+`boolean`
+
+Whether to use the plugin's directory as the root (defaults to false, which uses the repo's plugin data directory)
+
 ###### Returns
 
 `Promise`\<`void`\>
@@ -4885,7 +4909,7 @@ await orca.plugins.removeFile("my-plugin", "temp-log.txt")
 
 ###### removeFolder()
 
-> **removeFolder**(`name`, `folderPath`): `Promise`\<`void`\>
+> **removeFolder**(`name`, `folderPath`, `pluginAsRoot?`): `Promise`\<`void`\>
 
 Removes a folder from the plugin's data directory.
 
@@ -4902,6 +4926,12 @@ The name of the plugin
 `string`
 
 The path to the folder relative to the plugin's data directory
+
+###### pluginAsRoot?
+
+`boolean`
+
+Whether to use the plugin's directory as the root (defaults to false, which uses the repo's plugin data directory)
 
 ###### Returns
 
@@ -5099,7 +5129,7 @@ await orca.plugins.unregister("my-plugin")
 
 ###### writeFile()
 
-> **writeFile**(`name`, `filePath`, `data`): `Promise`\<`void`\>
+> **writeFile**(`name`, `filePath`, `data`, `pluginAsRoot?`): `Promise`\<`void`\>
 
 Writes a file to the plugin's data directory in the current repository.
 Automatically creates parent directories if they don't exist.
@@ -5123,6 +5153,12 @@ The path to the file relative to the plugin's data directory
 The data to write, either a string or an ArrayBuffer
 
 `string` | `ArrayBuffer`
+
+###### pluginAsRoot?
+
+`boolean`
+
+Whether to use the plugin's directory as the root (defaults to false, which uses the repo's plugin data directory)
 
 ###### Returns
 

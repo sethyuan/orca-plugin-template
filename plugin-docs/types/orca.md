@@ -109,6 +109,34 @@ The query description
 
 ***
 
+### BlockMoveOptions
+
+Options passed to `core.editor.moveBlocks` for fine-grained control over the move operation.
+
+#### Properties
+
+##### autoMatchType?
+
+> `optional` **autoMatchType**: `boolean`
+
+If `true`, the moved blocks' type (repr) is automatically adjusted to match
+the target parent or sibling (e.g., converting a text block to a list item
+when moving into a list).
+
+##### extraMoves?
+
+> `optional` **extraMoves**: \[`number`[], `number`, `"before"` \| `"after"` \| `"firstChild"` \| `"lastChild"`\][]
+
+Additional move operations that are performed atomically alongside the
+primary move. Each entry is a tuple of:
+`[blockIds, refBlockId, position]`.
+
+- `blockIds`: The blocks to move.
+- `refBlockId`: The reference block (or `null` for root-level).
+- `position`: Where to place the blocks relative to `refBlockId`.
+
+***
+
 ### BlockProperty
 
 Represents a named property attached to a block.
@@ -1449,11 +1477,11 @@ Renders a block's children
 
 > **BlockPreviewPopup**: (`props`) => `Element`
 
-Displays a block preview in a popup on hover
+Renders a block preview popup.
 
-When hovering over the child element, a popup appears showing a preview of the referenced block.
-The preview can be made interactive by pressing the configured keyboard shortcut,
-allowing users to edit the block content directly in the preview.
+The popup is typically opened by hovering the child element, but it can also be
+controlled with `visible`. `interactive` enables the editor-like preview mode,
+`customQuery` / `expandQueryRoot` customize the preview content source.
 
 ###### Parameters
 
@@ -1468,22 +1496,20 @@ allowing users to edit the block content directly in the preview.
 ###### Example
 
 ```tsx
-// Basic block preview on link hover
 <BlockPreviewPopup blockId={123}>
   <a href="#block-123">Block Reference</a>
 </BlockPreviewPopup>
 
-// With custom delay and event handlers
 <BlockPreviewPopup
   blockId={456}
   delay={500}
-  onClose={() => console.log("Preview closed")}
+  interactive
   className="custom-preview"
+  onClose={() => console.log("Preview closing")}
 >
   <span>Hover me for block preview</span>
 </BlockPreviewPopup>
 
-// Programmatically controlled visibility
 <BlockPreviewPopup
   blockId={789}
   visible={isPreviewOpen}
@@ -3437,7 +3463,7 @@ const onImageClick = (e) => {
 
 ###### ImageViewerContext.viewImages()
 
-> **viewImages**(`images`, `thumbnail`): `void`
+> **viewImages**(`images`, `thumbnail`, `options?`): `void`
 
 Opens the image viewer to display a list of images.
 
@@ -3454,6 +3480,14 @@ An array of image URLs to display in the viewer.
 `HTMLImageElement`
 
 The source image element used for transition animation.
+
+###### options?
+
+Optional viewer configuration such as initial rotation.
+
+###### initialRotation?
+
+`number`
 
 ###### Returns
 
@@ -3532,7 +3566,7 @@ const htmlContent = await orca.converters.blockConvert(
 
 ###### inlineConvert()
 
-> **inlineConvert**(`format`, `type`, `content`, `forExport?`): `Promise`\<`string`\>
+> **inlineConvert**(`format`, `type`, `content`, `forExport?`, `context?`): `Promise`\<`string`\>
 
 Converts an inline content fragment to a specific format.
 This is typically used internally by the system when exporting content.
@@ -3560,6 +3594,10 @@ The inline content fragment to convert
 ###### forExport?
 
 `boolean`
+
+###### context?
+
+[`ConvertContext`](#convertcontext)
 
 ###### Returns
 
@@ -3646,7 +3684,7 @@ The inline content type to convert from
 
 ###### fn
 
-(`content`, `forExport?`) => `string` \| `Promise`\<`string`\>
+(`content`, `forExport?`, `context?`) => `string` \| `Promise`\<`string`\>
 
 Conversion function that transforms inline content to the target format
 
@@ -4129,11 +4167,21 @@ orca.nav.focusPrev()
 
 ###### goBack()
 
-> **goBack**(`withRedo?`): `void`
+> **goBack**(`options?`): `void`
 
-Navigates back to the previous panel state in history.
+Navigates back to a previous panel state in history.
 
 ###### Parameters
+
+###### options?
+
+Optional navigation settings
+
+###### steps?
+
+`number`
+
+Number of valid history steps to go back
 
 ###### withRedo?
 
@@ -4148,15 +4196,30 @@ Whether to allow redo (forward navigation) after going back
 ###### Example
 
 ```ts
-// Go back with redo support
-orca.nav.goBack(true)
+// Go back one step with redo support
+orca.nav.goBack({ withRedo: true })
+
+// Go back three valid history steps
+orca.nav.goBack({ withRedo: true, steps: 3 })
 ```
 
 ###### goForward()
 
-> **goForward**(): `void`
+> **goForward**(`options?`): `void`
 
-Navigates forward to the next panel state in history.
+Navigates forward to a later panel state in history.
+
+###### Parameters
+
+###### options?
+
+Optional navigation settings
+
+###### steps?
+
+`number`
+
+Number of valid history steps to go forward
 
 ###### Returns
 
@@ -4166,6 +4229,7 @@ Navigates forward to the next panel state in history.
 
 ```ts
 orca.nav.goForward()
+orca.nav.goForward({ steps: 2 })
 ```
 
 ###### goTo()
@@ -4545,6 +4609,26 @@ A Promise that resolves when all data is cleared
 await orca.plugins.clearData("my-plugin")
 ```
 
+###### deployMarketplacePlugin()
+
+> **deployMarketplacePlugin**(`id`, `zipUrl`): `Promise`\<`void`\>
+
+Downloads and deploys a marketplace plugin zip package into the local plugins directory.
+
+###### Parameters
+
+###### id
+
+`string`
+
+###### zipUrl
+
+`string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
 ###### disable()
 
 > **disable**(`name`): `Promise`\<`void`\>
@@ -4695,6 +4779,22 @@ A Promise that resolves to an array of key strings
 const keys = await orca.plugins.getDataKeys("my-plugin")
 console.log("Stored data keys:", keys)
 ```
+
+###### getInstalledVersions()
+
+> **getInstalledVersions**(`ids`): `Promise`\<`Record`\<`string`, `string`\>\>
+
+Reads installed plugin versions from local plugin folders.
+
+###### Parameters
+
+###### ids
+
+`string`[]
+
+###### Returns
+
+`Promise`\<`Record`\<`string`, `string`\>\>
 
 ###### listFiles()
 
@@ -5196,7 +5296,9 @@ Renderer management API, used to register custom block and inline content render
 
 ###### registerBlock()
 
-> **registerBlock**(`type`, `isEditable`, `renderer`, `assetFields?`, `useChildren?`): `void`
+###### Call Signature
+
+> **registerBlock**(`type`, `isEditable`, `renderer`, `opts?`): `void`
 
 Registers a custom block renderer.
 
@@ -5220,22 +5322,25 @@ Whether this block type should be editable
 
 The React component that renders the block
 
+###### opts?
+
+Optional settings for block rendering.
+              - `assetFields`: property names that may contain asset references
+                (used for proper asset handling during import/export)
+              - `useChildren`: whether this block type renders its children itself
+              - `foldInQuery`: whether this block type should be folded in query contexts
+
 ###### assetFields?
 
 `string`[]
 
-Optional array of property names that may contain asset references
-                    (used for proper asset handling during import/export)
+###### foldInQuery?
+
+`boolean`
 
 ###### useChildren?
 
-`boolean` = `false`
-
-Whether this block type uses the children for rendering.
-                     When true, the block's children will be passed to the renderer component
-                     for custom rendering instead of being rendered by the default children renderer.
-                     This is useful for blocks that need to control how their children are displayed
-                     (e.g., custom layouts, tabs, or accordion blocks).
+`boolean`
 
 ###### Returns
 
@@ -5258,7 +5363,7 @@ orca.renderers.registerBlock(
   "myplugin.attachment",
   true,
   AttachmentBlock,
-  ["url", "thumbnailUrl"]
+  { assetFields: ["url", "thumbnailUrl"] }
 )
 
 // Register a block renderer that uses children for custom layout
@@ -5266,10 +5371,51 @@ orca.renderers.registerBlock(
   "myplugin.tabs",
   false,
   TabsBlock,
-  undefined,
-  true  // useChildren flag
+  { useChildren: true }
+)
+
+// Register a block renderer with query folding metadata
+orca.renderers.registerBlock(
+  "myplugin.queryCard",
+  false,
+  QueryCardBlock,
+  { foldInQuery: true }
 )
 ```
+
+###### Call Signature
+
+> **registerBlock**(`type`, `isEditable`, `renderer`, `assetFields?`, `useChildren?`): `void`
+
+###### Parameters
+
+###### type
+
+`string`
+
+###### isEditable
+
+`boolean`
+
+###### renderer
+
+`any`
+
+###### assetFields?
+
+`string`[]
+
+###### useChildren?
+
+`boolean`
+
+###### Returns
+
+`void`
+
+###### Deprecated
+
+Use the `opts` object instead of positional optional arguments.
 
 ###### registerInline()
 
@@ -5369,7 +5515,7 @@ orca.renderers.registerBlock(
   "myplugin.customBlock",
   true,
   CustomBlockRenderer,
-  ["image", "attachmentUrl"]
+  { assetFields: ["image", "attachmentUrl"] }
 )
 ```
 
@@ -5747,7 +5893,7 @@ const hasMyButton = !!orca.state.headbarButtons["myplugin.syncButton"]
 
 ###### inlineConverters
 
-> **inlineConverters**: `Record`\<`string`, `Record`\<`string`, (`content`) => `string` \| `Promise`\<`string`\>\> \| `undefined`\>
+> **inlineConverters**: `Record`\<`string`, `Record`\<`string`, (`content`, `forExport?`, `context?`) => `string` \| `Promise`\<`string`\>\> \| `undefined`\>
 
 Registry of inline content converters that transform inline content to different formats.
 Organized as a nested record with format as the first key and content type as the second.
@@ -5859,6 +6005,12 @@ const rootPanel = orca.state.panels
 console.log(`Root panel ID: ${rootPanel.id}`)
 console.log(`Number of child panels: ${rootPanel.children.length}`)
 ```
+
+###### pluginMarketplaceOpened
+
+> **pluginMarketplaceOpened**: `boolean`
+
+Indicates whether the plugin marketplace modal is currently opened.
 
 ###### plugins
 
@@ -6036,6 +6188,14 @@ Each entry can be a single button configuration or an array of related buttons.
 // Check if a specific toolbar button is registered
 const hasFormatButton = !!orca.state.toolbarButtons["myplugin.formatButton"]
 ```
+
+###### zoomLevel
+
+> **zoomLevel**: `number`
+
+The current zoom level of the application, where 1 is 100% (default),
+values less than 1 are zoomed out,
+and values greater than 1 are zoomed in.
 
 ##### tagMenuCommands
 
@@ -8096,6 +8256,38 @@ Context for block conversion, used to track export scope.
 > `optional` **exportRootId**: [`DbId`](#dbid)
 
 The root block ID of the export scope
+
+##### getBlockById()?
+
+> `optional` **getBlockById**: (`blockId`) => [`Block`](#block) \| `undefined`
+
+Resolve a block from a temporary conversion context before falling back to global state.
+
+###### Parameters
+
+###### blockId
+
+[`DbId`](#dbid)
+
+###### Returns
+
+[`Block`](#block) \| `undefined`
+
+##### getRefById()?
+
+> `optional` **getRefById**: (`refId`) => `Promise`\<\{ `alias?`: `string`; `to`: [`DbId`](#dbid); \} \| `undefined`\>
+
+Resolve an inline reference from a temporary conversion context before hitting the backend.
+
+###### Parameters
+
+###### refId
+
+[`DbId`](#dbid)
+
+###### Returns
+
+`Promise`\<\{ `alias?`: `string`; `to`: [`DbId`](#dbid); \} \| `undefined`\>
 
 ***
 

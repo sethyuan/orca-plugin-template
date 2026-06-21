@@ -253,7 +253,7 @@ orca.renderers.registerBlock(
   "myplugin.customBlock", // Block type
   true, // Is editable
   CustomBlockRenderer, // React component
-  ["src"], // Fields that use assets (optional)
+  { assetFields: ["src"] }, // Optional renderer settings
 )
 
 // Register inline content renderer

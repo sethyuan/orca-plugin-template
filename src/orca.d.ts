@@ -162,7 +162,14 @@ export interface Orca {
      */
     inlineConverters: Record<
       string,
-      | Record<string, (content: ContentFragment) => string | Promise<string>>
+      | Record<
+          string,
+          (
+            content: ContentFragment,
+            forExport?: boolean,
+            context?: ConvertContext,
+          ) => string | Promise<string>
+        >
       | undefined
     >
 
@@ -303,6 +310,11 @@ export interface Orca {
      * ```
      */
     settingsOpened: boolean
+
+    /**
+     * Indicates whether the plugin marketplace modal is currently opened.
+     */
+    pluginMarketplaceOpened: boolean
 
     /**
      * Indicates whether the command palette is currently opened.
@@ -483,6 +495,13 @@ export interface Orca {
      * ```
      */
     filterInPages?: string
+
+    /**
+     * The current zoom level of the application, where 1 is 100% (default),
+     * values less than 1 are zoomed out,
+     * and values greater than 1 are zoomed in.
+     */
+    zoomLevel: number
   }
 
   /**
@@ -970,27 +989,36 @@ export interface Orca {
     switchFocusTo(id: string): void
 
     /**
-     * Navigates back to the previous panel state in history.
+     * Navigates back to a previous panel state in history.
      *
-     * @param withRedo - Whether to allow redo (forward navigation) after going back
+     * @param options - Optional navigation settings
+     * @param options.withRedo - Whether to allow redo (forward navigation) after going back
+     * @param options.steps - Number of valid history steps to go back
      *
      * @example
      * ```ts
-     * // Go back with redo support
-     * orca.nav.goBack(true)
+     * // Go back one step with redo support
+     * orca.nav.goBack({ withRedo: true })
+     *
+     * // Go back three valid history steps
+     * orca.nav.goBack({ withRedo: true, steps: 3 })
      * ```
      */
-    goBack(withRedo?: boolean): void
+    goBack(options?: { withRedo?: boolean; steps?: number }): void
 
     /**
-     * Navigates forward to the next panel state in history.
+     * Navigates forward to a later panel state in history.
+     *
+     * @param options - Optional navigation settings
+     * @param options.steps - Number of valid history steps to go forward
      *
      * @example
      * ```ts
      * orca.nav.goForward()
+     * orca.nav.goForward({ steps: 2 })
      * ```
      */
-    goForward(): void
+    goForward(options?: { steps?: number }): void
 
     /**
      * Navigates to a specific view in the specified panel or current active panel.
@@ -1348,6 +1376,7 @@ export interface Orca {
      * @param name - The name of the plugin
      * @param filePath - The path to the file relative to the plugin's data directory
      * @param type - The expected return type, either "string" or "buffer" (defaults to "string")
+     * @param pluginAsRoot - Whether to use the plugin's directory as the root (defaults to false, which uses the repo's plugin data directory)
      * @returns A Promise that resolves to the file content as a string or ArrayBuffer, or null if not found
      *
      * @example
@@ -1363,6 +1392,7 @@ export interface Orca {
       name: string,
       filePath: string,
       type?: "string" | "buffer",
+      pluginAsRoot?: boolean,
     ): Promise<string | ArrayBuffer | null>
 
     /**
@@ -1372,6 +1402,7 @@ export interface Orca {
      * @param name - The name of the plugin
      * @param filePath - The path to the file relative to the plugin's data directory
      * @param data - The data to write, either a string or an ArrayBuffer
+     * @param pluginAsRoot - Whether to use the plugin's directory as the root (defaults to false, which uses the repo's plugin data directory)
      * @returns A Promise that resolves when the file is written
      *
      * @example
@@ -1383,6 +1414,7 @@ export interface Orca {
       name: string,
       filePath: string,
       data: string | ArrayBuffer,
+      pluginAsRoot?: boolean,
     ): Promise<void>
 
     /**
@@ -1390,6 +1422,7 @@ export interface Orca {
      *
      * @param name - The name of the plugin
      * @param filePath - The path to the file relative to the plugin's data directory
+     * @param pluginAsRoot - Whether to use the plugin's directory as the root (defaults to false, which uses the repo's plugin data directory)
      * @returns A Promise that resolves when the file is removed
      *
      * @example
@@ -1397,13 +1430,18 @@ export interface Orca {
      * await orca.plugins.removeFile("my-plugin", "temp-log.txt")
      * ```
      */
-    removeFile(name: string, filePath: string): Promise<void>
+    removeFile(
+      name: string,
+      filePath: string,
+      pluginAsRoot?: boolean,
+    ): Promise<void>
 
     /**
      * Removes a folder from the plugin's data directory.
      *
      * @param name - The name of the plugin
      * @param folderPath - The path to the folder relative to the plugin's data directory
+     * @param pluginAsRoot - Whether to use the plugin's directory as the root (defaults to false, which uses the repo's plugin data directory)
      * @returns A Promise that resolves when the folder is removed
      *
      * @example
@@ -1411,12 +1449,17 @@ export interface Orca {
      * await orca.plugins.removeFolder("my-plugin", "temp-folder")
      * ```
      */
-    removeFolder(name: string, folderPath: string): Promise<void>
+    removeFolder(
+      name: string,
+      folderPath: string,
+      pluginAsRoot?: boolean,
+    ): Promise<void>
 
     /**
      * Lists all files in the plugin's data directory recursively.
      *
      * @param name - The name of the plugin
+     * @param pluginAsRoot - Whether to use the plugin's directory as the root (defaults to false, which uses the repo's plugin data directory)
      * @returns A Promise that resolves to an array of relative file paths
      *
      * @example
@@ -1425,13 +1468,14 @@ export interface Orca {
      * console.log("Plugin files:", files)
      * ```
      */
-    listFiles(name: string): Promise<string[]>
+    listFiles(name: string, pluginAsRoot?: boolean): Promise<string[]>
 
     /**
      * Checks if a file exists in the plugin's data directory.
      *
      * @param name - The name of the plugin
      * @param filePath - The path to the file relative to the plugin's data directory
+     * @param pluginAsRoot - Whether to use the plugin's directory as the root (defaults to false, which uses the repo's plugin data directory)
      * @returns A Promise that resolves to true if the file exists, false otherwise
      *
      * @example
@@ -1439,7 +1483,23 @@ export interface Orca {
      * const exists = await orca.plugins.existsFile("my-plugin", "data.json")
      * ```
      */
-    existsFile(name: string, filePath: string): Promise<boolean>
+    existsFile(
+      name: string,
+      filePath: string,
+      pluginAsRoot?: boolean,
+    ): Promise<boolean>
+
+    /**
+     * Reads installed plugin versions from local plugin folders.
+     */
+    getInstalledVersions(
+      ids: string[],
+    ): Promise<Record<string, string | undefined>>
+
+    /**
+     * Downloads and deploys a marketplace plugin zip package into the local plugins directory.
+     */
+    deployMarketplacePlugin(id: string, zipUrl: string): Promise<void>
   }
 
   /**
@@ -1528,7 +1588,7 @@ export interface Orca {
    *   "myplugin.customBlock",
    *   true,
    *   CustomBlockRenderer,
-   *   ["image", "attachmentUrl"]
+   *   { assetFields: ["image", "attachmentUrl"] }
    * )
    * ```
    */
@@ -1571,13 +1631,11 @@ export interface Orca {
      * @param type - The type identifier for the block (e.g., "myplugin.diagram")
      * @param isEditable - Whether this block type should be editable
      * @param renderer - The React component that renders the block
-     * @param assetFields - Optional array of property names that may contain asset references
-     *                     (used for proper asset handling during import/export)
-     * @param useChildren - Whether this block type uses the children for rendering.
-     *                      When true, the block's children will be passed to the renderer component
-     *                      for custom rendering instead of being rendered by the default children renderer.
-     *                      This is useful for blocks that need to control how their children are displayed
-     *                      (e.g., custom layouts, tabs, or accordion blocks).
+     * @param opts - Optional settings for block rendering.
+     *               - `assetFields`: property names that may contain asset references
+     *                 (used for proper asset handling during import/export)
+     *               - `useChildren`: whether this block type renders its children itself
+     *               - `foldInQuery`: whether this block type should be folded in query contexts
      *
      * @example
      * ```ts
@@ -1595,7 +1653,7 @@ export interface Orca {
      *   "myplugin.attachment",
      *   true,
      *   AttachmentBlock,
-     *   ["url", "thumbnailUrl"]
+     *   { assetFields: ["url", "thumbnailUrl"] }
      * )
      *
      * // Register a block renderer that uses children for custom layout
@@ -1603,8 +1661,15 @@ export interface Orca {
      *   "myplugin.tabs",
      *   false,
      *   TabsBlock,
-     *   undefined,
-     *   true  // useChildren flag
+     *   { useChildren: true }
+     * )
+     *
+     * // Register a block renderer with query folding metadata
+     * orca.renderers.registerBlock(
+     *   "myplugin.queryCard",
+     *   false,
+     *   QueryCardBlock,
+     *   { foldInQuery: true }
      * )
      * ```
      */
@@ -1612,8 +1677,20 @@ export interface Orca {
       type: string,
       isEditable: boolean,
       renderer: any,
+      opts?: {
+        assetFields?: string[]
+        useChildren?: boolean
+        foldInQuery?: boolean
+      },
+    ): void
+
+    /** @deprecated Use the `opts` object instead of positional optional arguments. */
+    registerBlock(
+      type: string,
+      isEditable: boolean,
+      renderer: any,
       assetFields?: string[],
-      useChildren: boolean = false,
+      useChildren?: boolean,
     ): void
 
     /**
@@ -1761,6 +1838,7 @@ export interface Orca {
       fn: (
         content: ContentFragment,
         forExport?: boolean,
+        context?: ConvertContext,
       ) => string | Promise<string>,
     ): void
 
@@ -1846,6 +1924,7 @@ export interface Orca {
       type: string,
       content: ContentFragment,
       forExport?: boolean,
+      context?: ConvertContext,
     ): Promise<string>
   }
 
@@ -2199,30 +2278,28 @@ export interface Orca {
       selfFoldable?: boolean
     }) => JSX.Element | null
     /**
-     * Displays a block preview in a popup on hover
+     * Renders a block preview popup.
      *
-     * When hovering over the child element, a popup appears showing a preview of the referenced block.
-     * The preview can be made interactive by pressing the configured keyboard shortcut,
-     * allowing users to edit the block content directly in the preview.
+     * The popup is typically opened by hovering the child element, but it can also be
+     * controlled with `visible`. `interactive` enables the editor-like preview mode,
+     * `customQuery` / `expandQueryRoot` customize the preview content source.
      *
      * @example
      * ```tsx
-     * // Basic block preview on link hover
      * <BlockPreviewPopup blockId={123}>
      *   <a href="#block-123">Block Reference</a>
      * </BlockPreviewPopup>
      *
-     * // With custom delay and event handlers
      * <BlockPreviewPopup
      *   blockId={456}
      *   delay={500}
-     *   onClose={() => console.log("Preview closed")}
+     *   interactive
      *   className="custom-preview"
+     *   onClose={() => console.log("Preview closing")}
      * >
      *   <span>Hover me for block preview</span>
      * </BlockPreviewPopup>
      *
-     * // Programmatically controlled visibility
      * <BlockPreviewPopup
      *   blockId={789}
      *   visible={isPreviewOpen}
@@ -2236,21 +2313,31 @@ export interface Orca {
       props: {
         /** The ID of the block to display in the preview */
         blockId: DbId
+        /** Optional custom query used to build the preview content */
+        customQuery?: BlockCustomQuery
+        /** Whether to expand the query root block in custom preview mode */
+        expandQueryRoot?: boolean
         /** Delay in milliseconds before showing the preview on hover (default: 200) */
         delay?: number
-        /** Reference element to anchor the popup positioning */
+        /** Whether the preview starts in interactive mode */
+        interactive?: boolean
+        /** Reference element used to anchor popup positioning */
         refElement?: React.RefObject<HTMLElement>
-        /** Whether the preview popup is visible (controlled mode) */
+        /** DOM rect used to position the popup when no reference element is available */
+        rect?: DOMRect
+        /** Whether the preview popup is visible in controlled mode */
         visible?: boolean
-        /** Callback fired when the preview should close */
+        /** Disables hover-to-open behavior for block reference previews */
+        noHoverPreview?: boolean
+        /** Called when the preview begins closing */
         onClose?: () => void
-        /** Callback fired after the preview has finished closing animation */
+        /** Called after the close animation finishes */
         onClosed?: () => void
         /** CSS class name for the popup container */
         className?: string
         /** Inline styles for the popup container */
         style?: React.CSSProperties
-        /** The child element that triggers the preview on hover */
+        /** Child element that triggers the preview */
         children?: React.ReactElement
       } & React.HTMLAttributes<HTMLDivElement>,
     ) => JSX.Element | null
@@ -3743,8 +3830,15 @@ export interface Orca {
        *
        * @param images - An array of image URLs to display in the viewer.
        * @param thumbnail - The source image element used for transition animation.
+       * @param options - Optional viewer configuration such as initial rotation.
        */
-      viewImages(images: string[], thumbnail: HTMLImageElement): void
+      viewImages(
+        images: string[],
+        thumbnail: HTMLImageElement,
+        options?: {
+          initialRotation?: number
+        },
+      ): void
     }
   }
 
@@ -4429,6 +4523,7 @@ export type PanelProps = {
   active: boolean
   preview?: "content" | "backRef"
   customQuery?: BlockCustomQuery
+  expandQueryRoot?: boolean
 }
 
 // Commands
@@ -4804,6 +4899,13 @@ export interface BlockRef {
  */
 export type BlockRefData = Pick<BlockProperty, "name" | "type" | "value">
 
+export type TagInput =
+  | string
+  | {
+      name: string
+      props?: Record<string, any>
+    }
+
 /**
  * Simplified block structure used when converting blocks to other formats.
  */
@@ -4821,6 +4923,12 @@ export type BlockForConversion = {
 export type ConvertContext = {
   /** The root block ID of the export scope */
   exportRootId?: DbId
+  /** Resolve a block from a temporary conversion context before falling back to global state. */
+  getBlockById?: (blockId: DbId) => Block | undefined
+  /** Resolve an inline reference from a temporary conversion context before hitting the backend. */
+  getRefById?: (
+    refId: DbId,
+  ) => Promise<{ to: DbId; alias?: string } | undefined>
 }
 
 /** Block rendering modes */
@@ -5481,4 +5589,33 @@ export interface BlockCustomQuery {
   q: QueryDescription2
   /** Optional extra SQL to append to the query defined in `q` */
   extraSql?: string
+}
+
+/** Options passed to `core.editor.moveBlocks` for fine-grained control over the move operation. */
+export interface BlockMoveOptions {
+  /**
+   * If `true`, the moved blocks' type (repr) is automatically adjusted to match
+   * the target parent or sibling (e.g., converting a text block to a list item
+   * when moving into a list).
+   */
+  autoMatchType?: boolean
+  /**
+   * Additional move operations that are performed atomically alongside the
+   * primary move. Each entry is a tuple of:
+   * `[blockIds, refBlockId, position]`.
+   *
+   * - `blockIds`: The blocks to move.
+   * - `refBlockId`: The reference block (or `null` for root-level).
+   * - `position`: Where to place the blocks relative to `refBlockId`.
+   */
+  extraMoves?: [
+    DbId[],
+    DbId | null,
+    "before" | "after" | "firstChild" | "lastChild" | null,
+  ][]
+}
+
+export interface BlockMoveBackendOptions {
+  autoMatchType?: boolean
+  extraMoves?: [DbId[], DbId, DbId | null][]
 }

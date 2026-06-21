@@ -36,6 +36,14 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 
 > `readonly` **AIChatModel**: `28` = `28`
 
+##### AIChatSkillTag
+
+> `readonly` **AIChatSkillTag**: `60` = `60`
+
+##### AIChatSystemPromptExtension
+
+> `readonly` **AIChatSystemPromptExtension**: `59` = `59`
+
 ##### AIContinueWritingPresets
 
 > `readonly` **AIContinueWritingPresets**: `23` = `23`
@@ -48,6 +56,18 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 
 > `readonly` **AIRefinePresets**: `24` = `24`
 
+##### AISpeechToTextAPIKey
+
+> `readonly` **AISpeechToTextAPIKey**: `62` = `62`
+
+##### AISpeechToTextBaseURL
+
+> `readonly` **AISpeechToTextBaseURL**: `61` = `61`
+
+##### AISpeechToTextModel
+
+> `readonly` **AISpeechToTextModel**: `63` = `63`
+
 ##### AITag
 
 > `readonly` **AITag**: `21` = `21`
@@ -59,6 +79,10 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 ##### AutoDownloadWebImages
 
 > `readonly` **AutoDownloadWebImages**: `42` = `42`
+
+##### AutoPairing
+
+> `readonly` **AutoPairing**: `58` = `58`
 
 ##### CachedEditorNum
 
@@ -95,6 +119,10 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 ##### EditorFont
 
 > `readonly` **EditorFont**: `55` = `55`
+
+##### EnableAutoUpdate
+
+> `readonly` **EnableAutoUpdate**: `57` = `57`
 
 ##### EnableBlockRefPreview
 
@@ -271,6 +299,14 @@ These keys are used to store settings that are specific to a single repo.
 
 > `readonly` **AIChatModel**: `28` = `28`
 
+##### AIChatSkillTag
+
+> `readonly` **AIChatSkillTag**: `60` = `60`
+
+##### AIChatSystemPromptExtension
+
+> `readonly` **AIChatSystemPromptExtension**: `59` = `59`
+
 ##### AIContinueWritingPresets
 
 > `readonly` **AIContinueWritingPresets**: `23` = `23`
@@ -283,6 +319,18 @@ These keys are used to store settings that are specific to a single repo.
 
 > `readonly` **AIRefinePresets**: `24` = `24`
 
+##### AISpeechToTextAPIKey
+
+> `readonly` **AISpeechToTextAPIKey**: `62` = `62`
+
+##### AISpeechToTextBaseURL
+
+> `readonly` **AISpeechToTextBaseURL**: `61` = `61`
+
+##### AISpeechToTextModel
+
+> `readonly` **AISpeechToTextModel**: `63` = `63`
+
 ##### AITag
 
 > `readonly` **AITag**: `21` = `21`
@@ -294,6 +342,10 @@ These keys are used to store settings that are specific to a single repo.
 ##### AutoDownloadWebImages
 
 > `readonly` **AutoDownloadWebImages**: `42` = `42`
+
+##### AutoPairing
+
+> `readonly` **AutoPairing**: `58` = `58`
 
 ##### CachedEditorNum
 
@@ -330,6 +382,10 @@ These keys are used to store settings that are specific to a single repo.
 ##### EditorFont
 
 > `readonly` **EditorFont**: `55` = `55`
+
+##### EnableAutoUpdate
+
+> `readonly` **EnableAutoUpdate**: `57` = `57`
 
 ##### EnableBlockRefPreview
 

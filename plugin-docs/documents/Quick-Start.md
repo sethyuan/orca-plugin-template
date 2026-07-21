@@ -506,14 +506,20 @@ export default function MapBlockRenderer({
   const childrenBlocks = useMemo(
     () => (
       <BlockChildren
-        block={block as Block}
+        blockId={blockId}
         panelId={panelId}
         blockLevel={blockLevel}
         indentLevel={indentLevel}
         renderingMode={renderingMode}
       />
     ),
-    [block?.children],
+    [
+      blockId,
+      panelId,
+      blockLevel,
+      indentLevel,
+      renderingMode,
+    ],
   )
 
   return (

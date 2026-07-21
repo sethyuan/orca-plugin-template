@@ -1428,9 +1428,9 @@ Renders a block's children
 
 ###### props
 
-###### block
+###### blockId?
 
-[`Block`](#block)
+`number`
 
 ###### blockLevel
 
@@ -1457,7 +1457,7 @@ Renders a block's children
 ```tsx
 // Standard usage
 <orca.components.BlockChildren
-  block={blockObject}
+  blockId={123}
   panelId="main-panel"
   blockLevel={1}
   indentLevel={1}
@@ -1465,7 +1465,7 @@ Renders a block's children
 
 // Using simplified rendering mode
 <orca.components.BlockChildren
-  block={blockObject}
+  blockId={456}
   panelId="panel-2"
   blockLevel={2}
   indentLevel={3}

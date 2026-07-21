@@ -71,7 +71,7 @@ export default function CustomImageBlockRenderer({
   const childrenBlocks = useMemo(
     () => (
       <BlockChildren
-        block={block as Block}
+        blockId={blockId}
         panelId={panelId}
         blockLevel={blockLevel}
         indentLevel={indentLevel}
@@ -79,7 +79,7 @@ export default function CustomImageBlockRenderer({
       />
     ),
     [
-      hashArray(block?.children as any),
+      blockId,
       panelId,
       blockLevel,
       indentLevel,

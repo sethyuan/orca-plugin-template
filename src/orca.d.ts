@@ -343,6 +343,22 @@ export interface Orca {
     globalSearchOpened: boolean
 
     /**
+     * Indicates whether the repo switcher modal is currently opened.
+     * This modal allows switching repos with keyboard navigation and filtering.
+     * Set to `true` to open the modal, `false` to close it.
+     *
+     * @example
+     * ```ts
+     * // Open the repo switcher
+     * orca.state.repoSwitcherOpened = true
+     *
+     * // Close the repo switcher
+     * orca.state.repoSwitcherOpened = false
+     * ```
+     */
+    repoSwitcherOpened: boolean
+
+    /**
      * Registry of keyboard shortcuts, mapping shortcut strings to command IDs.
      * This defines the current keyboard bindings in the application.
      *
@@ -1684,15 +1700,6 @@ export interface Orca {
       },
     ): void
 
-    /** @deprecated Use the `opts` object instead of positional optional arguments. */
-    registerBlock(
-      type: string,
-      isEditable: boolean,
-      renderer: any,
-      assetFields?: string[],
-      useChildren?: boolean,
-    ): void
-
     /**
      * Unregisters a previously registered block renderer.
      *
@@ -2139,7 +2146,7 @@ export interface Orca {
      * ```tsx
      * // Standard usage
      * <orca.components.BlockChildren
-     *   block={blockObject}
+     *   blockId={123}
      *   panelId="main-panel"
      *   blockLevel={1}
      *   indentLevel={1}
@@ -2147,7 +2154,7 @@ export interface Orca {
      *
      * // Using simplified rendering mode
      * <orca.components.BlockChildren
-     *   block={blockObject}
+     *   blockId={456}
      *   panelId="panel-2"
      *   blockLevel={2}
      *   indentLevel={3}
@@ -2156,7 +2163,7 @@ export interface Orca {
      * ```
      */
     BlockChildren: (props: {
-      block: Block
+      blockId?: DbId
       panelId: string
       blockLevel: number
       indentLevel: number
@@ -4335,6 +4342,30 @@ export interface Orca {
       rect?: DOMRect,
       interactive?: boolean,
     ) => () => void
+
+    /**
+     * Computes a numeric hash from an array of numbers (e.g., block IDs).
+     *
+     * This is commonly used in React components as a dependency for memoization
+     * or as a key to detect changes in a block's children structure.
+     *
+     * @param arr - An array of numbers (e.g., block IDs) to hash, or undefined.
+     *              `undefined` values in the array are treated as 0.
+     * @returns A signed 32-bit integer hash value. Returns 0 if the array is
+     *          empty, undefined, or falsy.
+     *
+     * @example
+     * ```ts
+     * // Hash an array of block IDs to use as a React dependency
+     * const childrenHash = orca.utils.hashArray(block?.children as any)
+     *
+     * // Use in a React hook to detect changes
+     * React.useEffect(() => {
+     *   // Re-run when children structure changes
+     * }, [childrenHash])
+     * ```
+     */
+    hashArray: (arr?: Array<number | undefined>) => number
   }
 
   /**

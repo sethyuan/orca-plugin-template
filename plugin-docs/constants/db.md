@@ -24,6 +24,10 @@ Types used for properties.
 
 > `readonly` **Boolean**: `4` = `4`
 
+##### Computed
+
+> `readonly` **Computed**: `7` = `7`
+
 ##### DateTime
 
 > `readonly` **DateTime**: `5` = `5`

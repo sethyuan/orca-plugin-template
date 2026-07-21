@@ -50,7 +50,7 @@ type Props = {
   indentLevel: number
   mirrorId?: DbId
   initiallyCollapsed?: boolean
-  renderingMode?: "normal" | "simple" | "simple-children" | "readonly"
+  renderingMode?: "normal" | "simple" | "simple-children"
   src: string
 }
 
@@ -78,7 +78,13 @@ export default function CustomImageBlockRenderer({
         renderingMode={renderingMode}
       />
     ),
-    [block?.children],
+    [
+      hashArray(block?.children as any),
+      panelId,
+      blockLevel,
+      indentLevel,
+      renderingMode,
+    ],
   )
 
   return (
@@ -141,7 +147,9 @@ export default function register() {
 
 3. **Renderer Component**: The third argument is the `CustomImageBlockRenderer` component you created earlier. This component defines how the block is rendered.
 
-4. **Asset Fields**: The `assetFields` option, `{ assetFields: ["src"] }`, specifies the asset fields used by the renderer. These fields are potentialy used to fetch files from the `assets` folder, such as the image file in this case. It is meant to be used to help collect information when cleaning usued asset files.
+4. **Asset Fields**: The `assetFields` option, `{ assetFields: ["src"] }`, specifies the asset fields used by the renderer. These fields are potentialy used to fetch files from the `assets` folder, such as the image file in this case. It is meant to be used to help collect information when cleaning unused asset files.
+
+There are other options beside `assetFields` that you can use, see `registerBlock` for details.
 
 Once registered, the `CustomImageBlockRenderer` can be used in Orca Note to render custom image blocks. Ensure that the block type and asset fields align with the expected structure defined in your plugin.
 

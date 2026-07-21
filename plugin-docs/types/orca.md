@@ -5296,8 +5296,6 @@ Renderer management API, used to register custom block and inline content render
 
 ###### registerBlock()
 
-###### Call Signature
-
 > **registerBlock**(`type`, `isEditable`, `renderer`, `opts?`): `void`
 
 Registers a custom block renderer.
@@ -5382,40 +5380,6 @@ orca.renderers.registerBlock(
   { foldInQuery: true }
 )
 ```
-
-###### Call Signature
-
-> **registerBlock**(`type`, `isEditable`, `renderer`, `assetFields?`, `useChildren?`): `void`
-
-###### Parameters
-
-###### type
-
-`string`
-
-###### isEditable
-
-`boolean`
-
-###### renderer
-
-`any`
-
-###### assetFields?
-
-`string`[]
-
-###### useChildren?
-
-`boolean`
-
-###### Returns
-
-`void`
-
-###### Deprecated
-
-Use the `opts` object instead of positional optional arguments.
 
 ###### registerInline()
 
@@ -6057,6 +6021,24 @@ if (orca.state.repoDir) {
 }
 ```
 
+###### repoSwitcherOpened
+
+> **repoSwitcherOpened**: `boolean`
+
+Indicates whether the repo switcher modal is currently opened.
+This modal allows switching repos with keyboard navigation and filtering.
+Set to `true` to open the modal, `false` to close it.
+
+###### Example
+
+```ts
+// Open the repo switcher
+orca.state.repoSwitcherOpened = true
+
+// Close the repo switcher
+orca.state.repoSwitcherOpened = false
+```
+
 ###### settings
 
 > **settings**: `Record`\<`number`, `any`\>
@@ -6673,6 +6655,43 @@ const cursorData = orca.utils.getCursorDataFromSelection(selection);
 if (cursorData) {
   // Use cursorData for editor commands
 }
+```
+
+###### hashArray()
+
+> **hashArray**: (`arr?`) => `number`
+
+Computes a numeric hash from an array of numbers (e.g., block IDs).
+
+This is commonly used in React components as a dependency for memoization
+or as a key to detect changes in a block's children structure.
+
+###### Parameters
+
+###### arr?
+
+`number`[]
+
+An array of numbers (e.g., block IDs) to hash, or undefined.
+             `undefined` values in the array are treated as 0.
+
+###### Returns
+
+`number`
+
+A signed 32-bit integer hash value. Returns 0 if the array is
+         empty, undefined, or falsy.
+
+###### Example
+
+```ts
+// Hash an array of block IDs to use as a React dependency
+const childrenHash = orca.utils.hashArray(block?.children as any)
+
+// Use in a React hook to detect changes
+React.useEffect(() => {
+  // Re-run when children structure changes
+}, [childrenHash])
 ```
 
 ###### setSelectionFromCursorData()

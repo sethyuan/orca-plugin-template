@@ -36,6 +36,10 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 
 > `readonly` **AIChatModel**: `28` = `28`
 
+##### AIChatPromptTag
+
+> `readonly` **AIChatPromptTag**: `64` = `64`
+
 ##### AIChatSkillTag
 
 > `readonly` **AIChatSkillTag**: `60` = `60`
@@ -298,6 +302,10 @@ These keys are used to store settings that are specific to a single repo.
 ##### AIChatModel
 
 > `readonly` **AIChatModel**: `28` = `28`
+
+##### AIChatPromptTag
+
+> `readonly` **AIChatPromptTag**: `64` = `64`
 
 ##### AIChatSkillTag
 

@@ -511,13 +511,6 @@ export interface Orca {
      * ```
      */
     filterInPages?: string
-
-    /**
-     * The current zoom level of the application, where 1 is 100% (default),
-     * values less than 1 are zoomed out,
-     * and values greater than 1 are zoomed in.
-     */
-    zoomLevel: number
   }
 
   /**
@@ -4325,6 +4318,7 @@ export interface Orca {
      * @param refElement - Optional element to anchor the preview to.
      * @param rect - Optional bounding rectangle to anchor the preview to if refElement is not provided.
      * @param interactive - Whether the preview should be interactive (allow editing).
+     * @param blockEditorActive - Whether the preview should render with block editor context active (default: false).
      * @returns A function that, when called, will close the preview.
      *
      * @example
@@ -4341,6 +4335,7 @@ export interface Orca {
       refElement?: HTMLElement,
       rect?: DOMRect,
       interactive?: boolean,
+      blockEditorActive?: boolean,
     ) => () => void
 
     /**

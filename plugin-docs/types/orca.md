@@ -6171,14 +6171,6 @@ Each entry can be a single button configuration or an array of related buttons.
 const hasFormatButton = !!orca.state.toolbarButtons["myplugin.formatButton"]
 ```
 
-###### zoomLevel
-
-> **zoomLevel**: `number`
-
-The current zoom level of the application, where 1 is 100% (default),
-values less than 1 are zoomed out,
-and values greater than 1 are zoomed in.
-
 ##### tagMenuCommands
 
 > **tagMenuCommands**: `object`
@@ -6723,7 +6715,7 @@ await orca.utils.setSelectionFromCursorData(cursorData);
 
 ###### showBlockPreview()
 
-> **showBlockPreview**: (`blockId`, `refElement?`, `rect?`, `interactive?`) => () => `void`
+> **showBlockPreview**: (`blockId`, `refElement?`, `rect?`, `interactive?`, `blockEditorActive?`) => () => `void`
 
 Shows a preview popup for a specific block.
 
@@ -6752,6 +6744,12 @@ Optional bounding rectangle to anchor the preview to if refElement is not provid
 `boolean`
 
 Whether the preview should be interactive (allow editing).
+
+###### blockEditorActive?
+
+`boolean`
+
+Whether the preview should render with block editor context active (default: false).
 
 ###### Returns
 

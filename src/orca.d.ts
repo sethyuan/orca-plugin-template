@@ -3,9 +3,139 @@ declare global {
   interface Window {
     orca: Orca
     React: React
+    ReactDOM: ReactDOM
     createRoot: Function
     Valtio: any
   }
+}
+
+/** Props for the ContextMenu component */
+export interface ContextMenuProps {
+  className?: string
+  style?: React.CSSProperties
+  menu: (close: () => void, state?: any) => React.ReactNode
+  children: (
+    openMenu: (e: React.UIEvent, state?: any) => void,
+    closeMenu: () => void,
+    menuShown: boolean,
+  ) => React.ReactNode
+  container?: React.RefObject<HTMLElement>
+  alignment?: "left" | "top" | "center" | "bottom" | "right"
+  placement?: "vertical" | "horizontal"
+  defaultPlacement?: "top" | "bottom" | "left" | "right"
+  allowBeyondContainer?: boolean
+  noPointerLogic?: boolean
+  clickToClose?: boolean
+  restoreSelectionOnClose?: boolean
+  keyboardNav?: boolean
+  navDirection?: "vertical" | "both"
+  onKeyboardNav?: (el: HTMLElement) => void | Promise<void>
+  menuAttr?: Record<string, any>
+  offset?: number
+  crossOffset?: number
+  escapeToClose?: boolean
+  replacement?: boolean
+  useCurrentTarget?: boolean
+  onOpened?: () => void
+  onClosed?: () => void
+  rect?: DOMRect
+}
+
+/** A single option item for the Select component */
+export interface SelectOption {
+  /** Icon class (e.g., "ti ti-folder") or emoji string */
+  icon?: string
+  /** Background color for the option label (e.g., "#ff6600") */
+  color?: string
+  /** Display label shown in the dropdown and button */
+  label?: string
+  /** Unique value identifying this option */
+  value?: string
+  /** Pinyin representation for Chinese text filtering */
+  pinyin?: string
+  /** Click handler attached to the selected chip (multi-selection mode only) */
+  onClick?: (e: React.MouseEvent) => void | Promise<void>
+  /**
+   * Custom render function for the option item in the dropdown.
+   * Return `null` to skip this option (useful for non-selectable separators/headings).
+   */
+  render?: (
+    closeMenu: () => void,
+    icon?: string,
+    color?: string,
+    label?: string,
+    value?: string,
+    selected?: boolean,
+    onClick?: (e: React.MouseEvent) => void | Promise<void>,
+  ) => React.ReactElement | null
+  /**
+   * Custom render function for the selected value chip (multi-selection mode only).
+   * When set, this replaces the default coloured-chip display for this option.
+   */
+  renderSelected?: (
+    closeMenu: () => void,
+    icon?: string,
+    color?: string,
+    label?: string,
+    value?: string,
+    onClick?: (e: React.MouseEvent) => void | Promise<void>,
+  ) => React.ReactElement
+}
+
+/** Props for the Select dropdown component */
+export interface SelectProps {
+  /** Currently selected values */
+  selected: string[]
+  /** Available options */
+  options: SelectOption[]
+  /** Called when selection changes; second argument is the current filter keyword if filtering is active */
+  onChange?: (
+    selected: string[],
+    filterKeyword?: string,
+  ) => void | Promise<void>
+  /** Formats a selected value into a display string when the value has no matching option */
+  formatter?: (value: string) => string
+  /** Scrolling container ref for the popup */
+  menuContainer?: React.RefObject<HTMLElement>
+  /** Minimum width of the select button and dropdown */
+  width?: number | string
+  /** Placeholder text when nothing is selected */
+  placeholder?: string
+  /** Allow selecting multiple values */
+  multiSelection?: boolean
+  /** Show a "Clear selection(s)" action at the bottom of the dropdown */
+  withClear?: boolean
+  /** Show a search input to filter options */
+  filter?: boolean
+  /** Placeholder for the filter input */
+  filterPlaceholder?: string
+  /**
+   * Custom filter function.
+   * Receives the keyword and the full option list, returns filtered options.
+   * When omitted, a default label/pinyin substring match is used.
+   */
+  filterFunction?: (
+    keyword: string,
+    options?: SelectOption[],
+  ) => Promise<SelectOption[]> | SelectOption[]
+  /** Element appended after the filter input */
+  filterPost?: React.ReactElement
+  /** Popup alignment relative to the button */
+  alignment?: "left" | "center" | "right"
+  /** Element prepended inside the select button */
+  pre?: React.ReactElement
+  /** Class name for the trigger button */
+  buttonClassName?: string
+  /** Class name for the dropdown menu */
+  menuClassName?: string
+  /** Additional attributes forwarded to the Menu component */
+  menuAttrs?: Record<string, any>
+  /** Disable the select */
+  disabled?: boolean
+  /** Show the select in read-only mode (button click does nothing) */
+  readOnly?: boolean
+  onMouseEnter?: (e: React.MouseEvent) => void
+  onMouseLeave?: (e: React.MouseEvent) => void
 }
 
 /** The main Orca API entry, access it with the global `orca` object.
@@ -2133,6 +2263,30 @@ export interface Orca {
       style?: React.CSSProperties
     }) => JSX.Element | null
     /**
+     * Displays an editable caption input for a block.
+     * The caption is saved automatically when the input loses focus.
+     * Only renders when a caption value is present.
+     *
+     * @example
+     * ```tsx
+     * const { BlockCaption } = orca.components;
+     * // Basic usage in a custom block renderer
+     * <BlockCaption
+     *   panelId="main-panel"
+     *   blockId={123}
+     *   cap="My Caption"
+     * />
+     * ```
+     */
+    BlockCaption: (props: {
+      /** The ID of the panel containing the block */
+      panelId: string
+      /** The ID of the block to display/edit the caption for */
+      blockId: DbId
+      /** The caption text to display */
+      cap?: string
+    }) => JSX.Element | null
+    /**
      * Renders a block's children
      *
      * @example
@@ -2394,7 +2548,10 @@ export interface Orca {
      * ```
      */
     Button: (
-      props: React.HTMLAttributes<HTMLButtonElement> & {
+      props: React.DetailedHTMLProps<
+        ButtonHTMLAttributes<HTMLButtonElement>,
+        HTMLButtonElement
+      > & {
         variant: "solid" | "soft" | "dangerous" | "outline" | "plain"
       },
     ) => JSX.Element | null
@@ -2455,7 +2612,10 @@ export interface Orca {
      * ```
      */
     CompositionInput: (
-      props: React.HTMLAttributes<HTMLInputElement> & {
+      props: React.DetailedHTMLProps<
+        InputHTMLAttributes<HTMLInputElement>,
+        HTMLInputElement
+      > & {
         pre?: React.ReactElement
         post?: React.ReactElement
         error?: React.ReactNode
@@ -2482,7 +2642,10 @@ export interface Orca {
      * ```
      */
     CompositionTextArea: (
-      props: React.HTMLAttributes<HTMLTextAreaElement>,
+      props: React.DetailedHTMLProps<
+        TextareaHTMLAttributes<HTMLTextAreaElement>,
+        HTMLTextAreaElement
+      >,
     ) => JSX.Element | null
     /**
      * Displays a confirmation dialog
@@ -2605,29 +2768,7 @@ export interface Orca {
      * </orca.components.ContextMenu>
      * ```
      */
-    ContextMenu: (props: {
-      className?: string
-      style?: React.CSSProperties
-      menu: (close: () => void, state?: any) => React.ReactNode
-      children: (
-        openMenu: (e: React.UIEvent, state?: any) => void,
-        closeMenu: () => void,
-      ) => React.ReactNode
-      container?: React.RefObject<HTMLElement>
-      alignment?: "left" | "top" | "center" | "bottom" | "right"
-      placement?: "vertical" | "horizontal"
-      defaultPlacement?: "top" | "bottom" | "left" | "right"
-      allowBeyondContainer?: boolean
-      noPointerLogic?: boolean
-      keyboardNav?: boolean
-      navDirection?: "vertical" | "both"
-      menuAttr?: Record<string, any>
-      offset?: number
-      crossOffset?: number
-      escapeToClose?: boolean
-      onOpened?: () => void
-      onClosed?: () => void
-    }) => JSX.Element | null
+    ContextMenu: (props: ContextMenuProps) => JSX.Element | null
     /**
      * Calendar date picker
      *
@@ -2776,7 +2917,10 @@ export interface Orca {
      * ```
      */
     Input: (
-      props: React.HTMLAttributes<HTMLInputElement> & {
+      props: React.DetailedHTMLProps<
+        InputHTMLAttributes<HTMLInputElement>,
+        HTMLInputElement
+      > & {
         pre?: React.ReactElement
         post?: React.ReactElement
         error?: React.ReactNode
@@ -3457,32 +3601,7 @@ export interface Orca {
      * />
      * ```
      */
-    Select: (props: {
-      selected: string[]
-      options: { value: string; label: string; group?: string }[]
-      onChange?: (
-        selected: string[],
-        filterKeyword?: string,
-      ) => void | Promise<void>
-      menuContainer?: React.RefObject<HTMLElement>
-      width?: number | string
-      placeholder?: string
-      multiSelection?: boolean
-      withClear?: boolean
-      filter?: boolean
-      filterPlaceholder?: string
-      filterFunction?: (
-        keyword: string,
-      ) => Promise<{ value: string; label: string; group?: string }[]>
-      alignment?: "left" | "center" | "right"
-      pre?: React.ReactElement
-      buttonClassName?: string
-      menuClassName?: string
-      disabled?: boolean
-      readOnly?: boolean
-      onMouseEnter?: (e: React.MouseEvent) => void
-      onMouseLeave?: (e: React.MouseEvent) => void
-    }) => JSX.Element | null
+    Select: (props: SelectProps) => JSX.Element | null
     /**
      * Loading placeholder
      *
@@ -3840,6 +3959,74 @@ export interface Orca {
         },
       ): void
     }
+
+    /**
+     * Block editor context for accessing the current block editor instance.
+     *
+     * This React context provides access to the currently focused block editor's
+     * DOM references, panel identity and active state. It is
+     * useful for plugins that need to interact with the editor directly, such as
+     * custom UI overlays, toolbars, or editor extensions.
+     *
+     * @example
+     * ```tsx
+     * const { useContext } = window.React
+     * const { useSnapshot } = window.Valtio
+     *
+     * const BlockEditorContext = orca.contexts.BlockEditorContext
+     *
+     * function MyEditorPlugin() {
+     *   const editorCtx = useContext(BlockEditorContext)
+     *
+     *   const { editor, panelId, rootBlockId } = editorCtx
+     *   const { active } = useSnapshot(editorCtx)
+     *
+     *   // Use editor ref to position overlays relative to the editor
+     *
+     *   return active ? (
+     *     <div>Editing block {rootBlockId} in panel {panelId}</div>
+     *   ) : null
+     * }
+     * ```
+     */
+    BlockEditorContext: React.Context<{
+      /** Ref to the editor's content Editable (contentEditable) element. */
+      editor: React.RefObject<HTMLDivElement>
+      /** The ID of the panel this editor resides in. */
+      panelId: string
+      /** The database ID of the root block being edited. */
+      rootBlockId: import("@/types/orca").DbId
+      /** Whether this editor is currently focused / active. */
+      active: boolean
+    }>
+
+    /**
+     * Z-index context for managing hierarchical stacking order of UI elements.
+     *
+     * This React context provides the current z-index value for components that
+     * need to establish their own stacking contexts (e.g., popups, tooltips,
+     * maximized overlays). Components that render into portals or elevated
+     * layers should consume this context and offset their z-index from the
+     * provided value to ensure proper stacking order.
+     *
+     * @example
+     * ```tsx
+     * import { useContext } from "react"
+     *
+     * const ZContext = orca.contexts.ZContext
+     *
+     * function MyPopup() {
+     *   const zIndex = useContext(ZContext)
+     *
+     *   return (
+     *     <div style={{ zIndex: zIndex + 10 }}>
+     *       Popup content
+     *     </div>
+     *   )
+     * }
+     * ```
+     */
+    ZContext: React.Context<number>
   }
 
   /**
@@ -4361,6 +4548,111 @@ export interface Orca {
      * ```
      */
     hashArray: (arr?: Array<number | undefined>) => number
+  }
+
+  /**
+   * AI/LLM API, used to send messages to and receive responses from AI models configured in Orca.
+   * Supports both standard (single response) and streaming message exchanges,
+   * with optional custom tools for function calling.
+   *
+   * @example
+   * ```ts
+   * // Send a standard message
+   * const response = await orca.ai.sendMessage([
+   *   { role: "user", content: "Summarize this note" }
+   * ])
+   * const reply = response.choices[0].message.content
+   *
+   * // Stream a message with an abort controller
+   * const controller = new AbortController()
+   * const stream = orca.ai.sendStreamMessage(
+   *   [{ role: "user", content: "Write a poem" }],
+   *   controller
+   * )
+   * for await (const chunk of stream) {
+   *   if (chunk.content) {
+   *     console.log(chunk.content)
+   *   }
+   * }
+   * ```
+   */
+  ai: {
+    /**
+     * Sends a list of chat messages to the AI model and returns a complete response.
+     * This is a non-streaming API — the Promise resolves once the full reply is ready.
+     *
+     * @param messages - An array of chat completion messages representing the conversation history.
+     *                   Each message includes a `role` ("system", "user", or "assistant") and `content`.
+     * @param options - Optional configuration for the request.
+     * @param options.extraTools - Additional function tools to register for the AI model's use during
+     *                             this conversation turn. Each tool follows the OpenAI function tool schema.
+     * @returns A Promise resolving to the full chat completion response object, augmented with an
+     *          optional `_request_id` field for tracing purposes.
+     *
+     * @example
+     * ```ts
+     * const res = await orca.ai.sendMessage([
+     *   { role: "system", content: "You are a helpful assistant." },
+     *   { role: "user", content: "Explain what a Promise is in JavaScript." }
+     * ])
+     * console.log(res.choices[0].message.content)
+     * ```
+     */
+    sendMessage: (
+      messages: ChatCompletionMessageParam[],
+      options?: {
+        extraTools?: OpenAI.Chat.Completions.ChatCompletionFunctionTool[]
+      },
+    ) => Promise<
+      OpenAI.Chat.Completions.ChatCompletion & { _request_id?: string | null }
+    >
+
+    /**
+     * Sends a list of chat messages to the AI model and returns an async generator
+     * that yields each content delta (streaming chunk) as it arrives.
+     *
+     * This is ideal for real-time display of AI responses character-by-character.
+     * The generator yields `Choice.Delta` objects (with `content`, `role`, or tool-call deltas)
+     * augmented with a `reasoning_content` field for models that support reasoning tokens.
+     *
+     * @param messages - An array of chat completion messages representing the conversation history.
+     * @param controller - An `AbortController` that can be used to cancel the stream mid-flight.
+     * @param options - Optional configuration for the request.
+     * @param options.extraTools - Additional function tools to register for the AI model's use during
+     *                             this conversation turn.
+     * @returns An AsyncGenerator yielding streamed deltas. Each yielded object contains either
+     *          `content`, `role`, `function_call`, or `tool_calls` fields as produced by the model,
+     *          plus a `reasoning_content` string for models that expose chain-of-thought tokens.
+     *
+     * @example
+     * ```ts
+     * const controller = new AbortController()
+     * const stream = orca.ai.sendStreamMessage(
+     *   [{ role: "user", content: "Count from 1 to 5" }],
+     *   controller
+     * )
+     *
+     * for await (const delta of stream) {
+     *   if (delta.content) {
+     *     // Append the incoming content to the UI in real time
+     *     outputElement.textContent += delta.content
+     *   }
+     * }
+     * ```
+     */
+    sendStreamMessage: (
+      messages: ChatCompletionMessageParam[],
+      controller: AbortController,
+      options?: {
+        extraTools?: OpenAI.Chat.Completions.ChatCompletionFunctionTool[]
+      },
+    ) => AsyncGenerator<
+      OpenAI.Chat.Completions.ChatCompletionChunk.Choice.Delta & {
+        reasoning_content: string
+      },
+      void,
+      unknown
+    >
   }
 
   /**

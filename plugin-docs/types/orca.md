@@ -348,6 +348,12 @@ Pinyin phonetic representation for improved search in Chinese
 
 ***
 
+### ContextMenuProps
+
+Props for the ContextMenu component
+
+***
+
 ### CursorData
 
 Represents the current cursor position in the editor.
@@ -494,6 +500,141 @@ console.log(orca.state.locale)
 ```
 
 #### Properties
+
+##### ai
+
+> **ai**: `object`
+
+AI/LLM API, used to send messages to and receive responses from AI models configured in Orca.
+Supports both standard (single response) and streaming message exchanges,
+with optional custom tools for function calling.
+
+###### sendMessage()
+
+> **sendMessage**: (`messages`, `options?`) => `Promise`\<`any`\>
+
+Sends a list of chat messages to the AI model and returns a complete response.
+This is a non-streaming API — the Promise resolves once the full reply is ready.
+
+###### Parameters
+
+###### messages
+
+`ChatCompletionMessageParam`[]
+
+An array of chat completion messages representing the conversation history.
+                  Each message includes a `role` ("system", "user", or "assistant") and `content`.
+
+###### options?
+
+Optional configuration for the request.
+
+###### extraTools?
+
+`ChatCompletionFunctionTool`[]
+
+Additional function tools to register for the AI model's use during
+                            this conversation turn. Each tool follows the OpenAI function tool schema.
+
+###### Returns
+
+`Promise`\<`any`\>
+
+A Promise resolving to the full chat completion response object, augmented with an
+         optional `_request_id` field for tracing purposes.
+
+###### Example
+
+```ts
+const res = await orca.ai.sendMessage([
+  { role: "system", content: "You are a helpful assistant." },
+  { role: "user", content: "Explain what a Promise is in JavaScript." }
+])
+console.log(res.choices[0].message.content)
+```
+
+###### sendStreamMessage()
+
+> **sendStreamMessage**: (`messages`, `controller`, `options?`) => `AsyncGenerator`\<`any`, `void`, `unknown`\>
+
+Sends a list of chat messages to the AI model and returns an async generator
+that yields each content delta (streaming chunk) as it arrives.
+
+This is ideal for real-time display of AI responses character-by-character.
+The generator yields `Choice.Delta` objects (with `content`, `role`, or tool-call deltas)
+augmented with a `reasoning_content` field for models that support reasoning tokens.
+
+###### Parameters
+
+###### messages
+
+`ChatCompletionMessageParam`[]
+
+An array of chat completion messages representing the conversation history.
+
+###### controller
+
+`AbortController`
+
+An `AbortController` that can be used to cancel the stream mid-flight.
+
+###### options?
+
+Optional configuration for the request.
+
+###### extraTools?
+
+`ChatCompletionFunctionTool`[]
+
+Additional function tools to register for the AI model's use during
+                            this conversation turn.
+
+###### Returns
+
+`AsyncGenerator`\<`any`, `void`, `unknown`\>
+
+An AsyncGenerator yielding streamed deltas. Each yielded object contains either
+         `content`, `role`, `function_call`, or `tool_calls` fields as produced by the model,
+         plus a `reasoning_content` string for models that expose chain-of-thought tokens.
+
+###### Example
+
+```ts
+const controller = new AbortController()
+const stream = orca.ai.sendStreamMessage(
+  [{ role: "user", content: "Count from 1 to 5" }],
+  controller
+)
+
+for await (const delta of stream) {
+  if (delta.content) {
+    // Append the incoming content to the UI in real time
+    outputElement.textContent += delta.content
+  }
+}
+```
+
+###### Example
+
+```ts
+// Send a standard message
+const response = await orca.ai.sendMessage([
+  { role: "user", content: "Summarize this note" }
+])
+const reply = response.choices[0].message.content
+
+// Stream a message with an abort controller
+const controller = new AbortController()
+const stream = orca.ai.sendStreamMessage(
+  [{ role: "user", content: "Write a poem" }],
+  controller
+)
+for await (const chunk of stream) {
+  if (chunk.content) {
+    console.log(chunk.content)
+  }
+}
+```
 
 ##### blockMenuCommands
 
@@ -1319,7 +1460,7 @@ formatting options, template selection, and inclusion relationships.
 
 ###### props
 
-`object` & `Partial`\<\{ `alignment?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
+`object` & `Partial`\<\{ `alignment?`: `"left"` \| `"top"` \| `"center"` \| `"bottom"` \| `"right"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"left"` \| `"top"` \| `"bottom"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
 
 ###### Returns
 
@@ -1415,6 +1556,52 @@ Renders a breadcrumb trail for a block's ancestors
   blockId={456}
   className="custom-breadcrumb"
   style={{ marginBottom: '10px' }}
+/>
+```
+
+###### BlockCaption()
+
+> **BlockCaption**: (`props`) => `Element`
+
+Displays an editable caption input for a block.
+The caption is saved automatically when the input loses focus.
+Only renders when a caption value is present.
+
+###### Parameters
+
+###### props
+
+###### blockId
+
+`number`
+
+The ID of the block to display/edit the caption for
+
+###### cap?
+
+`string`
+
+The caption text to display
+
+###### panelId
+
+`string`
+
+The ID of the panel containing the block
+
+###### Returns
+
+`Element`
+
+###### Example
+
+```tsx
+const { BlockCaption } = orca.components;
+// Basic usage in a custom block renderer
+<BlockCaption
+  panelId="main-panel"
+  blockId={123}
+  cap="My Caption"
 />
 ```
 
@@ -1529,7 +1716,7 @@ Provides block selection functionality
 
 ###### props
 
-`object` & `Omit`\<`SelectProps`, `"options"` \| `"selected"` \| `"filter"` \| `"filterPlaceholder"` \| `"filterFunction"` \| `"onChange"`\>
+`object` & `Omit`\<[`SelectProps`](#selectprops), `"options"` \| `"selected"` \| `"filter"` \| `"filterPlaceholder"` \| `"filterFunction"` \| `"onChange"`\>
 
 ###### Returns
 
@@ -1776,7 +1963,7 @@ Standard button component with multiple variants
 
 ###### props
 
-`HTMLAttributes`\<`HTMLButtonElement`\> & `object`
+`any`
 
 ###### Returns
 
@@ -1851,7 +2038,7 @@ Input that handles IME composition events properly
 
 ###### props
 
-`HTMLAttributes`\<`HTMLInputElement`\> & `object`
+`any`
 
 ###### Returns
 
@@ -1892,7 +2079,7 @@ Textarea that handles IME composition events properly
 
 ###### props
 
-`HTMLAttributes`\<`HTMLTextAreaElement`\>
+`any`
 
 ###### Returns
 
@@ -1926,7 +2113,7 @@ Displays a confirmation dialog
 
 ###### props
 
-`object` & `Partial`\<\{ `alignment?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
+`object` & `Partial`\<\{ `alignment?`: `"left"` \| `"top"` \| `"center"` \| `"bottom"` \| `"right"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"left"` \| `"top"` \| `"bottom"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
 
 ###### Returns
 
@@ -1979,77 +2166,7 @@ Creates a context menu attached to an element
 
 ###### props
 
-###### alignment?
-
-`"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`
-
-###### allowBeyondContainer?
-
-`boolean`
-
-###### children
-
-(`openMenu`, `closeMenu`) => `ReactNode`
-
-###### className?
-
-`string`
-
-###### container?
-
-`RefObject`\<`HTMLElement`\>
-
-###### crossOffset?
-
-`number`
-
-###### defaultPlacement?
-
-`"top"` \| `"bottom"` \| `"left"` \| `"right"`
-
-###### escapeToClose?
-
-`boolean`
-
-###### keyboardNav?
-
-`boolean`
-
-###### menu
-
-(`close`, `state?`) => `ReactNode`
-
-###### menuAttr?
-
-`Record`\<`string`, `any`\>
-
-###### navDirection?
-
-`"vertical"` \| `"both"`
-
-###### noPointerLogic?
-
-`boolean`
-
-###### offset?
-
-`number`
-
-###### onClosed?
-
-() => `void`
-
-###### onOpened?
-
-() => `void`
-
-###### placement?
-
-`"vertical"` \| `"horizontal"`
-
-###### style?
-
-`CSSProperties`
+[`ContextMenuProps`](#contextmenuprops)
 
 ###### Returns
 
@@ -2111,7 +2228,7 @@ Calendar date picker
 
 ###### alignment?
 
-`"left"` \| `"right"` \| `"center"`
+`"left"` \| `"center"` \| `"right"`
 
 ###### className?
 
@@ -2201,7 +2318,7 @@ Context menu that appears on hover
 
 ###### props
 
-`object` & `Omit`\<`ContextMenuProps`, `"children"`\>
+`object` & `Omit`\<[`ContextMenuProps`](#contextmenuprops), `"children"`\>
 
 ###### Returns
 
@@ -2300,7 +2417,7 @@ Standard text input component
 
 ###### props
 
-`HTMLAttributes`\<`HTMLInputElement`\> & `object`
+`any`
 
 ###### Returns
 
@@ -2341,7 +2458,7 @@ Input dialog with label and actions
 
 ###### props
 
-`object` & `Partial`\<\{ `alignment?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
+`object` & `Partial`\<\{ `alignment?`: `"left"` \| `"top"` \| `"center"` \| `"bottom"` \| `"right"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"left"` \| `"top"` \| `"bottom"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
 
 ###### Returns
 
@@ -2958,81 +3075,7 @@ Dropdown select component
 
 ###### props
 
-###### alignment?
-
-`"left"` \| `"right"` \| `"center"`
-
-###### buttonClassName?
-
-`string`
-
-###### disabled?
-
-`boolean`
-
-###### filter?
-
-`boolean`
-
-###### filterFunction?
-
-(`keyword`) => `Promise`\<`object`[]\>
-
-###### filterPlaceholder?
-
-`string`
-
-###### menuClassName?
-
-`string`
-
-###### menuContainer?
-
-`RefObject`\<`HTMLElement`\>
-
-###### multiSelection?
-
-`boolean`
-
-###### onChange?
-
-(`selected`, `filterKeyword?`) => `void` \| `Promise`\<`void`\>
-
-###### onMouseEnter?
-
-(`e`) => `void`
-
-###### onMouseLeave?
-
-(`e`) => `void`
-
-###### options
-
-`object`[]
-
-###### placeholder?
-
-`string`
-
-###### pre?
-
-`ReactElement`
-
-###### readOnly?
-
-`boolean`
-
-###### selected
-
-`string`[]
-
-###### width?
-
-`string` \| `number`
-
-###### withClear?
-
-`boolean`
+[`SelectProps`](#selectprops)
 
 ###### Returns
 
@@ -3241,7 +3284,7 @@ Allows users to search, select existing tags, or create new ones.
 
 ###### props
 
-`object` & `Partial`\<\{ `alignment?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
+`object` & `Partial`\<\{ `alignment?`: `"left"` \| `"top"` \| `"center"` \| `"bottom"` \| `"right"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"left"` \| `"top"` \| `"bottom"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
 
 ###### Returns
 
@@ -3288,7 +3331,7 @@ Allows users to add, edit, and delete tag properties, set property types and val
 
 ###### props
 
-`object` & `Partial`\<\{ `alignment?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
+`object` & `Partial`\<\{ `alignment?`: `"left"` \| `"top"` \| `"center"` \| `"bottom"` \| `"right"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"left"` \| `"top"` \| `"bottom"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
 
 ###### Returns
 
@@ -3346,7 +3389,7 @@ Tooltip component
 
 ###### alignment?
 
-`"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`
+`"left"` \| `"top"` \| `"center"` \| `"bottom"` \| `"right"`
 
 ###### allowBeyondContainer?
 
@@ -3358,7 +3401,7 @@ Tooltip component
 
 ###### defaultPlacement?
 
-`"top"` \| `"bottom"` \| `"left"` \| `"right"`
+`"left"` \| `"top"` \| `"bottom"` \| `"right"`
 
 ###### delay?
 
@@ -3444,6 +3487,39 @@ function MyPluginUI() {
 
 React contexts exposed for use in plugins.
 
+###### BlockEditorContext
+
+> **BlockEditorContext**: `Context`\<\{ `active`: `boolean`; `editor`: `RefObject`\<`HTMLDivElement`\>; `panelId`: `string`; `rootBlockId`: `number`; \}\>
+
+Block editor context for accessing the current block editor instance.
+
+This React context provides access to the currently focused block editor's
+DOM references, panel identity and active state. It is
+useful for plugins that need to interact with the editor directly, such as
+custom UI overlays, toolbars, or editor extensions.
+
+###### Example
+
+```tsx
+const { useContext } = window.React
+const { useSnapshot } = window.Valtio
+
+const BlockEditorContext = orca.contexts.BlockEditorContext
+
+function MyEditorPlugin() {
+  const editorCtx = useContext(BlockEditorContext)
+
+  const { editor, panelId, rootBlockId } = editorCtx
+  const { active } = useSnapshot(editorCtx)
+
+  // Use editor ref to position overlays relative to the editor
+
+  return active ? (
+    <div>Editing block {rootBlockId} in panel {panelId}</div>
+  ) : null
+}
+```
+
 ###### ImageViewerContext
 
 > **ImageViewerContext**: `object`
@@ -3492,6 +3568,36 @@ Optional viewer configuration such as initial rotation.
 ###### Returns
 
 `void`
+
+###### ZContext
+
+> **ZContext**: `Context`\<`number`\>
+
+Z-index context for managing hierarchical stacking order of UI elements.
+
+This React context provides the current z-index value for components that
+need to establish their own stacking contexts (e.g., popups, tooltips,
+maximized overlays). Components that render into portals or elevated
+layers should consume this context and offset their z-index from the
+provided value to ensure proper stacking order.
+
+###### Example
+
+```tsx
+import { useContext } from "react"
+
+const ZContext = orca.contexts.ZContext
+
+function MyPopup() {
+  const zIndex = useContext(ZContext)
+
+  return (
+    <div style={{ zIndex: zIndex + 10 }}>
+      Popup content
+    </div>
+  )
+}
+```
 
 ##### converters
 
@@ -3996,7 +4102,7 @@ The ID of the existing panel to add the new panel next to
 
 The direction to add the panel ("top", "bottom", "left", or "right")
 
-`"top"` | `"bottom"` | `"left"` | `"right"`
+`"left"` | `"top"` | `"bottom"` | `"right"`
 
 ###### src?
 
@@ -4316,7 +4422,7 @@ The ID of the destination panel
 
 The direction to move the panel relative to the destination panel
 
-`"top"` | `"bottom"` | `"left"` | `"right"`
+`"left"` | `"top"` | `"bottom"` | `"right"`
 
 ###### Returns
 
@@ -7811,6 +7917,306 @@ Unique identifier for the row panel
 
 ***
 
+### SelectOption
+
+A single option item for the Select component
+
+#### Properties
+
+##### color?
+
+> `optional` **color**: `string`
+
+Background color for the option label (e.g., "#ff6600")
+
+##### icon?
+
+> `optional` **icon**: `string`
+
+Icon class (e.g., "ti ti-folder") or emoji string
+
+##### label?
+
+> `optional` **label**: `string`
+
+Display label shown in the dropdown and button
+
+##### onClick()?
+
+> `optional` **onClick**: (`e`) => `void` \| `Promise`\<`void`\>
+
+Click handler attached to the selected chip (multi-selection mode only)
+
+###### Parameters
+
+###### e
+
+`MouseEvent`
+
+###### Returns
+
+`void` \| `Promise`\<`void`\>
+
+##### pinyin?
+
+> `optional` **pinyin**: `string`
+
+Pinyin representation for Chinese text filtering
+
+##### render()?
+
+> `optional` **render**: (`closeMenu`, `icon?`, `color?`, `label?`, `value?`, `selected?`, `onClick?`) => `ReactElement`\<`any`, `string` \| `JSXElementConstructor`\<`any`\>\>
+
+Custom render function for the option item in the dropdown.
+Return `null` to skip this option (useful for non-selectable separators/headings).
+
+###### Parameters
+
+###### closeMenu
+
+() => `void`
+
+###### icon?
+
+`string`
+
+###### color?
+
+`string`
+
+###### label?
+
+`string`
+
+###### value?
+
+`string`
+
+###### selected?
+
+`boolean`
+
+###### onClick?
+
+(`e`) => `void` \| `Promise`\<`void`\>
+
+###### Returns
+
+`ReactElement`\<`any`, `string` \| `JSXElementConstructor`\<`any`\>\>
+
+##### renderSelected()?
+
+> `optional` **renderSelected**: (`closeMenu`, `icon?`, `color?`, `label?`, `value?`, `onClick?`) => `ReactElement`
+
+Custom render function for the selected value chip (multi-selection mode only).
+When set, this replaces the default coloured-chip display for this option.
+
+###### Parameters
+
+###### closeMenu
+
+() => `void`
+
+###### icon?
+
+`string`
+
+###### color?
+
+`string`
+
+###### label?
+
+`string`
+
+###### value?
+
+`string`
+
+###### onClick?
+
+(`e`) => `void` \| `Promise`\<`void`\>
+
+###### Returns
+
+`ReactElement`
+
+##### value?
+
+> `optional` **value**: `string`
+
+Unique value identifying this option
+
+***
+
+### SelectProps
+
+Props for the Select dropdown component
+
+#### Properties
+
+##### alignment?
+
+> `optional` **alignment**: `"left"` \| `"center"` \| `"right"`
+
+Popup alignment relative to the button
+
+##### buttonClassName?
+
+> `optional` **buttonClassName**: `string`
+
+Class name for the trigger button
+
+##### disabled?
+
+> `optional` **disabled**: `boolean`
+
+Disable the select
+
+##### filter?
+
+> `optional` **filter**: `boolean`
+
+Show a search input to filter options
+
+##### filterFunction()?
+
+> `optional` **filterFunction**: (`keyword`, `options?`) => [`SelectOption`](#selectoption)[] \| `Promise`\<[`SelectOption`](#selectoption)[]\>
+
+Custom filter function.
+Receives the keyword and the full option list, returns filtered options.
+When omitted, a default label/pinyin substring match is used.
+
+###### Parameters
+
+###### keyword
+
+`string`
+
+###### options?
+
+[`SelectOption`](#selectoption)[]
+
+###### Returns
+
+[`SelectOption`](#selectoption)[] \| `Promise`\<[`SelectOption`](#selectoption)[]\>
+
+##### filterPlaceholder?
+
+> `optional` **filterPlaceholder**: `string`
+
+Placeholder for the filter input
+
+##### filterPost?
+
+> `optional` **filterPost**: `ReactElement`
+
+Element appended after the filter input
+
+##### formatter()?
+
+> `optional` **formatter**: (`value`) => `string`
+
+Formats a selected value into a display string when the value has no matching option
+
+###### Parameters
+
+###### value
+
+`string`
+
+###### Returns
+
+`string`
+
+##### menuAttrs?
+
+> `optional` **menuAttrs**: `Record`\<`string`, `any`\>
+
+Additional attributes forwarded to the Menu component
+
+##### menuClassName?
+
+> `optional` **menuClassName**: `string`
+
+Class name for the dropdown menu
+
+##### menuContainer?
+
+> `optional` **menuContainer**: `RefObject`\<`HTMLElement`\>
+
+Scrolling container ref for the popup
+
+##### multiSelection?
+
+> `optional` **multiSelection**: `boolean`
+
+Allow selecting multiple values
+
+##### onChange()?
+
+> `optional` **onChange**: (`selected`, `filterKeyword?`) => `void` \| `Promise`\<`void`\>
+
+Called when selection changes; second argument is the current filter keyword if filtering is active
+
+###### Parameters
+
+###### selected
+
+`string`[]
+
+###### filterKeyword?
+
+`string`
+
+###### Returns
+
+`void` \| `Promise`\<`void`\>
+
+##### options
+
+> **options**: [`SelectOption`](#selectoption)[]
+
+Available options
+
+##### placeholder?
+
+> `optional` **placeholder**: `string`
+
+Placeholder text when nothing is selected
+
+##### pre?
+
+> `optional` **pre**: `ReactElement`
+
+Element prepended inside the select button
+
+##### readOnly?
+
+> `optional` **readOnly**: `boolean`
+
+Show the select in read-only mode (button click does nothing)
+
+##### selected
+
+> **selected**: `string`[]
+
+Currently selected values
+
+##### width?
+
+> `optional` **width**: `string` \| `number`
+
+Minimum width of the select button and dropdown
+
+##### withClear?
+
+> `optional` **withClear**: `boolean`
+
+Show a "Clear selection(s)" action at the bottom of the dropdown
+
+***
+
 ### SlashCommand
 
 Configuration for a slash command that appears in the editor's slash menu.
@@ -7886,7 +8292,7 @@ Icon identifier for the command
 
 ###### Inherited from
 
-[`SlashCommand`](#slashcommand).[`icon`](#icon-1)
+[`SlashCommand`](#slashcommand).[`icon`](#icon-2)
 
 ##### pinyin
 

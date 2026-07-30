@@ -224,6 +224,10 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 
 > `readonly` **S3SyncInterval**: `36` = `36`
 
+##### S3SyncOnQuit
+
+> `readonly` **S3SyncOnQuit**: `65` = `65`
+
 ##### SchemaVersion
 
 > `readonly` **SchemaVersion**: `1` = `1`
@@ -514,6 +518,10 @@ These keys are used to store settings that are specific to a single repo.
 ##### S3SyncInterval
 
 > `readonly` **S3SyncInterval**: `36` = `36`
+
+##### S3SyncOnQuit
+
+> `readonly` **S3SyncOnQuit**: `65` = `65`
 
 ##### SchemaVersion
 

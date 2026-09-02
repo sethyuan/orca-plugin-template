@@ -1884,7 +1884,7 @@ export interface Orca {
 
   /**
    * Content converter API, used to register converters for transforming blocks and inline content
-   * between different formats (e.g., HTML, plain text, Markdown).
+   * between different formats (e.g., html, plain text, markdown).
    *
    * @example
    * ```ts

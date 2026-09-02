@@ -19,9 +19,16 @@ export default defineConfig(({ command }) => {
         formats: ["es"],
       },
       rollupOptions: {
-        external: ["react", "valtio"],
+        external: ["react", "react-dom", "valtio"],
       },
     },
-    plugins: [react(), externalGlobals({ react: "React", valtio: "Valtio" })],
+    plugins: [
+      react(),
+      externalGlobals({
+        react: "React",
+        "react-dom": "ReactDOM",
+        valtio: "Valtio",
+      }),
+    ],
   };
 });

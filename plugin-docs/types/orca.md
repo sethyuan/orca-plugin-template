@@ -3604,7 +3604,7 @@ function MyPopup() {
 > **converters**: `object`
 
 Content converter API, used to register converters for transforming blocks and inline content
-between different formats (e.g., HTML, plain text, Markdown).
+between different formats (e.g., html, plain text, markdown).
 
 ###### blockConvert()
 
@@ -7349,9 +7349,9 @@ End date for the calendar range
 
 ###### field
 
-> **field**: `"created"` \| `"modified"` \| `"journal"`
+> **field**: `string` & `object` \| `"created"` \| `"modified"` \| `"journal"`
 
-Field to use for calendar date (created/modified/journal date)
+Field to use for calendar date (created/modified/journal or a tag DateTime property prefixed with `_`)
 
 ###### start
 

@@ -88,6 +88,10 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 
 > `readonly` **AutoPairing**: `58` = `58`
 
+##### BL
+
+> `readonly` **BL**: `67` = `67`
+
 ##### CachedEditorNum
 
 > `readonly` **CachedEditorNum**: `13` = `13`
@@ -111,6 +115,10 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 ##### CompressImages
 
 > `readonly` **CompressImages**: `49` = `49`
+
+##### DarkTheme
+
+> `readonly` **DarkTheme**: `66` = `66`
 
 ##### DefaultSortField
 
@@ -231,6 +239,10 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 ##### SchemaVersion
 
 > `readonly` **SchemaVersion**: `1` = `1`
+
+##### SearchHistory
+
+> `readonly` **SearchHistory**: `68` = `68`
 
 ##### ShowTagPropsOnFocus
 
@@ -359,6 +371,10 @@ These keys are used to store settings that are specific to a single repo.
 
 > `readonly` **AutoPairing**: `58` = `58`
 
+##### BL
+
+> `readonly` **BL**: `67` = `67`
+
 ##### CachedEditorNum
 
 > `readonly` **CachedEditorNum**: `13` = `13`
@@ -382,6 +398,10 @@ These keys are used to store settings that are specific to a single repo.
 ##### CompressImages
 
 > `readonly` **CompressImages**: `49` = `49`
+
+##### DarkTheme
+
+> `readonly` **DarkTheme**: `66` = `66`
 
 ##### DefaultSortField
 
@@ -526,6 +546,10 @@ These keys are used to store settings that are specific to a single repo.
 ##### SchemaVersion
 
 > `readonly` **SchemaVersion**: `1` = `1`
+
+##### SearchHistory
+
+> `readonly` **SearchHistory**: `68` = `68`
 
 ##### ShowTagPropsOnFocus
 

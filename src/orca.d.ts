@@ -5697,8 +5697,8 @@ export interface QueryDescription2 {
   asTable?: boolean
   /** Calendar view configuration if results should be displayed in calendar format */
   asCalendar?: {
-    /** Field to use for calendar date (created/modified/journal date) */
-    field: "created" | "modified" | "journal"
+    /** Field to use for calendar date (created/modified/journal or a tag DateTime property prefixed with `_`) */
+    field: "created" | "modified" | "journal" | (string & {})
     /** Start date for the calendar range */
     start: Date
     /** End date for the calendar range */

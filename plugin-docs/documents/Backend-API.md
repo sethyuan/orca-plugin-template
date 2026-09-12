@@ -34,11 +34,11 @@ const updatedBlocks = await orca.invokeBackend(
   "status",
   "In Progress",
   "In Development",
-)
+);
 
 // Update frontend state with the modified blocks
 for (const block of updatedBlocks) {
-  orca.state.blocks[block.id] = block
+  orca.state.blocks[block.id] = block;
 }
 ```
 
@@ -66,11 +66,11 @@ const [ok, result] = await orca.invokeBackend(
   "my-repo",
   12345,
   1200,
-)
+);
 if (ok) {
-  console.log("Exported PNG:", result) // result = path to saved PNG
+  console.log("Exported PNG:", result); // result = path to saved PNG
 } else {
-  console.error("Export failed:", result)
+  console.error("Export failed:", result);
 }
 ```
 
@@ -92,7 +92,7 @@ Example:
 
 ```ts
 // Get aliased blocks matching a keyword, with pagination
-const blocks = await orca.invokeBackend("get-aliased-blocks", "project", 0, 10)
+const blocks = await orca.invokeBackend("get-aliased-blocks", "project", 0, 10);
 ```
 
 ## get-aliases
@@ -113,7 +113,7 @@ Example:
 
 ```ts
 // Get aliases matching a keyword, with pagination
-const aliases = await orca.invokeBackend("get-aliases", "meeting", 0, 20)
+const aliases = await orca.invokeBackend("get-aliases", "meeting", 0, 20);
 ```
 
 ## get-aliases-ids
@@ -135,7 +135,7 @@ Example:
 const blockIds = await orca.invokeBackend("get-aliases-ids", [
   "project-a",
   "task-1",
-])
+]);
 ```
 
 ## get-block
@@ -154,8 +154,8 @@ Example:
 
 ```ts
 // Get a block by its ID
-const block = await orca.invokeBackend("get-block", 12345)
-console.log(`Block content: ${block.text}`)
+const block = await orca.invokeBackend("get-block", 12345);
+console.log(`Block content: ${block.text}`);
 ```
 
 ## get-block-by-alias
@@ -174,7 +174,7 @@ Example:
 
 ```ts
 // Get a block using its alias
-const block = await orca.invokeBackend("get-block-by-alias", "project-roadmap")
+const block = await orca.invokeBackend("get-block-by-alias", "project-roadmap");
 ```
 
 ## get-blockid-by-alias
@@ -193,9 +193,12 @@ Example:
 
 ```ts
 // Get the ID of a block by its alias
-const result = await orca.invokeBackend("get-blockid-by-alias", "meeting-notes")
+const result = await orca.invokeBackend(
+  "get-blockid-by-alias",
+  "meeting-notes",
+);
 if (result?.id != null) {
-  console.log(`Found block ID: ${result.id}`)
+  console.log(`Found block ID: ${result.id}`);
 }
 ```
 
@@ -215,7 +218,7 @@ Example:
 
 ```ts
 // Get multiple blocks by their IDs
-const blocks = await orca.invokeBackend("get-blocks", [123, 456, 789])
+const blocks = await orca.invokeBackend("get-blocks", [123, 456, 789]);
 ```
 
 ## get-blocks-with-tags
@@ -237,8 +240,8 @@ Example:
 const taggedBlocks = await orca.invokeBackend("get-blocks-with-tags", [
   "project",
   "active",
-])
-console.log(`Found ${taggedBlocks.length} active projects`)
+]);
+console.log(`Found ${taggedBlocks.length} active projects`);
 ```
 
 ## get-block-tree
@@ -257,7 +260,7 @@ Example:
 
 ```ts
 // Get a block and all its nested children
-const blockTree = await orca.invokeBackend("get-block-tree", 12345)
+const blockTree = await orca.invokeBackend("get-block-tree", 12345);
 ```
 
 ## get-children-tags
@@ -279,7 +282,7 @@ Example:
 const childTags = await orca.invokeBackend(
   "get-children-tags",
   parentTagBlockId,
-)
+);
 ```
 
 ## get-journal-block
@@ -298,7 +301,7 @@ Example:
 
 ```ts
 // Get the journal block for today's date
-const journalBlock = await orca.invokeBackend("get-journal-block", new Date())
+const journalBlock = await orca.invokeBackend("get-journal-block", new Date());
 ```
 
 ## get-remindings
@@ -318,13 +321,13 @@ Example:
 
 ```ts
 // Get remindings for a date range
-const startDate = new Date(2025, 0, 1)
-const endDate = new Date(2025, 11, 31)
+const startDate = new Date(2025, 0, 1);
+const endDate = new Date(2025, 11, 31);
 const remindings = await orca.invokeBackend(
   "get-remindings",
   startDate,
   endDate,
-)
+);
 ```
 
 ## image-ocr
@@ -343,13 +346,16 @@ Example:
 
 ```ts
 // OCR from a file path
-const ocrResult = await orca.invokeBackend("image-ocr", "./assets/document.png")
+const ocrResult = await orca.invokeBackend(
+  "image-ocr",
+  "./assets/document.png",
+);
 
 // OCR from binary data
-const response = await fetch("https://example.com/image.jpg")
-const imageData = await response.arrayBuffer()
-const ocrResult = await orca.invokeBackend("image-ocr", imageData)
-console.log(`OCR text recognized: ${ocrResult.length} elements`)
+const response = await fetch("https://example.com/image.jpg");
+const imageData = await response.arrayBuffer();
+const ocrResult = await orca.invokeBackend("image-ocr", imageData);
+console.log(`OCR text recognized: ${ocrResult.length} elements`);
 ```
 
 ## query
@@ -378,7 +384,7 @@ const results = await orca.invokeBackend("query", {
   },
   sort: [["modified", "DESC"]],
   pageSize: 20,
-})
+});
 ```
 
 ## search-aliases
@@ -397,7 +403,7 @@ Example:
 
 ```ts
 // Search for aliases containing a keyword
-const matchingAliases = await orca.invokeBackend("search-aliases", "project")
+const matchingAliases = await orca.invokeBackend("search-aliases", "project");
 ```
 
 ## search-blocks-by-text
@@ -419,7 +425,7 @@ Example:
 const blocks = await orca.invokeBackend(
   "search-blocks-by-text",
   "meeting agenda",
-)
+);
 ```
 
 ## set-app-config
@@ -439,8 +445,8 @@ Example:
 
 ```ts
 // Set an application-level configuration option
-await orca.invokeBackend("set-app-config", AppKeys.AIModel, "gpt-4")
-orca.broadcasts.broadcast(BroadcastMsgs.RefreshSettings, AppKeys.AIModel)
+await orca.invokeBackend("set-app-config", AppKeys.AIModel, "gpt-4");
+orca.broadcasts.broadcast(BroadcastMsgs.RefreshSettings, AppKeys.AIModel);
 ```
 
 ## set-config
@@ -460,7 +466,7 @@ Example:
 
 ```ts
 // Set a repository-level configuration option
-await orca.invokeBackend("set-config", RepoKeys.DefaultBlockType, "text")
+await orca.invokeBackend("set-config", RepoKeys.DefaultBlockType, "text");
 ```
 
 ## shell-open
@@ -479,10 +485,10 @@ Example:
 
 ```ts
 // Open a URL in the default browser
-await orca.invokeBackend("shell-open", "https://example.com")
+await orca.invokeBackend("shell-open", "https://example.com");
 
 // Open a local file with its associated application
-await orca.invokeBackend("shell-open", "/path/to/document.pdf")
+await orca.invokeBackend("shell-open", "/path/to/document.pdf");
 ```
 
 ## show-in-folder
@@ -501,7 +507,7 @@ Example:
 
 ```ts
 // Show a file in the system's file explorer
-await orca.invokeBackend("show-in-folder", "/path/to/file.txt")
+await orca.invokeBackend("show-in-folder", "/path/to/file.txt");
 ```
 
 ## upload-asset-binary
@@ -547,8 +553,8 @@ Example:
 const result = await orca.invokeBackend("upload-assets", [
   "/path/to/image1.jpg",
   "/path/to/image2.png",
-])
+]);
 console.log(
   `Uploaded: ${result.uploaded.length}, Failed: ${result.failed.length}`,
-)
+);
 ```

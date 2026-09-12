@@ -88,10 +88,6 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 
 > `readonly` **AutoPairing**: `58` = `58`
 
-##### BL
-
-> `readonly` **BL**: `67` = `67`
-
 ##### CachedEditorNum
 
 > `readonly` **CachedEditorNum**: `13` = `13`
@@ -171,10 +167,6 @@ Settings keys for the app. `orca.state.settings` uses these keys.
 ##### LastOpenedRepo
 
 > `readonly` **LastOpenedRepo**: `3` = `3`
-
-##### License
-
-> `readonly` **License**: `29` = `29`
 
 ##### MapProvider
 
@@ -371,10 +363,6 @@ These keys are used to store settings that are specific to a single repo.
 
 > `readonly` **AutoPairing**: `58` = `58`
 
-##### BL
-
-> `readonly` **BL**: `67` = `67`
-
 ##### CachedEditorNum
 
 > `readonly` **CachedEditorNum**: `13` = `13`
@@ -474,10 +462,6 @@ These keys are used to store settings that are specific to a single repo.
 ##### LastOpenedRepo
 
 > `readonly` **LastOpenedRepo**: `3` = `3`
-
-##### License
-
-> `readonly` **License**: `29` = `29`
 
 ##### MapProvider
 

@@ -38,14 +38,14 @@ These commands form the basis for manipulating blocks and their content.
 
 ```typescript
 // Insert a new text block after block 123
-const someBlock = orca.state.blocks[123]
+const someBlock = orca.state.blocks[123];
 const newBlockId = await orca.commands.invokeEditorCommand(
   "core.editor.insertBlock",
   null, // cursor data (can be null if not needed for context)
   someBlock,
   "after",
   [{ t: "t", v: "New block content" }],
-)
+);
 ```
 
 ### `core.editor.batchInsertText`
@@ -60,8 +60,8 @@ const newBlockId = await orca.commands.invokeEditorCommand(
 - **Usage**: Useful for pasting multi-line text.
 
 ```typescript
-const someBlock = orca.state.blocks[123]
-const multiLineText = "First line\nSecond line\nThird line"
+const someBlock = orca.state.blocks[123];
+const multiLineText = "First line\nSecond line\nThird line";
 await orca.commands.invokeEditorCommand(
   "core.editor.batchInsertText",
   cursor,
@@ -70,7 +70,7 @@ await orca.commands.invokeEditorCommand(
   multiLineText,
   false, // skipMarkdown
   false, // skipTags
-)
+);
 ```
 
 ### `core.editor.batchInsertReprs`
@@ -83,18 +83,18 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: For inserting multiple blocks with specific types or initial content structures.
 
 ```typescript
-const someBlock = orca.state.blocks[123]
+const someBlock = orca.state.blocks[123];
 const representations = [
   { type: "text", content: [{ t: "t", v: "Block 1" }] },
   { type: "heading", level: 2, content: [{ t: "t", v: "Block 2 Heading" }] },
-]
+];
 await orca.commands.invokeEditorCommand(
   "core.editor.batchInsertReprs",
   null,
   someBlock,
   "after",
   representations,
-)
+);
 ```
 
 ### `core.editor.batchInsertHTML`
@@ -107,15 +107,15 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: For pasting HTML content.
 
 ```typescript
-const someBlock = orca.state.blocks[123]
-const htmlContent = "<p>Paragraph 1</p><ul><li>Item 1</li><li>Item 2</li></ul>"
+const someBlock = orca.state.blocks[123];
+const htmlContent = "<p>Paragraph 1</p><ul><li>Item 1</li><li>Item 2</li></ul>";
 await orca.commands.invokeEditorCommand(
   "core.editor.batchInsertHTML",
   null, // Requires panel context, provide appropriate cursor data
   someBlock,
   "firstChild",
   htmlContent,
-)
+);
 ```
 
 ### `core.editor.deleteBlocks`
@@ -126,12 +126,12 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Removes specified blocks and updates parent/sibling relationships.
 
 ```typescript
-const blockIdsToDelete: DbId[] = [456, 789]
+const blockIdsToDelete: DbId[] = [456, 789];
 await orca.commands.invokeEditorCommand(
   "core.editor.deleteBlocks",
   null,
   blockIdsToDelete,
-)
+);
 ```
 
 ### `core.editor.setBlocksContent`
@@ -146,13 +146,13 @@ await orca.commands.invokeEditorCommand(
 const updates = [
   { id: 501, content: [{ t: "t", v: "Updated content for block 1" }] },
   { id: 502, content: null }, // Clear content for block 2
-]
+];
 await orca.commands.invokeEditorCommand(
   "core.editor.setBlocksContent",
   null, // Provide cursor data if setBackCursor is true
   updates,
   false,
-)
+);
 ```
 
 ### `core.editor.moveBlocks`
@@ -168,20 +168,20 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Reorders blocks in the hierarchy. Prevents moving a block to be a descendant of itself.
 
 ```typescript
-import type { BlockMoveOptions } from "@/types/orca"
+import type { BlockMoveOptions } from "@/types/orca";
 
-const blockIdsToMove: DbId[] = [101]
-const targetRefBlockId: DbId = 102
+const blockIdsToMove: DbId[] = [101];
+const targetRefBlockId: DbId = 102;
 await orca.commands.invokeEditorCommand(
   "core.editor.moveBlocks",
   null,
   blockIdsToMove,
   targetRefBlockId,
   "lastChild", // Move block 101 to be the last child of block 102
-)
+);
 
 // With options: auto-match type for list indentation
-const opts: BlockMoveOptions = { autoMatchType: true }
+const opts: BlockMoveOptions = { autoMatchType: true };
 await orca.commands.invokeEditorCommand(
   "core.editor.moveBlocks",
   null,
@@ -189,7 +189,7 @@ await orca.commands.invokeEditorCommand(
   targetRefBlockId,
   "lastChild",
   opts,
-)
+);
 
 // With extra moves (atomic batch)
 await orca.commands.invokeEditorCommand(
@@ -199,11 +199,9 @@ await orca.commands.invokeEditorCommand(
   targetRefBlockId,
   "lastChild",
   {
-    extraMoves: [
-      [[103, 104], 105, "after"],
-    ],
+    extraMoves: [[[103, 104], 105, "after"]],
   },
-)
+);
 ```
 
 ### `core.editor.copyBlocks`
@@ -217,15 +215,15 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Duplicates blocks and their descendants.
 
 ```typescript
-const blockIdsToCopy: DbId[] = [201]
-const targetRefBlockId: DbId = 202
+const blockIdsToCopy: DbId[] = [201];
+const targetRefBlockId: DbId = 202;
 const newBlocks = await orca.commands.invokeEditorCommand(
   "core.editor.copyBlocks",
   null,
   blockIdsToCopy,
   targetRefBlockId,
   "after", // Copy block 201 to appear after block 202
-)
+);
 ```
 
 ### `core.editor.crossRepoCopyBlocks`
@@ -239,9 +237,9 @@ const newBlocks = await orca.commands.invokeEditorCommand(
 - **Usage**: Imports blocks from another repository and inserts them at the specified position.
 
 ```typescript
-const sourceRepoId = "external-repo-id"
-const blockIdsToCopy: DbId[] = [201]
-const targetRefBlockId: DbId = 202
+const sourceRepoId = "external-repo-id";
+const blockIdsToCopy: DbId[] = [201];
+const targetRefBlockId: DbId = 202;
 await orca.commands.invokeEditorCommand(
   "core.editor.crossRepoCopyBlocks",
   null,
@@ -249,7 +247,7 @@ await orca.commands.invokeEditorCommand(
   blockIdsToCopy,
   targetRefBlockId,
   "after",
-)
+);
 ```
 
 ### `core.editor.createAlias`
@@ -262,17 +260,17 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Allows referencing a block by a human-readable name. Returns an error object if the alias name is already taken.
 
 ```typescript
-const aliasName = "my-important-block"
-const blockIdToAlias: DbId = 301
+const aliasName = "my-important-block";
+const blockIdToAlias: DbId = 301;
 const error = await orca.commands.invokeEditorCommand(
   "core.editor.createAlias",
   null,
   aliasName,
   blockIdToAlias,
   false,
-)
+);
 if (error) {
-  console.error("Failed to create alias:", error)
+  console.error("Failed to create alias:", error);
 }
 ```
 
@@ -284,12 +282,12 @@ if (error) {
 - **Usage**: Removes a named reference to a block.
 
 ```typescript
-const aliasToDelete = "my-old-alias"
+const aliasToDelete = "my-old-alias";
 await orca.commands.invokeEditorCommand(
   "core.editor.deleteAlias",
   null,
   aliasToDelete,
-)
+);
 ```
 
 ### `core.editor.renameAlias`
@@ -301,14 +299,14 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Changes the name of an existing alias.
 
 ```typescript
-const oldAliasName = "current-alias"
-const newAliasName = "new-alias-name"
+const oldAliasName = "current-alias";
+const newAliasName = "new-alias-name";
 await orca.commands.invokeEditorCommand(
   "core.editor.renameAlias",
   null,
   oldAliasName,
   newAliasName,
-)
+);
 ```
 
 ### `core.editor.createRef`
@@ -326,11 +324,11 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Establishes relationships between blocks, like properties or embeds.
 
 ```typescript
-import { RefType } from "@/constants/db"
+import { RefType } from "@/constants/db";
 
-const sourceBlockId: DbId = 401
-const targetBlockId: DbId = 402
-const propertyAlias = "relatedDocument"
+const sourceBlockId: DbId = 401;
+const targetBlockId: DbId = 402;
+const propertyAlias = "relatedDocument";
 
 // Create a property reference from block 401 to block 402 with alias 'relatedDocument'
 const refId = await orca.commands.invokeEditorCommand(
@@ -340,7 +338,7 @@ const refId = await orca.commands.invokeEditorCommand(
   targetBlockId,
   RefType.Property,
   propertyAlias,
-)
+);
 ```
 
 ### `core.editor.setRefAlias`
@@ -355,15 +353,15 @@ const refId = await orca.commands.invokeEditorCommand(
 // Assume 'blockRef' is a BlockRef object obtained from a block's 'refs' array
 const blockRef = orca.state.blocks[801]?.refs.find(
   (r) => r.type === RefType.Property,
-)
+);
 if (blockRef) {
-  const newAlias = "updatedRelation"
+  const newAlias = "updatedRelation";
   await orca.commands.invokeEditorCommand(
     "core.editor.setRefAlias",
     null,
     blockRef,
     newAlias,
-  )
+  );
 }
 ```
 
@@ -374,7 +372,7 @@ if (blockRef) {
 
   **Old format** (separate `blockIds` and `properties` arrays):
   - `blockIds: DbId[]`: An array of block IDs (numbers) whose properties are to be set.
-  - `properties: BlockProperty[]`: An array of property objects to set on *all* the specified blocks.
+  - `properties: BlockProperty[]`: An array of property objects to set on _all_ the specified blocks.
 
   **New format** (single array of per-block property sets):
   - `items: { blockId: DbId; properties: BlockProperty[] }[]`: An array where each item specifies a block ID and the properties to set on that block.
@@ -392,13 +390,14 @@ if (blockRef) {
   - `value?: any`: The data associated with the property. Its type should correspond to the `type` field.
   - `typeArgs?: any`: Optional arguments specific to the property type.
   - `pos?: number`: Optional position for visual ordering of properties.
+
 - **Usage**: Attaches metadata or structured data to blocks, allowing for typed properties.
 
 ```typescript
-import { PropType } from "@/constants/db"
+import { PropType } from "@/constants/db";
 
 // Old format: same properties applied to multiple blocks
-const blockIdsToUpdate: DbId[] = [601, 602]
+const blockIdsToUpdate: DbId[] = [601, 602];
 const propertiesToSet = [
   { name: "status", value: "completed", type: PropType.Text },
   { name: "priority", value: 1, type: PropType.Number },
@@ -410,34 +409,28 @@ const propertiesToSet = [
     value: { theme: "dark", notifications: true },
     type: PropType.JSON,
   },
-]
+];
 await orca.commands.invokeEditorCommand(
   "core.editor.setProperties",
   null,
   blockIdsToUpdate,
   propertiesToSet,
-)
+);
 
 // New format: different properties per block
-await orca.commands.invokeEditorCommand(
-  "core.editor.setProperties",
-  null,
-  [
-    {
-      blockId: 601,
-      properties: [
-        { name: "status", value: "active", type: PropType.Text },
-      ],
-    },
-    {
-      blockId: 602,
-      properties: [
-        { name: "status", value: "completed", type: PropType.Text },
-        { name: "priority", value: 2, type: PropType.Number },
-      ],
-    },
-  ],
-)
+await orca.commands.invokeEditorCommand("core.editor.setProperties", null, [
+  {
+    blockId: 601,
+    properties: [{ name: "status", value: "active", type: PropType.Text }],
+  },
+  {
+    blockId: 602,
+    properties: [
+      { name: "status", value: "completed", type: PropType.Text },
+      { name: "priority", value: 2, type: PropType.Number },
+    ],
+  },
+]);
 ```
 
 ### `core.editor.deleteProperties`
@@ -449,14 +442,14 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Removes metadata from blocks.
 
 ```typescript
-const blockIdsToUpdate: DbId[] = [701]
-const propertiesToDelete = ["status", "priority"]
+const blockIdsToUpdate: DbId[] = [701];
+const propertiesToDelete = ["status", "priority"];
 await orca.commands.invokeEditorCommand(
   "core.editor.deleteProperties",
   null,
   blockIdsToUpdate,
   propertiesToDelete,
-)
+);
 ```
 
 ### `core.editor.setRefData`
@@ -471,18 +464,18 @@ await orca.commands.invokeEditorCommand(
 // Assume 'propertyRef' is a BlockRef object for a property reference
 const propertyRef = orca.state.blocks[801]?.refs.find(
   (r) => r.type === RefType.Property && r.alias === "dueDate",
-)
+);
 if (propertyRef) {
   const refDataToSet = [
     { name: "date", value: new Date() }, // Will also create a RefType.RefData link to the journal page
     { name: "notes", value: "Due by end of week" },
-  ]
+  ];
   await orca.commands.invokeEditorCommand(
     "core.editor.setRefData",
     null,
     propertyRef,
     refDataToSet,
-  )
+  );
 }
 ```
 
@@ -496,14 +489,14 @@ if (propertyRef) {
 
 ```typescript
 // Assume 'propertyRefId' is the ID of a BlockRef
-const propertyRefId: DbId = 901
-const refDataNamesToDelete = ["notes"]
+const propertyRefId: DbId = 901;
+const refDataNamesToDelete = ["notes"];
 await orca.commands.invokeEditorCommand(
   "core.editor.deleteRefData",
   null,
   propertyRefId,
   refDataNamesToDelete,
-)
+);
 ```
 
 ### `core.editor.changeTagPropertyName`
@@ -516,16 +509,16 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Used for refactoring or renaming properties associated with tags/templates consistently across the knowledge base.
 
 ```typescript
-const tagBlockId: DbId = 1001 // ID (number) of the block representing the tag/template
-const oldPropertyName = "deadline"
-const newPropertyName = "dueDate"
+const tagBlockId: DbId = 1001; // ID (number) of the block representing the tag/template
+const oldPropertyName = "deadline";
+const newPropertyName = "dueDate";
 await orca.commands.invokeEditorCommand(
   "core.editor.changeTagPropertyName",
   null,
   tagBlockId,
   oldPropertyName,
   newPropertyName,
-)
+);
 ```
 
 ### `core.editor.migrateReferencesAndAliases`
@@ -537,14 +530,14 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Useful for merging or consolidating blocks by moving all their references and aliases to another block.
 
 ```typescript
-const sourceBlockId: DbId = 501
-const targetBlockId: DbId = 502
+const sourceBlockId: DbId = 501;
+const targetBlockId: DbId = 502;
 await orca.commands.invokeEditorCommand(
   "core.editor.migrateReferencesAndAliases",
   cursor,
   sourceBlockId,
   targetBlockId,
-)
+);
 ```
 
 ## Creation Commands
@@ -557,7 +550,7 @@ These commands help you create various types of content blocks.
 - **Usage**: Creates a new blank block at the end of the current document, even if the focus is elsewhere in the document.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.newRootChild", cursor)
+await orca.commands.invokeEditorCommand("core.editor.newRootChild", cursor);
 ```
 
 ### `core.editor.insertBlockBeforeCursor`
@@ -574,7 +567,7 @@ await orca.commands.invokeEditorCommand(
   "core.editor.insertBlockBeforeCursor",
   cursor,
   true,
-)
+);
 ```
 
 ### `core.editor.appendBlockAfterCursor`
@@ -590,7 +583,7 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.appendBlockAfterCursor",
   cursor,
-)
+);
 
 // Force insert after even if the block has children
 await orca.commands.invokeEditorCommand(
@@ -598,7 +591,7 @@ await orca.commands.invokeEditorCommand(
   cursor,
   blockId,
   true,
-)
+);
 ```
 
 ### `core.editor.insertTag`
@@ -617,7 +610,7 @@ const tagId = await orca.commands.invokeEditorCommand(
   cursor,
   blockId,
   "project",
-)
+);
 
 // Add a tag with associated data
 await orca.commands.invokeEditorCommand(
@@ -626,7 +619,7 @@ await orca.commands.invokeEditorCommand(
   blockId,
   "deadline",
   [{ name: "date", value: "2023-12-31" }],
-)
+);
 ```
 
 ### `core.duplicateTag`
@@ -643,7 +636,7 @@ const newTagId = await orca.commands.invokeEditorCommand(
   "core.duplicateTag",
   null,
   tagBlockId,
-)
+);
 
 // Duplicate with a specific name
 const newTagId = await orca.commands.invokeEditorCommand(
@@ -651,7 +644,7 @@ const newTagId = await orca.commands.invokeEditorCommand(
   null,
   tagBlockId,
   "custom-tag-name",
-)
+);
 ```
 
 ### `core.editor.insertLink`
@@ -671,7 +664,7 @@ await orca.commands.invokeEditorCommand(
   false,
   "https://example.com",
   "Example Website",
-)
+);
 
 // Insert a block reference
 await orca.commands.invokeEditorCommand(
@@ -680,7 +673,7 @@ await orca.commands.invokeEditorCommand(
   true,
   blockId,
   "Referenced Block",
-)
+);
 ```
 
 ### `core.editor.insertQuery`
@@ -691,7 +684,7 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Creates a block to run database queries.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.insertQuery", cursor)
+await orca.commands.invokeEditorCommand("core.editor.insertQuery", cursor);
 ```
 
 ### `core.editor.insertDate`
@@ -702,7 +695,7 @@ await orca.commands.invokeEditorCommand("core.editor.insertQuery", cursor)
 - **Usage**: Creates a link to a journal/calendar page for a specific date.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.insertDate", cursor)
+await orca.commands.invokeEditorCommand("core.editor.insertDate", cursor);
 ```
 
 ### `core.editor.insertImage`
@@ -713,7 +706,7 @@ await orca.commands.invokeEditorCommand("core.editor.insertDate", cursor)
 - **Usage**: Embeds an image from a URL or local path.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.insertImage", cursor)
+await orca.commands.invokeEditorCommand("core.editor.insertImage", cursor);
 ```
 
 ### `core.editor.insertVideo`
@@ -724,7 +717,7 @@ await orca.commands.invokeEditorCommand("core.editor.insertImage", cursor)
 - **Usage**: Embeds a video from a URL or local path.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.insertVideo", cursor)
+await orca.commands.invokeEditorCommand("core.editor.insertVideo", cursor);
 ```
 
 ### `core.editor.insertAudio`
@@ -735,7 +728,7 @@ await orca.commands.invokeEditorCommand("core.editor.insertVideo", cursor)
 - **Usage**: Embeds an audio file from a URL or local path.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.insertAudio", cursor)
+await orca.commands.invokeEditorCommand("core.editor.insertAudio", cursor);
 ```
 
 ### `core.editor.insertMediaTimestamp`
@@ -747,7 +740,7 @@ await orca.commands.invokeEditorCommand("core.editor.insertAudio", cursor)
 await orca.commands.invokeEditorCommand(
   "core.editor.insertMediaTimestamp",
   cursor,
-)
+);
 ```
 
 ### `core.editor.insertInlineMath`
@@ -756,7 +749,7 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Adds a LaTeX math expression within text.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.insertInlineMath", cursor)
+await orca.commands.invokeEditorCommand("core.editor.insertInlineMath", cursor);
 ```
 
 ### `core.editor.insertMath`
@@ -767,7 +760,7 @@ await orca.commands.invokeEditorCommand("core.editor.insertInlineMath", cursor)
 - **Usage**: Creates a block for extended LaTeX mathematical expressions.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.insertMath", cursor)
+await orca.commands.invokeEditorCommand("core.editor.insertMath", cursor);
 ```
 
 ### `core.editor.insertCode`
@@ -778,7 +771,7 @@ await orca.commands.invokeEditorCommand("core.editor.insertMath", cursor)
 - **Usage**: Creates a block for displaying and editing code with syntax highlighting.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.insertCode", cursor)
+await orca.commands.invokeEditorCommand("core.editor.insertCode", cursor);
 ```
 
 ### `core.editor.insertMermaid`
@@ -789,7 +782,7 @@ await orca.commands.invokeEditorCommand("core.editor.insertCode", cursor)
 - **Usage**: Creates a block for creating diagrams using Mermaid syntax.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.insertMermaid", cursor)
+await orca.commands.invokeEditorCommand("core.editor.insertMermaid", cursor);
 ```
 
 ### `core.editor.insertTable`
@@ -800,7 +793,7 @@ await orca.commands.invokeEditorCommand("core.editor.insertMermaid", cursor)
 - **Usage**: Creates a table for structured data.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.insertTable", cursor)
+await orca.commands.invokeEditorCommand("core.editor.insertTable", cursor);
 ```
 
 ### `core.editor.insertQuote`
@@ -811,7 +804,7 @@ await orca.commands.invokeEditorCommand("core.editor.insertTable", cursor)
 - **Usage**: Creates a block for displaying quoted content.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.insertQuote", cursor)
+await orca.commands.invokeEditorCommand("core.editor.insertQuote", cursor);
 ```
 
 ### `core.editor.insertPDF`
@@ -822,7 +815,7 @@ await orca.commands.invokeEditorCommand("core.editor.insertQuote", cursor)
 - **Usage**: Embeds a PDF from a URL or local path.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.insertPDF", cursor)
+await orca.commands.invokeEditorCommand("core.editor.insertPDF", cursor);
 ```
 
 ### `core.editor.insertHR`
@@ -833,7 +826,7 @@ await orca.commands.invokeEditorCommand("core.editor.insertPDF", cursor)
 - **Usage**: Creates a visual separator block and automatically creates a new block after it.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.insertHR", cursor)
+await orca.commands.invokeEditorCommand("core.editor.insertHR", cursor);
 ```
 
 ## Deletion Commands
@@ -850,7 +843,7 @@ These commands handle the removal and modification of content within blocks.
 
 ```typescript
 // Delete the current selection
-await orca.commands.invokeEditorCommand("core.editor.deleteSelection", cursor)
+await orca.commands.invokeEditorCommand("core.editor.deleteSelection", cursor);
 
 // Delete selection and replace with new text
 await orca.commands.invokeEditorCommand(
@@ -858,7 +851,7 @@ await orca.commands.invokeEditorCommand(
   cursor,
   false,
   "Replacement text",
-)
+);
 ```
 
 ### `core.editor.removeTag`
@@ -876,7 +869,7 @@ await orca.commands.invokeEditorCommand(
   cursor,
   blockId,
   "project",
-)
+);
 ```
 
 ### `core.editor.deleteBlocksInSelection`
@@ -889,7 +882,7 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.deleteBlocksInSelection",
   cursor,
-)
+);
 ```
 
 ### `core.editor.removeAllInstances`
@@ -900,12 +893,12 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Removes all references to a specific tag throughout the knowledge base.
 
 ```typescript
-const tagBlockId: DbId = 501
+const tagBlockId: DbId = 501;
 await orca.commands.invokeEditorCommand(
   "core.editor.removeAllInstances",
   null,
   tagBlockId,
-)
+);
 ```
 
 ### `core.editor.migrateTagInstances`
@@ -917,14 +910,14 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Useful for reorganizing tag structures or replacing one tag with another.
 
 ```typescript
-const sourceTagId: DbId = 501
-const targetTagName = "new-project-tag"
+const sourceTagId: DbId = 501;
+const targetTagName = "new-project-tag";
 await orca.commands.invokeEditorCommand(
   "core.editor.migrateTagInstances",
   null,
   sourceTagId,
   targetTagName,
-)
+);
 ```
 
 ## Indent/Outdent Commands
@@ -938,15 +931,15 @@ await orca.commands.invokeEditorCommand(
 
 ```typescript
 // Indent specific blocks by ID
-const blockIdsToIndent: DbId[] = [123, 124]
+const blockIdsToIndent: DbId[] = [123, 124];
 await orca.commands.invokeEditorCommand(
   "core.editor.indentSelection",
   cursor,
   blockIdsToIndent,
-)
+);
 
 // Or indent the current selection
-await orca.commands.invokeEditorCommand("core.editor.indentSelection", cursor)
+await orca.commands.invokeEditorCommand("core.editor.indentSelection", cursor);
 ```
 
 ### `core.editor.outdentSelection`
@@ -958,15 +951,15 @@ await orca.commands.invokeEditorCommand("core.editor.indentSelection", cursor)
 
 ```typescript
 // Outdent specific blocks by ID
-const blockIdsToOutdent: DbId[] = [123, 124]
+const blockIdsToOutdent: DbId[] = [123, 124];
 await orca.commands.invokeEditorCommand(
   "core.editor.outdentSelection",
   cursor,
   blockIdsToOutdent,
-)
+);
 
 // Or outdent the current selection
-await orca.commands.invokeEditorCommand("core.editor.outdentSelection", cursor)
+await orca.commands.invokeEditorCommand("core.editor.outdentSelection", cursor);
 ```
 
 ## Merge/Split Commands
@@ -987,7 +980,7 @@ await orca.commands.invokeEditorCommand(
   cursor,
   123, // source block ID
   124, // destination block ID
-)
+);
 ```
 
 ### `core.editor.mergePrecedingBlock`
@@ -1002,7 +995,7 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.mergePrecedingBlock",
   cursor,
-)
+);
 ```
 
 ### `core.editor.mergeFollowingBlock`
@@ -1015,7 +1008,7 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.mergeFollowingBlock",
   cursor,
-)
+);
 ```
 
 ### `core.editor.splitBlock`
@@ -1028,7 +1021,7 @@ await orca.commands.invokeEditorCommand(
 const newBlockId = await orca.commands.invokeEditorCommand(
   "core.editor.splitBlock",
   cursor,
-)
+);
 ```
 
 ## Text Commands
@@ -1049,7 +1042,7 @@ await orca.commands.invokeEditorCommand(
   "core.editor.formatSelectedText",
   cursor,
   "b",
-)
+);
 
 // Apply custom text color
 await orca.commands.invokeEditorCommand(
@@ -1057,7 +1050,7 @@ await orca.commands.invokeEditorCommand(
   cursor,
   "fc",
   { fcc: "red" },
-)
+);
 ```
 
 ### `core.editor.formatBold`
@@ -1066,7 +1059,7 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Applies bold formatting to selected text, or inserts bold formatting at cursor position.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.formatBold", cursor)
+await orca.commands.invokeEditorCommand("core.editor.formatBold", cursor);
 ```
 
 ### `core.editor.formatItalic`
@@ -1075,7 +1068,7 @@ await orca.commands.invokeEditorCommand("core.editor.formatBold", cursor)
 - **Usage**: Applies italic formatting to selected text, or inserts italic formatting at cursor position.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.formatItalic", cursor)
+await orca.commands.invokeEditorCommand("core.editor.formatItalic", cursor);
 ```
 
 ### `core.editor.formatStrikethrough`
@@ -1087,7 +1080,7 @@ await orca.commands.invokeEditorCommand("core.editor.formatItalic", cursor)
 await orca.commands.invokeEditorCommand(
   "core.editor.formatStrikethrough",
   cursor,
-)
+);
 ```
 
 ### `core.editor.formatUnderlineSolid`
@@ -1099,7 +1092,7 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.formatUnderlineSolid",
   cursor,
-)
+);
 ```
 
 ### `core.editor.formatUderlineCustomColor`
@@ -1114,14 +1107,14 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.formatUderlineCustomColor",
   cursor,
-)
+);
 
 // With predefined color
 await orca.commands.invokeEditorCommand(
   "core.editor.formatUderlineCustomColor",
   cursor,
   "#FF5500",
-)
+);
 ```
 
 ### `core.editor.formatUderlineWavyCustomColor`
@@ -1136,14 +1129,14 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.formatUderlineWavyCustomColor",
   cursor,
-)
+);
 
 // With predefined color
 await orca.commands.invokeEditorCommand(
   "core.editor.formatUderlineWavyCustomColor",
   cursor,
   "#FF5500",
-)
+);
 ```
 
 ### `core.editor.formatUnderlineWavyRed`
@@ -1155,7 +1148,7 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.formatUnderlineWavyRed",
   cursor,
-)
+);
 ```
 
 ### `core.editor.formatUnderlineWavyGreen`
@@ -1167,7 +1160,7 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.formatUnderlineWavyGreen",
   cursor,
-)
+);
 ```
 
 ### `core.editor.formatUnderlineWavyBlue`
@@ -1179,7 +1172,7 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.formatUnderlineWavyBlue",
   cursor,
-)
+);
 ```
 
 ### `core.editor.formatInlineCode`
@@ -1188,7 +1181,7 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Applies a monospace font and background to selected text for code snippets within regular text.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.formatInlineCode", cursor)
+await orca.commands.invokeEditorCommand("core.editor.formatInlineCode", cursor);
 ```
 
 ### `core.editor.formatTextBlue`
@@ -1197,7 +1190,7 @@ await orca.commands.invokeEditorCommand("core.editor.formatInlineCode", cursor)
 - **Usage**: Applies blue color to selected text.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.formatTextBlue", cursor)
+await orca.commands.invokeEditorCommand("core.editor.formatTextBlue", cursor);
 ```
 
 ### `core.editor.formatTextGreen`
@@ -1206,7 +1199,7 @@ await orca.commands.invokeEditorCommand("core.editor.formatTextBlue", cursor)
 - **Usage**: Applies green color to selected text.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.formatTextGreen", cursor)
+await orca.commands.invokeEditorCommand("core.editor.formatTextGreen", cursor);
 ```
 
 ### `core.editor.formatTextRed`
@@ -1215,7 +1208,7 @@ await orca.commands.invokeEditorCommand("core.editor.formatTextGreen", cursor)
 - **Usage**: Applies red color to selected text.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.formatTextRed", cursor)
+await orca.commands.invokeEditorCommand("core.editor.formatTextRed", cursor);
 ```
 
 ### `core.editor.formatHighlightYellow`
@@ -1227,7 +1220,7 @@ await orca.commands.invokeEditorCommand("core.editor.formatTextRed", cursor)
 await orca.commands.invokeEditorCommand(
   "core.editor.formatHighlightYellow",
   cursor,
-)
+);
 ```
 
 ### `core.editor.formatHighlightBlue`
@@ -1239,7 +1232,7 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.formatHighlightBlue",
   cursor,
-)
+);
 ```
 
 ### `core.editor.formatHighlightGreen`
@@ -1251,7 +1244,7 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.formatHighlightGreen",
   cursor,
-)
+);
 ```
 
 ### `core.editor.formatHighlightRed`
@@ -1263,7 +1256,7 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.formatHighlightRed",
   cursor,
-)
+);
 ```
 
 ### `core.editor.formatTextCustomColor`
@@ -1278,14 +1271,14 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.formatTextCustomColor",
   cursor,
-)
+);
 
 // With predefined color
 await orca.commands.invokeEditorCommand(
   "core.editor.formatTextCustomColor",
   cursor,
   "#7700FF",
-)
+);
 ```
 
 ### `core.editor.formatHighlightCustomColor`
@@ -1300,14 +1293,14 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.formatHighlightCustomColor",
   cursor,
-)
+);
 
 // With predefined color
 await orca.commands.invokeEditorCommand(
   "core.editor.formatHighlightCustomColor",
   cursor,
   "#FFFFAA",
-)
+);
 ```
 
 ### `core.editor.formatSup`
@@ -1316,7 +1309,7 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Makes the selected text appear as superscript.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.formatSup", cursor)
+await orca.commands.invokeEditorCommand("core.editor.formatSup", cursor);
 ```
 
 ### `core.editor.formatSub`
@@ -1325,7 +1318,7 @@ await orca.commands.invokeEditorCommand("core.editor.formatSup", cursor)
 - **Usage**: Makes the selected text appear as subscript.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.formatSub", cursor)
+await orca.commands.invokeEditorCommand("core.editor.formatSub", cursor);
 ```
 
 ### `core.editor.formatIncreaseFontSize`
@@ -1337,7 +1330,7 @@ await orca.commands.invokeEditorCommand("core.editor.formatSub", cursor)
 await orca.commands.invokeEditorCommand(
   "core.editor.formatIncreaseFontSize",
   cursor,
-)
+);
 ```
 
 ### `core.editor.formatDecreaseFontSize`
@@ -1349,7 +1342,7 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.formatDecreaseFontSize",
   cursor,
-)
+);
 ```
 
 ### `core.editor.formatResetFontSize`
@@ -1361,7 +1354,7 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.formatResetFontSize",
   cursor,
-)
+);
 ```
 
 ### `core.editor.copyFormatting`
@@ -1370,7 +1363,7 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Select text with formatting, invoke this command, then select another text to apply the same formatting.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.copyFormatting", cursor)
+await orca.commands.invokeEditorCommand("core.editor.copyFormatting", cursor);
 ```
 
 ### `core.editor.convertSelectionIntoLink`
@@ -1382,7 +1375,7 @@ await orca.commands.invokeEditorCommand("core.editor.copyFormatting", cursor)
 await orca.commands.invokeEditorCommand(
   "core.editor.convertSelectionIntoLink",
   cursor,
-)
+);
 ```
 
 ### `core.editor.convertSelectionIntoMath`
@@ -1394,7 +1387,7 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.convertSelectionIntoMath",
   cursor,
-)
+);
 ```
 
 ### `core.editor.convertSelectionIntoReference`
@@ -1406,7 +1399,7 @@ await orca.commands.invokeEditorCommand(
 await orca.commands.invokeEditorCommand(
   "core.editor.convertSelectionIntoReference",
   cursor,
-)
+);
 ```
 
 ### `core.editor.clearFormatting`
@@ -1415,7 +1408,7 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Strips bold, italic, colors, highlighting, and other formatting from selected text.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.clearFormatting", cursor)
+await orca.commands.invokeEditorCommand("core.editor.clearFormatting", cursor);
 ```
 
 ### `core.editor.selectAll`
@@ -1424,7 +1417,7 @@ await orca.commands.invokeEditorCommand("core.editor.clearFormatting", cursor)
 - **Usage**: Progressively expands selection from current block to all content.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.selectAll", cursor)
+await orca.commands.invokeEditorCommand("core.editor.selectAll", cursor);
 ```
 
 ### `core.editor.makeText`
@@ -1436,10 +1429,10 @@ await orca.commands.invokeEditorCommand("core.editor.selectAll", cursor)
 
 ```typescript
 // Convert current selection to text blocks
-await orca.commands.invokeEditorCommand("core.editor.makeText", cursor)
+await orca.commands.invokeEditorCommand("core.editor.makeText", cursor);
 
 // Convert specific block to text
-await orca.commands.invokeEditorCommand("core.editor.makeText", cursor, 123)
+await orca.commands.invokeEditorCommand("core.editor.makeText", cursor, 123);
 ```
 
 ### `core.editor.makeHeading1`
@@ -1450,7 +1443,7 @@ await orca.commands.invokeEditorCommand("core.editor.makeText", cursor, 123)
 - **Usage**: Converts blocks to heading 1 format.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.makeHeading1", cursor)
+await orca.commands.invokeEditorCommand("core.editor.makeHeading1", cursor);
 ```
 
 ### `core.editor.makeHeading2`
@@ -1461,7 +1454,7 @@ await orca.commands.invokeEditorCommand("core.editor.makeHeading1", cursor)
 - **Usage**: Converts blocks to heading 2 format.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.makeHeading2", cursor)
+await orca.commands.invokeEditorCommand("core.editor.makeHeading2", cursor);
 ```
 
 ### `core.editor.makeHeading3`
@@ -1472,7 +1465,7 @@ await orca.commands.invokeEditorCommand("core.editor.makeHeading2", cursor)
 - **Usage**: Converts blocks to heading 3 format.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.makeHeading3", cursor)
+await orca.commands.invokeEditorCommand("core.editor.makeHeading3", cursor);
 ```
 
 ### `core.editor.makeHeading4`
@@ -1483,7 +1476,7 @@ await orca.commands.invokeEditorCommand("core.editor.makeHeading3", cursor)
 - **Usage**: Converts blocks to heading 4 format.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.makeHeading4", cursor)
+await orca.commands.invokeEditorCommand("core.editor.makeHeading4", cursor);
 ```
 
 ### `core.editor.makeNumberedList`
@@ -1496,7 +1489,7 @@ await orca.commands.invokeEditorCommand("core.editor.makeHeading4", cursor)
 
 ```typescript
 // Standard numbered list
-await orca.commands.invokeEditorCommand("core.editor.makeNumberedList", cursor)
+await orca.commands.invokeEditorCommand("core.editor.makeNumberedList", cursor);
 
 // Numbered list starting from 5
 await orca.commands.invokeEditorCommand(
@@ -1504,7 +1497,7 @@ await orca.commands.invokeEditorCommand(
   cursor,
   undefined,
   5,
-)
+);
 ```
 
 ### `core.editor.makeBulletedList`
@@ -1515,7 +1508,7 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Converts blocks to unordered list items.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.makeBulletedList", cursor)
+await orca.commands.invokeEditorCommand("core.editor.makeBulletedList", cursor);
 ```
 
 ### `core.editor.makeQuote`
@@ -1526,7 +1519,7 @@ await orca.commands.invokeEditorCommand("core.editor.makeBulletedList", cursor)
 - **Usage**: Creates a quote block with the selected blocks as its content.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.makeQuote", cursor)
+await orca.commands.invokeEditorCommand("core.editor.makeQuote", cursor);
 ```
 
 ### `core.editor.makeMath`
@@ -1537,7 +1530,7 @@ await orca.commands.invokeEditorCommand("core.editor.makeQuote", cursor)
 - **Usage**: Converts blocks to mathematical expression blocks that render LaTeX.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.makeMath", cursor)
+await orca.commands.invokeEditorCommand("core.editor.makeMath", cursor);
 ```
 
 ### `core.editor.makeTask`
@@ -1548,7 +1541,7 @@ await orca.commands.invokeEditorCommand("core.editor.makeMath", cursor)
 - **Usage**: Converts blocks to checkable task items.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.makeTask", cursor)
+await orca.commands.invokeEditorCommand("core.editor.makeTask", cursor);
 ```
 
 ### `core.editor.insertFragments`
@@ -1562,12 +1555,12 @@ await orca.commands.invokeEditorCommand("core.editor.makeTask", cursor)
 // Insert bold text
 await orca.commands.invokeEditorCommand("core.editor.insertFragments", cursor, [
   { t: "t", v: "Important note", f: "b" },
-])
+]);
 
 // Insert link
 await orca.commands.invokeEditorCommand("core.editor.insertFragments", cursor, [
   { t: "r", v: "Orca Documentation", u: "https://orca.so/docs" },
-])
+]);
 ```
 
 ### `core.editor.toggleTask`
@@ -1579,10 +1572,14 @@ await orca.commands.invokeEditorCommand("core.editor.insertFragments", cursor, [
 
 ```typescript
 // Toggle task on current block
-await orca.commands.invokeEditorCommand("core.editor.toggleTask", cursor)
+await orca.commands.invokeEditorCommand("core.editor.toggleTask", cursor);
 
 // Toggle task on specific block
-await orca.commands.invokeEditorCommand("core.editor.toggleTask", null, blockId)
+await orca.commands.invokeEditorCommand(
+  "core.editor.toggleTask",
+  null,
+  blockId,
+);
 ```
 
 ### `core.editor.makeAliased`
@@ -1593,7 +1590,7 @@ await orca.commands.invokeEditorCommand("core.editor.toggleTask", null, blockId)
 - **Usage**: Makes a block aliased so it can be referenced by name throughout the document.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.makeAliased", cursor)
+await orca.commands.invokeEditorCommand("core.editor.makeAliased", cursor);
 ```
 
 ## Misc Commands
@@ -1612,14 +1609,14 @@ These commands provide miscellaneous functionality for manipulating blocks and U
 await orca.commands.invokeEditorCommand(
   "core.editor.toggleShowAsLongForm",
   cursor,
-)
+);
 
 // Toggle long-form display for a specific block
 await orca.commands.invokeEditorCommand(
   "core.editor.toggleShowAsLongForm",
   cursor,
   123,
-)
+);
 ```
 
 ### `core.editor.toggleAsTemplate`
@@ -1631,14 +1628,14 @@ await orca.commands.invokeEditorCommand(
 
 ```typescript
 // Toggle template status for the current block
-await orca.commands.invokeEditorCommand("core.editor.toggleAsTemplate", cursor)
+await orca.commands.invokeEditorCommand("core.editor.toggleAsTemplate", cursor);
 
 // Toggle template status for a specific block
 await orca.commands.invokeEditorCommand(
   "core.editor.toggleAsTemplate",
   cursor,
   123,
-)
+);
 ```
 
 ### `core.editor.toggleFavorite`
@@ -1650,7 +1647,7 @@ await orca.commands.invokeEditorCommand(
 
 ```typescript
 // Toggle favorite status for the current block
-await orca.commands.invokeEditorCommand("core.editor.toggleFavorite", cursor)
+await orca.commands.invokeEditorCommand("core.editor.toggleFavorite", cursor);
 ```
 
 ### `core.editor.toggleReadOnly`
@@ -1660,7 +1657,7 @@ await orca.commands.invokeEditorCommand("core.editor.toggleFavorite", cursor)
 
 ```typescript
 // Toggle read-only mode for the current editor
-await orca.commands.invokeEditorCommand("core.editor.toggleReadOnly", cursor)
+await orca.commands.invokeEditorCommand("core.editor.toggleReadOnly", cursor);
 ```
 
 ### `core.editor.showBlockMenu`
@@ -1670,7 +1667,7 @@ await orca.commands.invokeEditorCommand("core.editor.toggleReadOnly", cursor)
 
 ```typescript
 // Show menu for the current block
-await orca.commands.invokeEditorCommand("core.editor.showBlockMenu", cursor)
+await orca.commands.invokeEditorCommand("core.editor.showBlockMenu", cursor);
 ```
 
 ### `core.editor.focusIn`
@@ -1682,10 +1679,10 @@ await orca.commands.invokeEditorCommand("core.editor.showBlockMenu", cursor)
 
 ```typescript
 // Focus in on the current block
-await orca.commands.invokeEditorCommand("core.editor.focusIn", cursor)
+await orca.commands.invokeEditorCommand("core.editor.focusIn", cursor);
 
 // Focus in on a specific block
-await orca.commands.invokeEditorCommand("core.editor.focusIn", cursor, 123)
+await orca.commands.invokeEditorCommand("core.editor.focusIn", cursor, 123);
 ```
 
 ### `core.editor.focusOut`
@@ -1697,7 +1694,7 @@ await orca.commands.invokeEditorCommand("core.editor.focusIn", cursor, 123)
 
 ```typescript
 // Focus out from the current block
-await orca.commands.invokeEditorCommand("core.editor.focusOut", cursor)
+await orca.commands.invokeEditorCommand("core.editor.focusOut", cursor);
 ```
 
 ### `core.editor.openOnTheSide`
@@ -1709,7 +1706,7 @@ await orca.commands.invokeEditorCommand("core.editor.focusOut", cursor)
 
 ```typescript
 // Open current block on the side
-await orca.commands.invokeEditorCommand("core.editor.openOnTheSide", cursor)
+await orca.commands.invokeEditorCommand("core.editor.openOnTheSide", cursor);
 ```
 
 ### `core.editor.copyBlockLink`
@@ -1721,7 +1718,7 @@ await orca.commands.invokeEditorCommand("core.editor.openOnTheSide", cursor)
 
 ```typescript
 // Copy link to current block
-await orca.commands.invokeEditorCommand("core.editor.copyBlockLink", cursor)
+await orca.commands.invokeEditorCommand("core.editor.copyBlockLink", cursor);
 ```
 
 ### `core.editor.foldAll`
@@ -1731,7 +1728,7 @@ await orca.commands.invokeEditorCommand("core.editor.copyBlockLink", cursor)
 
 ```typescript
 // Fold all blocks
-await orca.commands.invokeEditorCommand("core.editor.foldAll", cursor)
+await orca.commands.invokeEditorCommand("core.editor.foldAll", cursor);
 ```
 
 ### `core.editor.unfoldAll`
@@ -1741,7 +1738,7 @@ await orca.commands.invokeEditorCommand("core.editor.foldAll", cursor)
 
 ```typescript
 // Unfold all blocks
-await orca.commands.invokeEditorCommand("core.editor.unfoldAll", cursor)
+await orca.commands.invokeEditorCommand("core.editor.unfoldAll", cursor);
 ```
 
 ### `core.editor.foldBlock`
@@ -1753,7 +1750,7 @@ await orca.commands.invokeEditorCommand("core.editor.unfoldAll", cursor)
 
 ```typescript
 // Fold the current block
-await orca.commands.invokeEditorCommand("core.editor.foldBlock", cursor)
+await orca.commands.invokeEditorCommand("core.editor.foldBlock", cursor);
 ```
 
 ### `core.editor.unfoldBlock`
@@ -1765,7 +1762,7 @@ await orca.commands.invokeEditorCommand("core.editor.foldBlock", cursor)
 
 ```typescript
 // Unfold the current block
-await orca.commands.invokeEditorCommand("core.editor.unfoldBlock", cursor)
+await orca.commands.invokeEditorCommand("core.editor.unfoldBlock", cursor);
 ```
 
 ### `core.editor.moveBlockUp`
@@ -1777,14 +1774,14 @@ await orca.commands.invokeEditorCommand("core.editor.unfoldBlock", cursor)
 
 ```typescript
 // Move current block up
-await orca.commands.invokeEditorCommand("core.editor.moveBlockUp", cursor)
+await orca.commands.invokeEditorCommand("core.editor.moveBlockUp", cursor);
 
 // Move specific blocks up
 await orca.commands.invokeEditorCommand(
   "core.editor.moveBlockUp",
   cursor,
   [123, 124],
-)
+);
 ```
 
 ### `core.editor.moveBlockDown`
@@ -1796,7 +1793,7 @@ await orca.commands.invokeEditorCommand(
 
 ```typescript
 // Move current block down
-await orca.commands.invokeEditorCommand("core.editor.moveBlockDown", cursor)
+await orca.commands.invokeEditorCommand("core.editor.moveBlockDown", cursor);
 ```
 
 ### `core.editor.export.pdf`
@@ -1809,7 +1806,7 @@ await orca.commands.invokeEditorCommand("core.editor.moveBlockDown", cursor)
 
 ```typescript
 // Export current block as PDF
-await orca.commands.invokeEditorCommand("core.editor.export.pdf", cursor)
+await orca.commands.invokeEditorCommand("core.editor.export.pdf", cursor);
 
 // Export in landscape mode
 await orca.commands.invokeEditorCommand(
@@ -1817,7 +1814,7 @@ await orca.commands.invokeEditorCommand(
   cursor,
   123,
   true,
-)
+);
 ```
 
 ### `core.editor.export.png`
@@ -1829,7 +1826,7 @@ await orca.commands.invokeEditorCommand(
 
 ```typescript
 // Export current block as PNG
-await orca.commands.invokeEditorCommand("core.editor.export.png", cursor)
+await orca.commands.invokeEditorCommand("core.editor.export.png", cursor);
 ```
 
 ### `core.editor.export.txt`
@@ -1841,7 +1838,7 @@ await orca.commands.invokeEditorCommand("core.editor.export.png", cursor)
 
 ```typescript
 // Export current block as text
-await orca.commands.invokeEditorCommand("core.editor.export.txt", cursor)
+await orca.commands.invokeEditorCommand("core.editor.export.txt", cursor);
 ```
 
 ### `core.editor.pasteText`
@@ -1851,7 +1848,7 @@ await orca.commands.invokeEditorCommand("core.editor.export.txt", cursor)
 
 ```typescript
 // Paste text from clipboard
-await orca.commands.invokeEditorCommand("core.editor.pasteText", cursor)
+await orca.commands.invokeEditorCommand("core.editor.pasteText", cursor);
 ```
 
 ### `core.editor.pasteAsReference`
@@ -1861,7 +1858,7 @@ await orca.commands.invokeEditorCommand("core.editor.pasteText", cursor)
 
 ```typescript
 // Paste block as reference
-await orca.commands.invokeEditorCommand("core.editor.pasteAsReference", cursor)
+await orca.commands.invokeEditorCommand("core.editor.pasteAsReference", cursor);
 ```
 
 ### `core.editor.pasteAsMirror`
@@ -1871,7 +1868,7 @@ await orca.commands.invokeEditorCommand("core.editor.pasteAsReference", cursor)
 
 ```typescript
 // Paste block as mirror
-await orca.commands.invokeEditorCommand("core.editor.pasteAsMirror", cursor)
+await orca.commands.invokeEditorCommand("core.editor.pasteAsMirror", cursor);
 ```
 
 ### `core.editor.pasteAsMove`
@@ -1881,7 +1878,7 @@ await orca.commands.invokeEditorCommand("core.editor.pasteAsMirror", cursor)
 
 ```typescript
 // Move blocks to current position
-await orca.commands.invokeEditorCommand("core.editor.pasteAsMove", cursor)
+await orca.commands.invokeEditorCommand("core.editor.pasteAsMove", cursor);
 ```
 
 ### `core.editor.pasteAsCopy`
@@ -1891,7 +1888,7 @@ await orca.commands.invokeEditorCommand("core.editor.pasteAsMove", cursor)
 
 ```typescript
 // Paste as copy
-await orca.commands.invokeEditorCommand("core.editor.pasteAsCopy", cursor)
+await orca.commands.invokeEditorCommand("core.editor.pasteAsCopy", cursor);
 ```
 
 ### `core.editor.showAIMenu`
@@ -1901,7 +1898,7 @@ await orca.commands.invokeEditorCommand("core.editor.pasteAsCopy", cursor)
 
 ```typescript
 // Show AI menu
-await orca.commands.invokeEditorCommand("core.editor.showAIMenu", cursor)
+await orca.commands.invokeEditorCommand("core.editor.showAIMenu", cursor);
 ```
 
 ### `core.editor.insertCurrentTime`
@@ -1911,7 +1908,10 @@ await orca.commands.invokeEditorCommand("core.editor.showAIMenu", cursor)
 
 ```typescript
 // Insert current time
-await orca.commands.invokeEditorCommand("core.editor.insertCurrentTime", cursor)
+await orca.commands.invokeEditorCommand(
+  "core.editor.insertCurrentTime",
+  cursor,
+);
 ```
 
 ### `core.editor.copyBlockID`
@@ -1923,7 +1923,7 @@ await orca.commands.invokeEditorCommand("core.editor.insertCurrentTime", cursor)
 
 ```typescript
 // Copy the ID of the current block
-await orca.commands.invokeEditorCommand("core.editor.copyBlockID", cursor)
+await orca.commands.invokeEditorCommand("core.editor.copyBlockID", cursor);
 ```
 
 ### `core.editor.export.md`
@@ -1935,7 +1935,7 @@ await orca.commands.invokeEditorCommand("core.editor.copyBlockID", cursor)
 
 ```typescript
 // Export current block as Markdown
-await orca.commands.invokeEditorCommand("core.editor.export.md", cursor)
+await orca.commands.invokeEditorCommand("core.editor.export.md", cursor);
 ```
 
 ### `core.editor.export.html`
@@ -1947,7 +1947,7 @@ await orca.commands.invokeEditorCommand("core.editor.export.md", cursor)
 
 ```typescript
 // Export current block as HTML
-await orca.commands.invokeEditorCommand("core.editor.export.html", cursor)
+await orca.commands.invokeEditorCommand("core.editor.export.html", cursor);
 ```
 
 ### `core.editor.pasteHTML`
@@ -1957,7 +1957,7 @@ await orca.commands.invokeEditorCommand("core.editor.export.html", cursor)
 
 ```typescript
 // Paste HTML from clipboard
-await orca.commands.invokeEditorCommand("core.editor.pasteHTML", cursor)
+await orca.commands.invokeEditorCommand("core.editor.pasteHTML", cursor);
 ```
 
 ### `core.editor.extractPage`
@@ -1969,7 +1969,7 @@ await orca.commands.invokeEditorCommand("core.editor.pasteHTML", cursor)
 
 ```typescript
 // Extract current block as page
-await orca.commands.invokeEditorCommand("core.editor.extractPage", cursor)
+await orca.commands.invokeEditorCommand("core.editor.extractPage", cursor);
 ```
 
 ### `core.editor.inlinePage`
@@ -1981,7 +1981,7 @@ await orca.commands.invokeEditorCommand("core.editor.extractPage", cursor)
 
 ```typescript
 // Inline a page reference
-await orca.commands.invokeEditorCommand("core.editor.inlinePage", cursor)
+await orca.commands.invokeEditorCommand("core.editor.inlinePage", cursor);
 ```
 
 ### `core.editor.toggleFold`
@@ -1993,7 +1993,7 @@ await orca.commands.invokeEditorCommand("core.editor.inlinePage", cursor)
 
 ```typescript
 // Toggle fold state for current block
-await orca.commands.invokeEditorCommand("core.editor.toggleFold", cursor)
+await orca.commands.invokeEditorCommand("core.editor.toggleFold", cursor);
 ```
 
 ### `core.editor.toggleTaskState`
@@ -2005,7 +2005,7 @@ await orca.commands.invokeEditorCommand("core.editor.toggleFold", cursor)
 
 ```typescript
 // Toggle task state
-await orca.commands.invokeEditorCommand("core.editor.toggleTaskState", cursor)
+await orca.commands.invokeEditorCommand("core.editor.toggleTaskState", cursor);
 ```
 
 ### `core.editor.showAliasEditor`
@@ -2017,7 +2017,7 @@ await orca.commands.invokeEditorCommand("core.editor.toggleTaskState", cursor)
 
 ```typescript
 // Show alias editor for current block
-await orca.commands.invokeEditorCommand("core.editor.showAliasEditor", cursor)
+await orca.commands.invokeEditorCommand("core.editor.showAliasEditor", cursor);
 ```
 
 ### `core.editor.showTagInsertion`
@@ -2027,5 +2027,5 @@ await orca.commands.invokeEditorCommand("core.editor.showAliasEditor", cursor)
 
 ```typescript
 // Show tag insertion menu
-await orca.commands.invokeEditorCommand("core.editor.showTagInsertion", cursor)
+await orca.commands.invokeEditorCommand("core.editor.showTagInsertion", cursor);
 ```

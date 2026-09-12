@@ -1451,7 +1451,7 @@ These components follow Orca's design system and provide consistent UI patterns.
 
 ###### AliasEditor()
 
-> **AliasEditor**: (`props`) => `Element`
+> **AliasEditor**: (`props`) => `any`
 
 Provides an editor interface for managing aliases/tags, including adding/removing aliases,
 formatting options, template selection, and inclusion relationships.
@@ -1460,11 +1460,11 @@ formatting options, template selection, and inclusion relationships.
 
 ###### props
 
-`object` & `Partial`\<\{ `alignment?`: `"left"` \| `"top"` \| `"center"` \| `"bottom"` \| `"right"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"left"` \| `"top"` \| `"bottom"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
+`object` & `Partial`\<\{ `alignment?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -1493,7 +1493,7 @@ formatting options, template selection, and inclusion relationships.
 
 ###### Block()
 
-> **Block**: (`props`) => `Element`
+> **Block**: (`props`) => `any`
 
 Renders a block with all its content and children
 
@@ -1501,11 +1501,11 @@ Renders a block with all its content and children
 
 ###### props
 
-`object` & `HTMLAttributes`\<`HTMLDivElement`\>
+`any`
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -1521,7 +1521,7 @@ Renders a block with all its content and children
 
 ###### BlockBreadcrumb()
 
-> **BlockBreadcrumb**: (`props`) => `Element`
+> **BlockBreadcrumb**: (`props`) => `any`
 
 Renders a breadcrumb trail for a block's ancestors
 
@@ -1543,7 +1543,7 @@ Renders a breadcrumb trail for a block's ancestors
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -1561,7 +1561,7 @@ Renders a breadcrumb trail for a block's ancestors
 
 ###### BlockCaption()
 
-> **BlockCaption**: (`props`) => `Element`
+> **BlockCaption**: (`props`) => `any`
 
 Displays an editable caption input for a block.
 The caption is saved automatically when the input loses focus.
@@ -1591,7 +1591,7 @@ The ID of the panel containing the block
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -1607,7 +1607,7 @@ const { BlockCaption } = orca.components;
 
 ###### BlockChildren()
 
-> **BlockChildren**: (`props`) => `Element`
+> **BlockChildren**: (`props`) => `any`
 
 Renders a block's children
 
@@ -1637,7 +1637,7 @@ Renders a block's children
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -1662,7 +1662,7 @@ Renders a block's children
 
 ###### BlockPreviewPopup()
 
-> **BlockPreviewPopup**: (`props`) => `Element`
+> **BlockPreviewPopup**: (`props`) => `any`
 
 Renders a block preview popup.
 
@@ -1674,11 +1674,11 @@ controlled with `visible`. `interactive` enables the editor-like preview mode,
 
 ###### props
 
-`object` & `HTMLAttributes`\<`HTMLDivElement`\>
+`any`
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -1708,7 +1708,7 @@ controlled with `visible`. `interactive` enables the editor-like preview mode,
 
 ###### BlockSelect()
 
-> **BlockSelect**: (`props`) => `Element`
+> **BlockSelect**: (`props`) => `any`
 
 Provides block selection functionality
 
@@ -1720,7 +1720,7 @@ Provides block selection functionality
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -1745,7 +1745,7 @@ Provides block selection functionality
 
 ###### BlockShell()
 
-> **BlockShell**: (`props`) => `Element`
+> **BlockShell**: (`props`) => `any`
 
 Core component for block rendering with common UI elements.
 It provides the standard block structure including the handle, folding caret, tags, and back-references.
@@ -1876,7 +1876,7 @@ Whether the block can be folded even if it has no children (defaults to false)
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -1910,7 +1910,7 @@ Whether the block can be folded even if it has no children (defaults to false)
 
 ###### Breadcrumb()
 
-> **Breadcrumb**: (`props`) => `Element`
+> **Breadcrumb**: (`props`) => `any`
 
 Renders a generic breadcrumb navigation
 
@@ -1932,7 +1932,7 @@ Renders a generic breadcrumb navigation
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -1955,7 +1955,7 @@ Renders a generic breadcrumb navigation
 
 ###### Button()
 
-> **Button**: (`props`) => `Element`
+> **Button**: (`props`) => `any`
 
 Standard button component with multiple variants
 
@@ -1967,7 +1967,7 @@ Standard button component with multiple variants
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -1995,7 +1995,7 @@ Standard button component with multiple variants
 
 ###### Checkbox()
 
-> **Checkbox**: (`props`) => `Element`
+> **Checkbox**: (`props`) => `any`
 
 Checkbox form element
 
@@ -2007,7 +2007,7 @@ Checkbox form element
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2030,7 +2030,7 @@ Checkbox form element
 
 ###### CompositionInput()
 
-> **CompositionInput**: (`props`) => `Element`
+> **CompositionInput**: (`props`) => `any`
 
 Input that handles IME composition events properly
 
@@ -2042,7 +2042,7 @@ Input that handles IME composition events properly
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2071,7 +2071,7 @@ Input that handles IME composition events properly
 
 ###### CompositionTextArea()
 
-> **CompositionTextArea**: (`props`) => `Element`
+> **CompositionTextArea**: (`props`) => `any`
 
 Textarea that handles IME composition events properly
 
@@ -2079,11 +2079,11 @@ Textarea that handles IME composition events properly
 
 ###### props
 
-`any`
+`DetailedHTMLProps`\<`TextareaHTMLAttributes`\<`HTMLTextAreaElement`\>, `HTMLTextAreaElement`\>
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2105,7 +2105,7 @@ Textarea that handles IME composition events properly
 
 ###### ConfirmBox()
 
-> **ConfirmBox**: (`props`) => `Element`
+> **ConfirmBox**: (`props`) => `any`
 
 Displays a confirmation dialog
 
@@ -2113,11 +2113,11 @@ Displays a confirmation dialog
 
 ###### props
 
-`object` & `Partial`\<\{ `alignment?`: `"left"` \| `"top"` \| `"center"` \| `"bottom"` \| `"right"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"left"` \| `"top"` \| `"bottom"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
+`object` & `Partial`\<\{ `alignment?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2158,7 +2158,7 @@ Displays a confirmation dialog
 
 ###### ContextMenu()
 
-> **ContextMenu**: (`props`) => `Element`
+> **ContextMenu**: (`props`) => `any`
 
 Creates a context menu attached to an element
 
@@ -2170,7 +2170,7 @@ Creates a context menu attached to an element
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2218,7 +2218,7 @@ Creates a context menu attached to an element
 
 ###### DatePicker()
 
-> **DatePicker**: (`props`) => `Element`
+> **DatePicker**: (`props`) => `any`
 
 Calendar date picker
 
@@ -2228,7 +2228,7 @@ Calendar date picker
 
 ###### alignment?
 
-`"left"` \| `"center"` \| `"right"`
+`"left"` \| `"right"` \| `"center"`
 
 ###### className?
 
@@ -2280,7 +2280,7 @@ Calendar date picker
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2310,7 +2310,7 @@ const [dateRange, setDateRange] = useState([new Date(), new Date(Date.now() + 86
 
 ###### HoverContextMenu()
 
-> **HoverContextMenu**: (`props`) => `Element`
+> **HoverContextMenu**: (`props`) => `any`
 
 Context menu that appears on hover
 
@@ -2322,7 +2322,7 @@ Context menu that appears on hover
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2367,7 +2367,7 @@ Context menu that appears on hover
 
 ###### Image()
 
-> **Image**: (`props`) => `Element`
+> **Image**: (`props`) => `any`
 
 Image component with loading states
 
@@ -2379,7 +2379,7 @@ Image component with loading states
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2409,7 +2409,7 @@ Image component with loading states
 
 ###### Input()
 
-> **Input**: (`props`) => `Element`
+> **Input**: (`props`) => `any`
 
 Standard text input component
 
@@ -2421,7 +2421,7 @@ Standard text input component
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2450,7 +2450,7 @@ Standard text input component
 
 ###### InputBox()
 
-> **InputBox**: (`props`) => `Element`
+> **InputBox**: (`props`) => `any`
 
 Input dialog with label and actions
 
@@ -2458,11 +2458,11 @@ Input dialog with label and actions
 
 ###### props
 
-`object` & `Partial`\<\{ `alignment?`: `"left"` \| `"top"` \| `"center"` \| `"bottom"` \| `"right"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"left"` \| `"top"` \| `"bottom"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
+`object` & `Partial`\<\{ `alignment?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2508,7 +2508,7 @@ Input dialog with label and actions
 
 ###### LoadMore()
 
-> **LoadMore**: (`props`) => `Element`
+> **LoadMore**: (`props`) => `any`
 
 Component for loading more items in paginated lists
 
@@ -2516,11 +2516,11 @@ Component for loading more items in paginated lists
 
 ###### props
 
-`object` & `HTMLAttributes`\<`HTMLDivElement`\>
+`any`
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2543,7 +2543,7 @@ Component for loading more items in paginated lists
 
 ###### MemoizedViews()
 
-> **MemoizedViews**: (`props`) => `Element`
+> **MemoizedViews**: (`props`) => `any`
 
 Efficient view container for switching between components
 
@@ -2573,11 +2573,11 @@ Efficient view container for switching between components
 
 ###### views
 
-\{\[`key`: `string`\]: `ReactElement`\<`any`, `string` \| `JSXElementConstructor`\<`any`\>\>; \}
+\{\[`key`: `string`\]: `any`; \}
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2609,7 +2609,7 @@ Efficient view container for switching between components
 
 ###### Menu()
 
-> **Menu**: (`props`) => `Element`
+> **Menu**: (`props`) => `any`
 
 Standard menu container
 
@@ -2617,11 +2617,11 @@ Standard menu container
 
 ###### props
 
-`object` & `HTMLAttributes`\<`HTMLDivElement`\>
+`any`
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2654,7 +2654,7 @@ Standard menu container
 
 ###### MenuItem()
 
-> **MenuItem**: (`props`) => `Element`
+> **MenuItem**: (`props`) => `any`
 
 Menu item component
 
@@ -2662,11 +2662,11 @@ Menu item component
 
 ###### props
 
-`object` & `HTMLAttributes`\<`HTMLDivElement`\>
+`any`
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2699,7 +2699,7 @@ Menu item component
 
 ###### MenuSeparator()
 
-> **MenuSeparator**: (`props`) => `Element`
+> **MenuSeparator**: (`props`) => `any`
 
 Visual separator for menus
 
@@ -2709,7 +2709,7 @@ Visual separator for menus
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2729,7 +2729,7 @@ Visual separator for menus
 
 ###### MenuText()
 
-> **MenuText**: (`props`) => `Element`
+> **MenuText**: (`props`) => `any`
 
 Text-based menu item
 
@@ -2741,7 +2741,7 @@ Text-based menu item
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2792,7 +2792,7 @@ Text-based menu item
 
 ###### MenuTitle()
 
-> **MenuTitle**: (`props`) => `Element`
+> **MenuTitle**: (`props`) => `any`
 
 Menu section title
 
@@ -2818,7 +2818,7 @@ Menu section title
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2852,7 +2852,7 @@ Menu section title
 
 ###### ModalOverlay()
 
-> **ModalOverlay**: (`props`) => `Element`
+> **ModalOverlay**: (`props`) => `any`
 
 Full-screen modal overlay
 
@@ -2860,11 +2860,11 @@ Full-screen modal overlay
 
 ###### props
 
-`object` & `HTMLAttributes`\<`HTMLDivElement`\>
+`any`
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2913,7 +2913,7 @@ const [isVisible, setIsVisible] = useState(false);
 
 ###### Popup()
 
-> **Popup**: (`props`) => `Element`
+> **Popup**: (`props`) => `any`
 
 Popup panel attached to an element.
 
@@ -2931,11 +2931,11 @@ Default values: `placement: "vertical"`, `defaultPlacement: "bottom"`,
 
 ###### props
 
-`object` & `HTMLAttributes`\<`HTMLDivElement`\>
+`any`
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -2981,7 +2981,7 @@ const buttonRef = useRef(null);
 
 ###### QueryConditionsBuilder()
 
-> **QueryConditionsBuilder**: (`props`) => `Element`
+> **QueryConditionsBuilder**: (`props`) => `any`
 
 A visual builder for creating and editing complex query conditions.
 It provides a user interface for constructing nested AND/OR logic, property filters,
@@ -3005,7 +3005,7 @@ The current query description object representing the conditions.
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -3023,7 +3023,7 @@ const [query, setQuery] = useState<QueryDescription2>({
 
 ###### Segmented()
 
-> **Segmented**: (`props`) => `Element`
+> **Segmented**: (`props`) => `any`
 
 Segmented control for selecting from options
 
@@ -3035,7 +3035,7 @@ Segmented control for selecting from options
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -3067,7 +3067,7 @@ const [selected, setSelected] = useState("list");
 
 ###### Select()
 
-> **Select**: (`props`) => `Element`
+> **Select**: (`props`) => `any`
 
 Dropdown select component
 
@@ -3079,7 +3079,7 @@ Dropdown select component
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -3125,7 +3125,7 @@ const [selected, setSelected] = useState(["option1"]);
 
 ###### Skeleton()
 
-> **Skeleton**: (`props`) => `Element`
+> **Skeleton**: (`props`) => `any`
 
 Loading placeholder
 
@@ -3135,7 +3135,7 @@ Loading placeholder
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -3166,7 +3166,7 @@ Loading placeholder
 
 ###### Switch()
 
-> **Switch**: (`props`) => `Element`
+> **Switch**: (`props`) => `any`
 
 Toggle switch component
 
@@ -3178,7 +3178,7 @@ Toggle switch component
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -3214,7 +3214,7 @@ const [isOn, setIsOn] = useState(false);
 
 ###### Table()
 
-> **Table**: (`props`) => `Element`
+> **Table**: (`props`) => `any`
 
 Data table component
 
@@ -3222,11 +3222,11 @@ Data table component
 
 ###### props
 
-`object` & `HTMLAttributes`\<`HTMLDivElement`\>
+`any`
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -3275,7 +3275,7 @@ Data table component
 
 ###### TagPopup()
 
-> **TagPopup**: (`props`) => `Element`
+> **TagPopup**: (`props`) => `any`
 
 Provides a popup menu for tag selection and creation.
 Allows users to search, select existing tags, or create new ones.
@@ -3284,11 +3284,11 @@ Allows users to search, select existing tags, or create new ones.
 
 ###### props
 
-`object` & `Partial`\<\{ `alignment?`: `"left"` \| `"top"` \| `"center"` \| `"bottom"` \| `"right"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"left"` \| `"top"` \| `"bottom"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
+`object` & `Partial`\<\{ `alignment?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -3322,7 +3322,7 @@ Allows users to search, select existing tags, or create new ones.
 
 ###### TagPropsEditor()
 
-> **TagPropsEditor**: (`props`) => `Element`
+> **TagPropsEditor**: (`props`) => `any`
 
 Provides an editor interface for managing and configuring tag properties.
 Allows users to add, edit, and delete tag properties, set property types and values.
@@ -3331,11 +3331,11 @@ Allows users to add, edit, and delete tag properties, set property types and val
 
 ###### props
 
-`object` & `Partial`\<\{ `alignment?`: `"left"` \| `"top"` \| `"center"` \| `"bottom"` \| `"right"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"left"` \| `"top"` \| `"bottom"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
+`object` & `Partial`\<\{ `alignment?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`; `allowBeyondContainer?`: `boolean`; `children`: (`openMenu`, `closeMenu`) => `ReactNode`; `className?`: `string`; `container?`: `RefObject`\<`HTMLElement`\>; `crossOffset?`: `number`; `defaultPlacement?`: `"top"` \| `"bottom"` \| `"left"` \| `"right"`; `escapeToClose?`: `boolean`; `keyboardNav?`: `boolean`; `menu`: (`close`, `state?`) => `ReactNode`; `menuAttr?`: `Record`\<`string`, `any`\>; `navDirection?`: `"vertical"` \| `"both"`; `noPointerLogic?`: `boolean`; `offset?`: `number`; `onClosed?`: () => `void`; `onOpened?`: () => `void`; `placement?`: `"vertical"` \| `"horizontal"`; `style?`: `CSSProperties`; \}\>
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -3379,7 +3379,7 @@ Allows users to add, edit, and delete tag properties, set property types and val
 
 ###### Tooltip()
 
-> **Tooltip**: (`props`) => `Element`
+> **Tooltip**: (`props`) => `any`
 
 Tooltip component
 
@@ -3389,7 +3389,7 @@ Tooltip component
 
 ###### alignment?
 
-`"left"` \| `"top"` \| `"center"` \| `"bottom"` \| `"right"`
+`"top"` \| `"bottom"` \| `"left"` \| `"right"` \| `"center"`
 
 ###### allowBeyondContainer?
 
@@ -3401,7 +3401,7 @@ Tooltip component
 
 ###### defaultPlacement?
 
-`"left"` \| `"top"` \| `"bottom"` \| `"right"`
+`"top"` \| `"bottom"` \| `"left"` \| `"right"`
 
 ###### delay?
 
@@ -3429,7 +3429,7 @@ Tooltip component
 
 ###### Returns
 
-`Element`
+`any`
 
 ###### Example
 
@@ -3489,7 +3489,7 @@ React contexts exposed for use in plugins.
 
 ###### BlockEditorContext
 
-> **BlockEditorContext**: `Context`\<\{ `active`: `boolean`; `editor`: `RefObject`\<`HTMLDivElement`\>; `panelId`: `string`; `rootBlockId`: `number`; \}\>
+> **BlockEditorContext**: `Context`\<\{ `active`: `boolean`; `editor`: `RefObject`\<`HTMLDivElement`\>; `panelId`: `string`; `rootBlockId`: `any`; \}\>
 
 Block editor context for accessing the current block editor instance.
 
@@ -3568,6 +3568,38 @@ Optional viewer configuration such as initial rotation.
 ###### Returns
 
 `void`
+
+###### QueryContext
+
+> **QueryContext**: `Context`\<\{ `getAllIds`: (`group?`) => `Promise`\<`number`[]\>; `isRootCollapsed`: `boolean`; `loadPage`: (`page`, `pageSize?`, `group?`) => `Promise`\<`any`[]\>; `setRootCollapsed`: (`collapsed`) => `void`; \}\>
+
+Query context for interacting with the query editor's result loading.
+
+This React context provides pagination and full-id loading helpers for
+custom query views. Custom views should consume this context to manage
+their own pagination (loading more pages of blocks) using the loaded
+results provided in their props.
+
+###### Example
+
+```tsx
+const { useContext } = window.React
+
+const QueryContext = orca.contexts.QueryContext
+
+function TimelineView({ data, options }) {
+  const { loadPage, getAllIds } = useContext(QueryContext)
+
+  async function loadMore() {
+    const nextPage = (options.page ?? 1) + 1
+    const moreIds = await loadPage(nextPage, undefined, undefined)
+    options.page = nextPage
+    // ... append moreIds to the view's state
+  }
+
+  return <div>Timeline of {data.length} group(s)</div>
+}
+```
 
 ###### ZContext
 
@@ -4102,7 +4134,7 @@ The ID of the existing panel to add the new panel next to
 
 The direction to add the panel ("top", "bottom", "left", or "right")
 
-`"left"` | `"top"` | `"bottom"` | `"right"`
+`"top"` | `"bottom"` | `"left"` | `"right"`
 
 ###### src?
 
@@ -4422,7 +4454,7 @@ The ID of the destination panel
 
 The direction to move the panel relative to the destination panel
 
-`"left"` | `"top"` | `"bottom"` | `"right"`
+`"top"` | `"bottom"` | `"left"` | `"right"`
 
 ###### Returns
 
@@ -5394,6 +5426,85 @@ await orca.plugins.setSettingsSchema("my-plugin", {
 })
 ```
 
+##### queryViews
+
+> **queryViews**: `object`
+
+Query views API for registering custom result views that appear in the
+query editor's result view switcher. Custom views render the matched blocks
+of a query and can manage their own pagination via
+`orca.contexts.QueryContext`.
+
+###### registerQueryView()
+
+> **registerQueryView**(`id`, `view`): `void`
+
+Registers a custom query view in the query editor's result view switcher.
+
+###### Parameters
+
+###### id
+
+`string`
+
+A unique identifier for the view
+
+###### view
+
+[`QueryView`](#queryview)
+
+The query view configuration
+
+###### Returns
+
+`void`
+
+###### Example
+
+```ts
+orca.queryViews.registerQueryView("myplugin.timeline", {
+  icon: "ti ti-calendar-stats",
+  title: "Timeline",
+  render: TimelineView,
+})
+```
+
+###### unregisterQueryView()
+
+> **unregisterQueryView**(`id`): `void`
+
+Unregisters a previously registered custom query view.
+
+###### Parameters
+
+###### id
+
+`string`
+
+The identifier of the query view to unregister
+
+###### Returns
+
+`void`
+
+###### Example
+
+```ts
+orca.queryViews.unregisterQueryView("myplugin.timeline")
+```
+
+###### Example
+
+```tsx
+// Register a custom query view (component uses window.React / window.Valtio)
+orca.queryViews.registerQueryView("myplugin.timeline", {
+  icon: "ti ti-calendar-stats",
+  title: "Timeline",
+  defaultOptions: { zoom: "day" },
+  render: TimelineView,
+})
+```
+
 ##### renderers
 
 > **renderers**: `object`
@@ -6097,6 +6208,20 @@ const myPlugin = orca.state.plugins["my-plugin"]
 if (myPlugin && myPlugin.enabled) {
   console.log("My plugin is installed and enabled")
 }
+```
+
+###### queryViews
+
+> **queryViews**: `Record`\<`string`, [`QueryView`](#queryview) \| `undefined`\>
+
+Registry of custom query views that appear in the query editor's
+result view switcher.
+
+###### Example
+
+```ts
+// Check if a specific custom query view is registered
+const hasTimelineView = !!orca.state.queryViews["myplugin.timeline"]
 ```
 
 ###### repo
@@ -7349,7 +7474,7 @@ End date for the calendar range
 
 ###### field
 
-> **field**: `string` & `object` \| `"created"` \| `"modified"` \| `"journal"`
+> **field**: `"created"` \| `"modified"` \| `"journal"` \| `string` & `object`
 
 Field to use for calendar date (created/modified/journal or a tag DateTime property prefixed with `_`)
 
@@ -7884,6 +8009,80 @@ The text to search for
 
 ***
 
+### QueryView
+
+Configuration for a custom query view that appears in the query editor's
+result view switcher and renders the matched blocks.
+
+#### Properties
+
+##### defaultOptions?
+
+> `optional` **defaultOptions**: `Record`\<`string`, `any`\>
+
+Optional initial options merged into the view's options object on its
+first selection.
+
+##### icon
+
+> **icon**: `string`
+
+Tabler icon identifier for the result view dropdown.
+
+##### render
+
+> **render**: `ComponentType`\<[`QueryViewProps`](#queryviewprops)\>
+
+React component that renders the query results.
+
+##### title
+
+> **title**: `string`
+
+Display title shown in the result view dropdown.
+
+***
+
+### QueryViewProps
+
+Props passed to a registered custom query view component.
+
+#### Properties
+
+##### data
+
+> **data**: `number`[][]
+
+The currently loaded query results, grouped by result group.
+Each inner array is the block IDs of one result group. For an
+ungrouped query this is a single group containing all loaded block IDs.
+
+##### options
+
+> **options**: `Record`\<`string`, `any`\>
+
+Per-view options, backed by the query editor's reactive view options proxy.
+The view owns this object and should mutate it directly (and use
+`useSnapshot` for reactivity) to persist its configuration.
+
+##### refresh()
+
+> **refresh**: () => `Promise`\<`void`\>
+
+Re-runs the query and refreshes the results.
+
+###### Returns
+
+`Promise`\<`void`\>
+
+##### tagNames
+
+> **tagNames**: `string`[]
+
+Tag names derived from the query conditions.
+
+***
+
 ### RowPanel
 
 Represents a panel container that arranges its children in a row.
@@ -7965,7 +8164,7 @@ Pinyin representation for Chinese text filtering
 
 ##### render()?
 
-> `optional` **render**: (`closeMenu`, `icon?`, `color?`, `label?`, `value?`, `selected?`, `onClick?`) => `ReactElement`\<`any`, `string` \| `JSXElementConstructor`\<`any`\>\>
+> `optional` **render**: (`closeMenu`, `icon?`, `color?`, `label?`, `value?`, `selected?`, `onClick?`) => `any`
 
 Custom render function for the option item in the dropdown.
 Return `null` to skip this option (useful for non-selectable separators/headings).
@@ -8002,7 +8201,7 @@ Return `null` to skip this option (useful for non-selectable separators/headings
 
 ###### Returns
 
-`ReactElement`\<`any`, `string` \| `JSXElementConstructor`\<`any`\>\>
+`any`
 
 ##### renderSelected()?
 
@@ -8057,7 +8256,7 @@ Props for the Select dropdown component
 
 ##### alignment?
 
-> `optional` **alignment**: `"left"` \| `"center"` \| `"right"`
+> `optional` **alignment**: `"left"` \| `"right"` \| `"center"`
 
 Popup alignment relative to the button
 
@@ -8292,7 +8491,7 @@ Icon identifier for the command
 
 ###### Inherited from
 
-[`SlashCommand`](#slashcommand).[`icon`](#icon-2)
+[`SlashCommand`](#slashcommand).[`icon`](#icon-3)
 
 ##### pinyin
 
@@ -8308,7 +8507,7 @@ Display title for the command
 
 ###### Inherited from
 
-[`SlashCommand`](#slashcommand).[`title`](#title-1)
+[`SlashCommand`](#slashcommand).[`title`](#title-2)
 
 ***
 

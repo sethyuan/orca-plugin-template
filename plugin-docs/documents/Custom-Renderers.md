@@ -36,23 +36,23 @@ To implement a block renderer in Orca Note, you need to define a React component
 
 ```tsx
 // CustomImageBlockRenderer.tsx
-import type { Block, DbId } from "./orca.d.ts"
+import type { Block, DbId } from "./orca.d.ts";
 
-const { useRef, useMemo } = window.React
-const { useSnapshot } = window.Valtio
-const { BlockShell, BlockChildren } = orca.components
+const { useRef, useMemo } = window.React;
+const { useSnapshot } = window.Valtio;
+const { BlockShell, BlockChildren } = orca.components;
 
 type Props = {
-  panelId: string
-  blockId: DbId
-  rndId: string
-  blockLevel: number
-  indentLevel: number
-  mirrorId?: DbId
-  initiallyCollapsed?: boolean
-  renderingMode?: "normal" | "simple" | "simple-children"
-  src: string
-}
+  panelId: string;
+  blockId: DbId;
+  rndId: string;
+  blockLevel: number;
+  indentLevel: number;
+  mirrorId?: DbId;
+  initiallyCollapsed?: boolean;
+  renderingMode?: "normal" | "simple" | "simple-children";
+  src: string;
+};
 
 export default function CustomImageBlockRenderer({
   panelId,
@@ -65,8 +65,8 @@ export default function CustomImageBlockRenderer({
   renderingMode,
   src, // received from _repr
 }: Props) {
-  const { blocks } = useSnapshot(orca.state)
-  const block = blocks[mirrorId ?? blockId]
+  const { blocks } = useSnapshot(orca.state);
+  const block = blocks[mirrorId ?? blockId];
 
   const childrenBlocks = useMemo(
     () => (
@@ -78,14 +78,8 @@ export default function CustomImageBlockRenderer({
         renderingMode={renderingMode}
       />
     ),
-    [
-      blockId,
-      panelId,
-      blockLevel,
-      indentLevel,
-      renderingMode,
-    ],
-  )
+    [blockId, panelId, blockLevel, indentLevel, renderingMode],
+  );
 
   return (
     <BlockShell
@@ -103,7 +97,7 @@ export default function CustomImageBlockRenderer({
       contentJsx={<img src={src} />}
       childrenJsx={childrenBlocks}
     />
-  )
+  );
 }
 ```
 
@@ -127,7 +121,7 @@ To make the `CustomImageBlockRenderer` available in Orca Note, you need to regis
 
 ```ts
 // register.ts
-import CustomImageBlockRenderer from "./CustomImage"
+import CustomImageBlockRenderer from "./CustomImage";
 
 export default function register() {
   orca.renderers.registerBlock(
@@ -135,7 +129,7 @@ export default function register() {
     false,
     CustomImageBlockRenderer,
     { assetFields: ["src"] },
-  )
+  );
 }
 ```
 
@@ -159,11 +153,11 @@ After registering the `CustomImageBlockRenderer`, you can create a block of this
 
 ```ts
 // createImageBlock.ts
-import type { DbId, CursorData } from "./orca.d.ts"
+import type { DbId, CursorData } from "./orca.d.ts";
 
 export async function createImageBlock(cursor: CursorData, src: string) {
-  const block = orca.state.blocks[cursor?.anchor?.blockId]
-  if (!block) return null
+  const block = orca.state.blocks[cursor?.anchor?.blockId];
+  if (!block) return null;
 
   const newBlockId = await orca.commands.invokeEditorCommand(
     "core.editor.insertBlock",
@@ -173,9 +167,9 @@ export async function createImageBlock(cursor: CursorData, src: string) {
     null,
     // _repr
     { type: "myplugin.image", src },
-  )
+  );
 
-  return newBlockId
+  return newBlockId;
 }
 ```
 
@@ -197,30 +191,30 @@ To implement an inline renderer in Orca Note, you need to create a React compone
 
 ```tsx
 // CustomMathInlineRenderer.tsx
-const { useRef, useEffect } = window.React
+const { useRef, useEffect } = window.React;
 
 export default function CustomMathInlineRenderer({
   blockId,
   data,
   index,
 }: {
-  blockId: string
-  data: ContentFragment
-  index: number
+  blockId: string;
+  data: ContentFragment;
+  index: number;
 }) {
-  const ref = useRef<HTMLSpanElement>(null)
+  const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     if (ref.current) {
-      renderMathExpression(ref.current, data.v)
+      renderMathExpression(ref.current, data.v);
     }
-  }, [data.v])
+  }, [data.v]);
 
   return (
     <span ref={ref} className="orca-inline myplugin-inline-math">
       {data.v}
     </span>
-  )
+  );
 }
 
 function renderMathExpression(element: HTMLElement, expression: string) {
@@ -240,14 +234,14 @@ To make the custom inline renderer available in Orca Note, you need to register 
 
 ```ts
 // register.ts
-import CustomMathInlineRenderer from "./CustomMathInlineRenderer"
+import CustomMathInlineRenderer from "./CustomMathInlineRenderer";
 
 export default function register() {
   orca.renderers.registerInline(
     "myplugin.math",
     false,
     CustomMathInlineRenderer,
-  )
+  );
 }
 ```
 
@@ -267,23 +261,23 @@ After registering your inline renderer, you can use it by creating content fragm
 
 ```ts
 // insertMathExpression.ts
-import type { CursorData } from "./orca.d.ts"
+import type { CursorData } from "./orca.d.ts";
 
 export async function insertMathExpression(
   cursor: CursorData,
   expression: string,
 ) {
-  if (!cursor) return
+  if (!cursor) return;
 
   // Create a math fragment
-  const mathFragment = { t: "myplugin.math", v: expression }
+  const mathFragment = { t: "myplugin.math", v: expression };
 
   // Insert the fragment at the cursor position
   await orca.commands.invokeEditorCommand(
     "core.editor.insertFragments",
     cursor,
     [mathFragment],
-  )
+  );
 }
 ```
 

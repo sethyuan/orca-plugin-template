@@ -83,12 +83,12 @@ For example:
 ```typescript
 export async function load(pluginName: string) {
   // Plugin enable logic
-  console.log("Plugin enabled")
+  console.log("Plugin enabled");
 }
 
 export async function unload() {
   // Plugin disable logic
-  console.log("Plugin disabled")
+  console.log("Plugin disabled");
 }
 ```
 
@@ -115,20 +115,20 @@ export async function load(pluginName: string) {
   orca.commands.registerCommand(
     `${pluginName}.helloWorld`,
     () => {
-      orca.notify("info", "Hello from My Plugin!")
+      orca.notify("info", "Hello from My Plugin!");
     },
     "Show welcome message",
-  )
+  );
 
   // Register block renderer
-  orca.renderers.registerBlock("myblock", false, MyCustomBlockRenderer)
+  orca.renderers.registerBlock("myblock", false, MyCustomBlockRenderer);
 
   // Add toolbar button
   orca.toolbar.registerToolbarButton(`${pluginName}.toolbarButton`, {
     icon: "ti ti-star",
     tooltip: "My Tool Button",
     command: `${pluginName}.helloWorld`,
-  })
+  });
 }
 ```
 
@@ -144,13 +144,13 @@ When a user disables the plugin or the application closes, the plugin's `unload`
 ```typescript
 export async function unload() {
   // Unregister command
-  orca.commands.unregisterCommand(`${pluginName}.helloWorld`)
+  orca.commands.unregisterCommand(`${pluginName}.helloWorld`);
 
   // Unregister block renderer
-  orca.renderers.unregisterBlock("myblock")
+  orca.renderers.unregisterBlock("myblock");
 
   // Remove toolbar button
-  orca.toolbar.unregisterToolbarButton(`${pluginName}.toolbarButton`)
+  orca.toolbar.unregisterToolbarButton(`${pluginName}.toolbarButton`);
 }
 ```
 
@@ -171,14 +171,14 @@ const settingsSchema = {
     type: "string",
     defaultValue: "",
   },
-}
+};
 
 export async function load(pluginName: string) {
   // Register settings schema
-  await orca.plugins.setSettingsSchema(pluginName, settingsSchema)
+  await orca.plugins.setSettingsSchema(pluginName, settingsSchema);
 
   // Get settings value
-  const settings = orca.state.plugins[pluginName]?.settings
+  const settings = orca.state.plugins[pluginName]?.settings;
   if (settings?.enableFeatureX) {
     // Execute related logic
   }
@@ -201,13 +201,13 @@ The global object `orca` is the main entry point for the plugin system, providin
 
 ```typescript
 // Example: Get current language
-const currentLocale = orca.state.locale
+const currentLocale = orca.state.locale;
 
 // Example: Get loaded block data
-const currentBlock = orca.state.blocks[blockId]
+const currentBlock = orca.state.blocks[blockId];
 
 // Example: Get application settings
-const themeMode = orca.state.themeMode // "light" or "dark"
+const themeMode = orca.state.themeMode; // "light" or "dark"
 ```
 
 Orca Note uses the `valtio` library to manage application state (mounted to `window.Valtio`). You can listen to state changes using the `subscribe` function provided by `valtio` or other supported mechanisms.
@@ -226,7 +226,7 @@ orca.commands.registerCommand(
     /* Command logic */
   }, // Command function
   "Command Display Name", // Command label
-)
+);
 
 // Register editor command (supports undo)
 orca.commands.registerEditorCommand(
@@ -234,13 +234,13 @@ orca.commands.registerEditorCommand(
   doFn, // Execute function
   undoFn, // Undo function
   { label: "Editor Command" }, // Configuration
-)
+);
 
 // Execute command
-await orca.commands.invokeCommand("core.toggleThemeMode")
+await orca.commands.invokeCommand("core.toggleThemeMode");
 
 // Execute editor command
-await orca.commands.invokeEditorCommand("myplugin.editorCommand", cursor)
+await orca.commands.invokeEditorCommand("myplugin.editorCommand", cursor);
 ```
 
 ### Render System
@@ -254,14 +254,14 @@ orca.renderers.registerBlock(
   true, // Is editable
   CustomBlockRenderer, // React component
   { assetFields: ["src"] }, // Optional renderer settings
-)
+);
 
 // Register inline content renderer
 orca.renderers.registerInline(
   "myplugin.customInline", // Inline type
   true, // Is editable
   CustomInlineRenderer, // React component
-)
+);
 ```
 
 Orca Note's UI is based on React 18 (mounted to `window.React`). If you need to develop custom UI components, you can use the globally exposed React directly without importing the React library separately.
@@ -277,9 +277,9 @@ orca.converters.registerBlock(
   "myplugin.customBlock", // Block type
   (block, repr) => {
     // Convert function
-    return `<div>${block.text}</div>`
+    return `<div>${block.text}</div>`;
   },
-)
+);
 
 // Register inline content converter
 orca.converters.registerInline(
@@ -287,9 +287,9 @@ orca.converters.registerInline(
   "myplugin.customInline", // Inline type
   (content) => {
     // Convert function
-    return content.v.toString()
+    return content.v.toString();
   },
-)
+);
 ```
 
 ### UI Extensions
@@ -316,13 +316,13 @@ Plugins can persistently store data:
 
 ```typescript
 // Set plugin data
-await orca.plugins.setData("myplugin", "key", "value")
+await orca.plugins.setData("myplugin", "key", "value");
 
 // Get plugin data
-const value = await orca.plugins.getData("myplugin", "key")
+const value = await orca.plugins.getData("myplugin", "key");
 
 // Remove plugin data
-await orca.plugins.removeData("myplugin", "key")
+await orca.plugins.removeData("myplugin", "key");
 ```
 
 ### Notification System
@@ -340,7 +340,7 @@ orca.notify(
       /* Execute when notification is clicked */
     },
   },
-)
+);
 ```
 
 ## Main Data Models
@@ -351,18 +351,18 @@ Blocks are the basic structural units of Orca Note:
 
 ```typescript
 interface Block {
-  id: DbId // Block ID
-  content?: ContentFragment[] // Block content
-  text?: string // Plain text content
-  created: Date // Creation time
-  modified: Date // Modification time
-  parent?: DbId // Parent block ID
-  left?: DbId // Left block ID
-  children: DbId[] // Child block ID list
-  aliases: string[] // Alias list
-  properties: BlockProperty[] // Property list
-  refs: BlockRef[] // Reference list
-  backRefs: BlockRef[] // Back reference list
+  id: DbId; // Block ID
+  content?: ContentFragment[]; // Block content
+  text?: string; // Plain text content
+  created: Date; // Creation time
+  modified: Date; // Modification time
+  parent?: DbId; // Parent block ID
+  left?: DbId; // Left block ID
+  children: DbId[]; // Child block ID list
+  aliases: string[]; // Alias list
+  properties: BlockProperty[]; // Property list
+  refs: BlockRef[]; // Reference list
+  backRefs: BlockRef[]; // Back reference list
 }
 ```
 
@@ -374,14 +374,14 @@ Panels are the main organizational units of the UI:
 
 ```typescript
 interface ViewPanel {
-  id: string // Panel ID
-  view: PanelView // View type ("journal" | "block")
-  viewArgs: Record<string, any> // View parameters
-  viewState: Record<string, any> // View state
-  width?: number // Width
-  height?: number // Height
-  locked?: boolean // Is locked
-  wide?: boolean // Is wide screen
+  id: string; // Panel ID
+  view: PanelView; // View type ("journal" | "block")
+  viewArgs: Record<string, any>; // View parameters
+  viewState: Record<string, any>; // View state
+  width?: number; // Width
+  height?: number; // Height
+  locked?: boolean; // Is locked
+  wide?: boolean; // Is wide screen
 }
 ```
 
@@ -420,17 +420,17 @@ export async function load(pluginName: string) {
   orca.commands.registerEditorCommand(
     "myplugin.insertTimeBlock",
     async ([_panelId, _rootBlockId, cursor]) => {
-      if (!cursor || !cursor.anchor) return null
+      if (!cursor || !cursor.anchor) return null;
 
-      const currentBlock = orca.state.blocks[cursor.anchor.blockId]
-      if (!currentBlock) return null
+      const currentBlock = orca.state.blocks[cursor.anchor.blockId];
+      if (!currentBlock) return null;
 
       // Get current time
-      const now = new Date()
-      const timeStr = now.toLocaleTimeString()
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString();
 
       // Create new block content
-      const content = [{ t: "t", v: `Current time is: ${timeStr}` }]
+      const content = [{ t: "t", v: `Current time is: ${timeStr}` }];
 
       // Call editor command to insert new block
       await orca.commands.invokeEditorCommand(
@@ -439,13 +439,13 @@ export async function load(pluginName: string) {
         currentBlock,
         "after",
         content,
-      )
+      );
 
-      return null
+      return null;
     },
     () => {},
     { label: "Insert Time Block" },
-  )
+  );
 
   // Register slash command
   orca.slashCommands.registerSlashCommand("myplugin.insertTimeBlock", {
@@ -453,15 +453,15 @@ export async function load(pluginName: string) {
     group: "Utilities",
     title: "Insert Time Block",
     command: "myplugin.insertTimeBlock",
-  })
+  });
 }
 
 export async function unload() {
   // Unregister command
-  orca.commands.unregisterCommand("myplugin.insertTimeBlock")
+  orca.commands.unregisterCommand("myplugin.insertTimeBlock");
 
   // Remove slash command
-  orca.slashCommands.unregisterSlashCommand("myplugin.insertTimeBlock")
+  orca.slashCommands.unregisterSlashCommand("myplugin.insertTimeBlock");
 }
 ```
 
@@ -471,23 +471,23 @@ This example shows how to create a custom map block renderer:
 
 ```tsx
 // src/MapBlock.tsx
-import type { Block, DbId } from "./orca.d.ts"
+import type { Block, DbId } from "./orca.d.ts";
 
-const { useRef, useMemo } = window.React
-const { useSnapshot } = window.Valtio
-const { BlockShell, BlockChildren } = orca.components
+const { useRef, useMemo } = window.React;
+const { useSnapshot } = window.Valtio;
+const { BlockShell, BlockChildren } = orca.components;
 
 type Props = {
-  panelId: string
-  blockId: DbId
-  rndId: string
-  blockLevel: number
-  indentLevel: number
-  mirrorId?: DbId
-  initiallyCollapsed?: boolean
-  renderingMode?: "normal" | "simple" | "simple-children"
-  keyword: string // Prop to receive from _repr
-}
+  panelId: string;
+  blockId: DbId;
+  rndId: string;
+  blockLevel: number;
+  indentLevel: number;
+  mirrorId?: DbId;
+  initiallyCollapsed?: boolean;
+  renderingMode?: "normal" | "simple" | "simple-children";
+  keyword: string; // Prop to receive from _repr
+};
 
 export default function MapBlockRenderer({
   panelId,
@@ -500,8 +500,8 @@ export default function MapBlockRenderer({
   renderingMode,
   keyword, // Received from _repr
 }: Props) {
-  const { blocks } = useSnapshot(orca.state)
-  const block = blocks[mirrorId ?? blockId]
+  const { blocks } = useSnapshot(orca.state);
+  const block = blocks[mirrorId ?? blockId];
 
   const childrenBlocks = useMemo(
     () => (
@@ -513,14 +513,8 @@ export default function MapBlockRenderer({
         renderingMode={renderingMode}
       />
     ),
-    [
-      blockId,
-      panelId,
-      blockLevel,
-      indentLevel,
-      renderingMode,
-    ],
-  )
+    [blockId, panelId, blockLevel, indentLevel, renderingMode],
+  );
 
   return (
     <BlockShell
@@ -548,31 +542,31 @@ export default function MapBlockRenderer({
       }
       childrenJsx={childrenBlocks}
     />
-  )
+  );
 }
 
 // src/main.ts
-import MapBlockRenderer from "./MapBlock"
+import MapBlockRenderer from "./MapBlock";
 
 export async function load(pluginName: string) {
   // Register block renderer
-  orca.renderers.registerBlock("myplugin.map", false, MapBlockRenderer)
+  orca.renderers.registerBlock("myplugin.map", false, MapBlockRenderer);
 
   // Register block converter
   orca.converters.registerBlock("plain", "myplugin.map", (block, repr) => {
-    return `Map of: ${repr.keyword}`
-  })
+    return `Map of: ${repr.keyword}`;
+  });
 
   // Register editor command to insert the map block
   orca.commands.registerEditorCommand(
     "myplugin.insertMapBlockCommand",
     async ([_panelId, _rootBlockId, cursor]) => {
-      if (!cursor || !cursor.anchor) return null
-      const currentBlock = orca.state.blocks[cursor.anchor.blockId]
-      if (!currentBlock) return null
+      if (!cursor || !cursor.anchor) return null;
+      const currentBlock = orca.state.blocks[cursor.anchor.blockId];
+      if (!currentBlock) return null;
 
       // Define the representation for the new map block
-      const repr = { type: "myplugin.map", keyword: "Beijing" }
+      const repr = { type: "myplugin.map", keyword: "Beijing" };
 
       // Insert the new map block after the current block using core.editor.insertBlock
       const newBlockId = await orca.commands.invokeEditorCommand(
@@ -582,13 +576,13 @@ export async function load(pluginName: string) {
         "after", // Position
         null, // No content fragments
         repr, // Representation object
-      )
+      );
 
-      return null // Indicate success
+      return null; // Indicate success
     },
     () => {},
     { label: "Insert Map Block" },
-  )
+  );
 
   // Register slash command to trigger the map block insertion
   orca.slashCommands.registerSlashCommand("myplugin.insertMapBlock", {
@@ -596,21 +590,21 @@ export async function load(pluginName: string) {
     group: "Insert", // Group in the slash command menu
     title: "Insert Map Block", // Title displayed in the menu
     command: "myplugin.insertMapBlockCommand", // The editor command to execute
-  })
+  });
 }
 
 export async function unload() {
   // Unregister block renderer
-  orca.renderers.unregisterBlock("myplugin.map")
+  orca.renderers.unregisterBlock("myplugin.map");
 
   // Unregister block converter
-  orca.converters.unregisterBlock("plain", "myplugin.map")
+  orca.converters.unregisterBlock("plain", "myplugin.map");
 
   // Unregister the editor command
-  orca.commands.unregisterCommand("myplugin.insertMapBlockCommand")
+  orca.commands.unregisterCommand("myplugin.insertMapBlockCommand");
 
   // Unregister the slash command
-  orca.slashCommands.unregisterSlashCommand("myplugin.insertMapBlock")
+  orca.slashCommands.unregisterSlashCommand("myplugin.insertMapBlock");
 }
 ```
 

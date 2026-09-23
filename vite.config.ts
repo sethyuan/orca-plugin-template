@@ -6,11 +6,10 @@ import { defineConfig } from "vite";
 export default defineConfig(({ command }) => {
   return {
     define: {
-      "process.env": {
-        NODE_ENV: JSON.stringify(
-          command === "build" ? "production" : "development",
-        ),
-      },
+      "process.env": "{}",
+      "process.env.NODE_ENV": JSON.stringify(
+        command === "build" ? "production" : "development",
+      ),
     },
     build: {
       lib: {
@@ -23,7 +22,18 @@ export default defineConfig(({ command }) => {
       },
     },
     plugins: [
-      react(),
+      react({
+        // Force the SWC transform path so we can switch JSX to the classic
+        // runtime. The automatic runtime pulls in `react/jsx-runtime`, which
+        // references `process.env` and `require("react")` and breaks inside
+        // Orca's webview. `React` is available as a global instead.
+        plugins: [],
+        useAtYourOwnRisk_mutateSwcOptions: (options) => {
+          if (options.jsc?.transform?.react) {
+            options.jsc.transform.react.runtime = "classic";
+          }
+        },
+      }),
       externalGlobals({
         react: "React",
         "react-dom": "ReactDOM",

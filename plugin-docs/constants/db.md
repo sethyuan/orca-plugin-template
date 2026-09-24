@@ -346,6 +346,10 @@ Types used for references.
 
 > `readonly` **Media**: `4` = `4`
 
+##### Mirror
+
+> `readonly` **Mirror**: `5` = `5`
+
 ##### Property
 
 > `readonly` **Property**: `2` = `2`

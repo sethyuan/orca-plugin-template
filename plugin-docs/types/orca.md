@@ -379,6 +379,12 @@ End position of the selection
 
 Whether the selection direction is forward (anchor comes before focus)
 
+##### mirror?
+
+> `optional` **mirror**: [`CursorMirror`](#cursormirror)
+
+The mirror the cursor is under
+
 ##### panelId
 
 > **panelId**: `string`
@@ -390,6 +396,12 @@ ID of the panel containing the cursor
 > **rootBlockId**: `number`
 
 ID of the root block in the editor
+
+***
+
+### CursorMirror
+
+Mirror IDs for the cursor.
 
 ***
 
@@ -4936,9 +4948,9 @@ Reads installed plugin versions from local plugin folders.
 
 ###### listFiles()
 
-> **listFiles**(`name`, `pluginAsRoot?`): `Promise`\<`string`[]\>
+> **listFiles**(`name`, `folderOrRoot?`, `pluginAsRoot?`): `Promise`\<`string`[]\>
 
-Lists all files in the plugin's data directory recursively.
+Lists files in the plugin's data directory recursively.
 
 ###### Parameters
 
@@ -4948,23 +4960,33 @@ Lists all files in the plugin's data directory recursively.
 
 The name of the plugin
 
+###### folderOrRoot?
+
+Either a folder path relative to the plugin's data directory to scope the listing to (e.g. `"a/b"`), or a boolean treated as the legacy `pluginAsRoot` flag. When omitted, all files in the plugin's data directory are listed.
+
+`string` | `boolean`
+
 ###### pluginAsRoot?
 
 `boolean`
 
-Whether to use the plugin's directory as the root (defaults to false, which uses the repo's plugin data directory)
+Whether to use the plugin's directory as the root (defaults to false, which uses the repo's plugin data directory). Ignored when `folderOrRoot` is a boolean.
 
 ###### Returns
 
 `Promise`\<`string`[]\>
 
-A Promise that resolves to an array of relative file paths
+A Promise that resolves to an array of file paths relative to the plugin's data directory. Returns an empty array when the folder does not exist or is not a directory.
 
 ###### Example
 
 ```ts
 const files = await orca.plugins.listFiles("my-plugin")
 console.log("Plugin files:", files)
+
+// Only files under the "a/b" folder (paths are relative to the plugin root)
+const folderFiles = await orca.plugins.listFiles("my-plugin", "a/b")
+console.log("Files under a/b:", folderFiles)
 ```
 
 ###### load()
@@ -5909,6 +5931,36 @@ Organized as a nested record with format as the first key and block type as the 
 // Check if a converter exists for HTML format and custom block type
 const hasConverter = !!orca.state.blockConverters?.["html"]?.["myplugin.customBlock"]
 ```
+
+###### blockHighlight
+
+> **blockHighlight**: `object`
+
+Block highlighting data. `container` is stored via valtio `ref()`.
+
+###### blockHighlight.container
+
+> **container**: `HTMLElement`
+
+###### blockHighlight.height
+
+> **height**: `string`
+
+###### blockHighlight.left
+
+> **left**: `string`
+
+###### blockHighlight.top
+
+> **top**: `string`
+
+###### blockHighlight.type
+
+> **type**: `"selection"` \| `"drag"`
+
+###### blockHighlight.width
+
+> **width**: `string`
 
 ###### blockMenuCommands
 

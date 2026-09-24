@@ -320,6 +320,7 @@ await orca.commands.invokeEditorCommand(
   - `2` (`RefType.Property`): A reference via a block property.
   - `3` (`RefType.RefData`): A reference via a reference data.
   - `4` (`RefType.Media`): A reference via a media, like a whiteboard, pdf or epub.
+  - `5` (`RefType.Mirror`): A reference from a mirror block to its source block.
 - `alias?: string`: An optional alias for this specific reference instance (often used with `RefType.Property`).
 - **Usage**: Establishes relationships between blocks, like properties or embeds.
 
@@ -594,6 +595,25 @@ await orca.commands.invokeEditorCommand(
 );
 ```
 
+### `core.editor.insertParent`
+
+- **Description**: Wraps the current block, or the selected top-level sibling blocks, in a newly created parent block. The selected blocks become the children of the new parent in order, and the caret moves into the new parent.
+- **Parameters**:
+  - `ids?: DbId[]`: Optional explicit list of sibling block IDs to wrap. When omitted, the top-level blocks of the current selection are used.
+- **Usage**: Creates one indent level of structure in a single undoable step. All selected blocks must share the same non-null parent, otherwise a warning is shown and nothing happens. The new parent keeps the shared list type (`ol`/`ul`/`task`) when every selected block has that same type; otherwise it is a plain `text` block. Mirrors are wrapped at their own location (the source block is unaffected).
+
+```typescript
+// Wrap the current block (or selected siblings) in a new parent block
+await orca.commands.invokeEditorCommand("core.editor.insertParent", cursor);
+
+// Wrap an explicit list of sibling blocks
+await orca.commands.invokeEditorCommand("core.editor.insertParent", cursor, [
+  blockId1,
+  blockId2,
+  blockId3,
+]);
+```
+
 ### `core.editor.insertTag`
 
 - **Description**: Inserts a tag into a block or updates an existing tag.
@@ -805,6 +825,72 @@ await orca.commands.invokeEditorCommand("core.editor.insertTable", cursor);
 
 ```typescript
 await orca.commands.invokeEditorCommand("core.editor.insertQuote", cursor);
+```
+
+### `core.editor.insertKanban`
+
+- **Description**: Inserts a kanban board block. The board starts empty; its level-1 children are lists and their level-2 children are cards.
+- **Parameters**:
+- `id?: DbId`: Optional block ID to insert at or modify.
+- **Usage**: Creates a kanban board for organizing blocks into columns.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.insertKanban", cursor);
+```
+
+### `core.editor.insertGallery`
+
+- **Description**: Inserts a gallery block. Its level-1 children are rendered as cards in a wrapping grid, with a trailing "+" cell to add new cards. Cards can be reordered within the gallery or dragged onto other blocks like normal blocks.
+- **Parameters**:
+- `id?: DbId`: Optional block ID to insert at or modify.
+- **Usage**: Creates a gallery for laying blocks out as cards.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.insertGallery", cursor);
+```
+
+### `core.editor.insertColumns`
+
+- **Description**: Inserts a columns block. Its level-1 children are rendered as columns in a single non-wrapping row. A new block starts with two empty columns. Columns can be reordered within the row, resized by the drag bar between them (widths are stored as percentages), or dragged onto other blocks like normal blocks.
+- **Parameters**:
+- `id?: DbId`: Optional block ID to insert at or modify.
+- **Usage**: Creates a multi-column layout.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.insertColumns", cursor);
+```
+
+### `core.editor.insertTimeline`
+
+- **Description**: Inserts a timeline block. Its level-1 children are rendered as time entries (a right-aligned label on a vertical axis) and each level-1 child's level-2 children are rendered as the entry's content column. A new block starts with one empty pair (a time block and a content block). Shift+Enter on an entry (or any block inside it) inserts a new pair below; the time column width can be resized and is stored on the container.
+- **Parameters**:
+- `id?: DbId`: Optional block ID to insert at or modify.
+- **Usage**: Creates a chronological timeline layout.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.insertTimeline", cursor);
+```
+
+### `core.editor.insertTabsH`
+
+- **Description**: Inserts a horizontal tabs block. Its level-1 children are rendered as tabs in a horizontal strip (the tab's own content is the label) and the active tab's level-2 children are shown in a shared content pane. A new block starts with one empty tab. Drop a block on the strip to make it a tab, or on the content pane to make it the active tab's content.
+- **Parameters**:
+- `id?: DbId`: Optional block ID to insert at or modify.
+- **Usage**: Creates a horizontal tabbed layout.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.insertTabsH", cursor);
+```
+
+### `core.editor.insertTabsV`
+
+- **Description**: Inserts a vertical tabs block. Same as `insertTabsH`, but the tab strip is rendered vertically on the left. A new block starts with one empty tab.
+- **Parameters**:
+- `id?: DbId`: Optional block ID to insert at or modify.
+- **Usage**: Creates a vertical tabbed layout.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.insertTabsV", cursor);
 ```
 
 ### `core.editor.insertPDF`

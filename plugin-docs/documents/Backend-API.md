@@ -8,6 +8,40 @@
 
 This document will guide you through all available backend API calls, which can be invoked using `orca.invokeBackend`.
 
+## batch-insert-tags
+
+Inserts one or more tags (with optional properties) into multiple blocks in a single atomic operation. Tags that do not exist yet are created automatically, and property values are validated against each tag's property definitions.
+
+Parameters:
+
+- blockIds - Array of block IDs to insert the tags into (DbId / number).
+- tags - Array of tags to insert. Each tag is either a tag name (string) or an object `{ name: string; props?: Record<string, any> }`, where `props` maps property names to values (e.g., valid choices for single/multi-select, an array of block IDs or alias strings for block references).
+- strictProps - Controls how unknown or invalid properties are handled (boolean, defaults to `true`). When `true`, an unknown property or an invalid value throws an error and aborts the transaction; when `false`, invalid properties are silently skipped.
+
+Returns:
+
+A tuple `[undoState, updatedBlocks]`, where `undoState` is `{ createdTagIds, createdTagRefs }` describing newly created tags and tag references (usable with `undo-batch-insert-tags`), and `updatedBlocks` is an array of the blocks that were modified.
+
+Example:
+
+```ts
+// Insert tags with properties into multiple blocks in one call
+const [undoState, updatedBlocks] = await orca.invokeBackend(
+  "batch-insert-tags",
+  [12345, 67890],
+  [
+    "project",
+    { name: "related", props: { Blocks: [4, "Project A"] } },
+  ],
+  true,
+);
+
+// Update frontend state with the modified blocks
+for (const block of updatedBlocks ?? []) {
+  orca.state.blocks[block.id] = block;
+}
+```
+
 ## change-tag-property-choice
 
 Changes a single/multi choice property value across all blocks that use it.

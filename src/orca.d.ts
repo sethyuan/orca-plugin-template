@@ -1,141 +1,13 @@
 declare global {
-  declare const orca: Orca
+  declare const orca: Orca;
+
   interface Window {
-    orca: Orca
-    React: React
-    ReactDOM: ReactDOM
-    createRoot: Function
-    Valtio: any
+    orca: Orca;
+    React: React;
+    ReactDOM: ReactDOM;
+    createRoot: Function;
+    Valtio: any;
   }
-}
-
-/** Props for the ContextMenu component */
-export interface ContextMenuProps {
-  className?: string
-  style?: React.CSSProperties
-  menu: (close: () => void, state?: any) => React.ReactNode
-  children: (
-    openMenu: (e: React.UIEvent, state?: any) => void,
-    closeMenu: () => void,
-    menuShown: boolean,
-  ) => React.ReactNode
-  container?: React.RefObject<HTMLElement>
-  alignment?: "left" | "top" | "center" | "bottom" | "right"
-  placement?: "vertical" | "horizontal"
-  defaultPlacement?: "top" | "bottom" | "left" | "right"
-  allowBeyondContainer?: boolean
-  noPointerLogic?: boolean
-  clickToClose?: boolean
-  restoreSelectionOnClose?: boolean
-  keyboardNav?: boolean
-  navDirection?: "vertical" | "both"
-  onKeyboardNav?: (el: HTMLElement) => void | Promise<void>
-  menuAttr?: Record<string, any>
-  offset?: number
-  crossOffset?: number
-  escapeToClose?: boolean
-  replacement?: boolean
-  useCurrentTarget?: boolean
-  onOpened?: () => void
-  onClosed?: () => void
-  rect?: DOMRect
-}
-
-/** A single option item for the Select component */
-export interface SelectOption {
-  /** Icon class (e.g., "ti ti-folder") or emoji string */
-  icon?: string
-  /** Background color for the option label (e.g., "#ff6600") */
-  color?: string
-  /** Display label shown in the dropdown and button */
-  label?: string
-  /** Unique value identifying this option */
-  value?: string
-  /** Pinyin representation for Chinese text filtering */
-  pinyin?: string
-  /** Click handler attached to the selected chip (multi-selection mode only) */
-  onClick?: (e: React.MouseEvent) => void | Promise<void>
-  /**
-   * Custom render function for the option item in the dropdown.
-   * Return `null` to skip this option (useful for non-selectable separators/headings).
-   */
-  render?: (
-    closeMenu: () => void,
-    icon?: string,
-    color?: string,
-    label?: string,
-    value?: string,
-    selected?: boolean,
-    onClick?: (e: React.MouseEvent) => void | Promise<void>,
-  ) => React.ReactElement | null
-  /**
-   * Custom render function for the selected value chip (multi-selection mode only).
-   * When set, this replaces the default coloured-chip display for this option.
-   */
-  renderSelected?: (
-    closeMenu: () => void,
-    icon?: string,
-    color?: string,
-    label?: string,
-    value?: string,
-    onClick?: (e: React.MouseEvent) => void | Promise<void>,
-  ) => React.ReactElement
-}
-
-/** Props for the Select dropdown component */
-export interface SelectProps {
-  /** Currently selected values */
-  selected: string[]
-  /** Available options */
-  options: SelectOption[]
-  /** Called when selection changes; second argument is the current filter keyword if filtering is active */
-  onChange?: (
-    selected: string[],
-    filterKeyword?: string,
-  ) => void | Promise<void>
-  /** Formats a selected value into a display string when the value has no matching option */
-  formatter?: (value: string) => string
-  /** Scrolling container ref for the popup */
-  menuContainer?: React.RefObject<HTMLElement>
-  /** Minimum width of the select button and dropdown */
-  width?: number | string
-  /** Placeholder text when nothing is selected */
-  placeholder?: string
-  /** Allow selecting multiple values */
-  multiSelection?: boolean
-  /** Show a "Clear selection(s)" action at the bottom of the dropdown */
-  withClear?: boolean
-  /** Show a search input to filter options */
-  filter?: boolean
-  /** Placeholder for the filter input */
-  filterPlaceholder?: string
-  /**
-   * Custom filter function.
-   * Receives the keyword and the full option list, returns filtered options.
-   * When omitted, a default label/pinyin substring match is used.
-   */
-  filterFunction?: (
-    keyword: string,
-    options?: SelectOption[],
-  ) => Promise<SelectOption[]> | SelectOption[]
-  /** Element appended after the filter input */
-  filterPost?: React.ReactElement
-  /** Popup alignment relative to the button */
-  alignment?: "left" | "center" | "right"
-  /** Element prepended inside the select button */
-  pre?: React.ReactElement
-  /** Class name for the trigger button */
-  buttonClassName?: string
-  /** Class name for the dropdown menu */
-  menuClassName?: string
-  /** Additional attributes forwarded to the Menu component */
-  menuAttrs?: Record<string, any>
-  /** Disable the select */
-  disabled?: boolean
-  /** Show the select in read-only mode (button click does nothing) */
-  readOnly?: boolean
-  onMouseEnter?: (e: React.MouseEvent) => void
-  onMouseLeave?: (e: React.MouseEvent) => void
 }
 
 /** The main Orca API entry, access it with the global `orca` object.
@@ -167,7 +39,7 @@ export interface Orca {
    * console.log(`Found ${taggedBlocks.length} active projects`)
    * ```
    */
-  invokeBackend(type: APIMsg, ...args: any[]): Promise<any>
+  invokeBackend(type: APIMsg, ...args: any[]): Promise<any>;
 
   /**
    * The current state of the Orca Note application.
@@ -188,7 +60,7 @@ export interface Orca {
      * orca.nav.goTo("block", { blockId: 123 }, activePanelId)
      * ```
      */
-    activePanel: string
+    activePanel: string;
 
     /**
      * Registry of block converters that transform block content to different formats.
@@ -213,7 +85,7 @@ export interface Orca {
           | undefined
         >
       | undefined
-    >
+    >;
 
     /**
      * Registry of block renderer components used to render different block types.
@@ -225,7 +97,7 @@ export interface Orca {
      * const codeBlockRenderer = orca.state.blockRenderers["code"]
      * ```
      */
-    blockRenderers: Record<string, any>
+    blockRenderers: Record<string, any>;
 
     /**
      * Map of all blocks currently loaded in memory, indexed by their database IDs.
@@ -240,7 +112,7 @@ export interface Orca {
      * }
      * ```
      */
-    blocks: Record<string | DbId, Block | undefined>
+    blocks: Record<string | DbId, Block | undefined>;
 
     /**
      * Registry of all registered commands in the application, indexed by their IDs.
@@ -254,7 +126,7 @@ export interface Orca {
      * }
      * ```
      */
-    commands: Record<string, CommandWithPinyin | undefined>
+    commands: Record<string, CommandWithPinyin | undefined>;
 
     /**
      * The absolute path to the application data directory.
@@ -265,7 +137,7 @@ export interface Orca {
      * console.log(`Application data directory: ${orca.state.dataDir}`)
      * ```
      */
-    dataDir: string
+    dataDir: string;
 
     /**
      * The absolute path to the current repository directory, if a repository is added from non-standard location.
@@ -278,7 +150,7 @@ export interface Orca {
      * }
      * ```
      */
-    repoDir?: string
+    repoDir?: string;
 
     /**
      * Registry of inline content converters that transform inline content to different formats.
@@ -301,7 +173,7 @@ export interface Orca {
           ) => string | Promise<string>
         >
       | undefined
-    >
+    >;
 
     /**
      * Registry of inline renderer components used to render different inline content types.
@@ -313,7 +185,7 @@ export interface Orca {
      * const codeInlineRenderer = orca.state.inlineRenderers["code"]
      * ```
      */
-    inlineRenderers: Record<string, any>
+    inlineRenderers: Record<string, any>;
 
     /**
      * Registry of panel renderer components used to render different panel types.
@@ -325,7 +197,7 @@ export interface Orca {
      * const journalPanelRenderer = orca.state.panelRenderers["journal"]
      * ```
      */
-    panelRenderers: Record<string, any>
+    panelRenderers: Record<string, any>;
 
     /**
      * The current locale of the application (e.g., "en" for English, "zh-CN" for Chinese).
@@ -338,7 +210,7 @@ export interface Orca {
      * }
      * ```
      */
-    locale: string
+    locale: string;
 
     /**
      * Array of active notifications currently displayed to the user.
@@ -350,7 +222,7 @@ export interface Orca {
      * const hasErrors = orca.state.notifications.some(n => n.type === "error")
      * ```
      */
-    notifications: Notification[]
+    notifications: Notification[];
 
     /**
      * History of past panel states for backward navigation.
@@ -362,7 +234,7 @@ export interface Orca {
      * const canGoBack = orca.state.panelBackHistory.length > 0
      * ```
      */
-    panelBackHistory: PanelHistory[]
+    panelBackHistory: PanelHistory[];
 
     /**
      * History of forward panel states for forward navigation after going back.
@@ -374,7 +246,7 @@ export interface Orca {
      * const canGoForward = orca.state.panelForwardHistory.length > 0
      * ```
      */
-    panelForwardHistory: PanelHistory[]
+    panelForwardHistory: PanelHistory[];
 
     /**
      * The root panel structure that defines the current layout of the application.
@@ -388,7 +260,7 @@ export interface Orca {
      * console.log(`Number of child panels: ${rootPanel.children.length}`)
      * ```
      */
-    panels: RowPanel
+    panels: RowPanel;
 
     /**
      * Registry of all installed plugins, indexed by their names.
@@ -403,7 +275,7 @@ export interface Orca {
      * }
      * ```
      */
-    plugins: Record<string, Plugin | undefined>
+    plugins: Record<string, Plugin | undefined>;
 
     /**
      * The name of the current repository.
@@ -414,7 +286,7 @@ export interface Orca {
      * console.log(`Current repository: ${orca.state.repo}`)
      * ```
      */
-    repo: string
+    repo: string;
 
     /**
      * Application and repository settings, indexed by their numeric IDs.
@@ -426,7 +298,7 @@ export interface Orca {
      * const editorFontSize = orca.state.settings[12345]
      * ```
      */
-    settings: Record<number, any>
+    settings: Record<number, any>;
 
     /**
      * Indicates whether the settings panel is currently opened.
@@ -439,12 +311,12 @@ export interface Orca {
      * }
      * ```
      */
-    settingsOpened: boolean
+    settingsOpened: boolean;
 
     /**
      * Indicates whether the plugin marketplace modal is currently opened.
      */
-    pluginMarketplaceOpened: boolean
+    pluginMarketplaceOpened: boolean;
 
     /**
      * Indicates whether the command palette is currently opened.
@@ -457,7 +329,7 @@ export interface Orca {
      * }
      * ```
      */
-    commandPaletteOpened: boolean
+    commandPaletteOpened: boolean;
 
     /**
      * Indicates whether the global search panel is currently opened.
@@ -470,7 +342,7 @@ export interface Orca {
      * }
      * ```
      */
-    globalSearchOpened: boolean
+    globalSearchOpened: boolean;
 
     /**
      * Indicates whether the repo switcher modal is currently opened.
@@ -486,7 +358,7 @@ export interface Orca {
      * orca.state.repoSwitcherOpened = false
      * ```
      */
-    repoSwitcherOpened: boolean
+    repoSwitcherOpened: boolean;
 
     /**
      * Registry of keyboard shortcuts, mapping shortcut strings to command IDs.
@@ -501,7 +373,7 @@ export interface Orca {
      * }
      * ```
      */
-    shortcuts: Record<string, string | undefined>
+    shortcuts: Record<string, string | undefined>;
 
     /**
      * The current theme mode of the application ("light" or "dark").
@@ -514,7 +386,7 @@ export interface Orca {
      * }
      * ```
      */
-    themeMode: "light" | "dark"
+    themeMode: "light" | "dark";
 
     /**
      * Registry of installed themes, mapping theme names to CSS file paths.
@@ -526,7 +398,7 @@ export interface Orca {
      * const oceanThemePath = orca.state.themes["Ocean Blue"]
      * ```
      */
-    themes: Record<string, string | undefined>
+    themes: Record<string, string | undefined>;
 
     /**
      * Registry of custom buttons registered for the header bar.
@@ -538,7 +410,7 @@ export interface Orca {
      * const hasMyButton = !!orca.state.headbarButtons["myplugin.syncButton"]
      * ```
      */
-    headbarButtons: Record<string, (() => React.ReactElement) | undefined>
+    headbarButtons: Record<string, (() => React.ReactElement) | undefined>;
 
     /**
      * Registry of toolbar buttons or button groups registered for the editor toolbar.
@@ -553,7 +425,7 @@ export interface Orca {
     toolbarButtons: Record<
       string,
       (ToolbarButton | ToolbarButton[]) | undefined
-    >
+    >;
 
     /**
      * Registry of slash commands available in the editor, indexed by their IDs.
@@ -565,7 +437,19 @@ export interface Orca {
      * const hasInsertChartCommand = !!orca.state.slashCommands["myplugin.insertChart"]
      * ```
      */
-    slashCommands: Record<string, SlashCommandWithPinyin | undefined>
+    slashCommands: Record<string, SlashCommandWithPinyin | undefined>;
+
+    /**
+     * Registry of custom query views that appear in the query editor's
+     * result view switcher.
+     *
+     * @example
+     * ```ts
+     * // Check if a specific custom query view is registered
+     * const hasTimelineView = !!orca.state.queryViews["myplugin.timeline"]
+     * ```
+     */
+    queryViews: Record<string, QueryView | undefined>;
 
     /**
      * Registry of block menu commands that appear in block context menus.
@@ -577,7 +461,7 @@ export interface Orca {
      * const hasExportCommand = !!orca.state.blockMenuCommands["myplugin.exportBlock"]
      * ```
      */
-    blockMenuCommands: Record<string, BlockMenuCommand | undefined>
+    blockMenuCommands: Record<string, BlockMenuCommand | undefined>;
 
     /**
      * Registry of tag menu commands that appear in tag context menus.
@@ -589,7 +473,7 @@ export interface Orca {
      * const hasTagStatsCommand = !!orca.state.tagMenuCommands["myplugin.tagStats"]
      * ```
      */
-    tagMenuCommands: Record<string, TagMenuCommand | undefined>
+    tagMenuCommands: Record<string, TagMenuCommand | undefined>;
 
     /**
      * Registry of editor sidetools that appear in the block editor's sidebar.
@@ -601,7 +485,7 @@ export interface Orca {
      * const hasTocTool = !!orca.state.editorSidetools["myplugin.toc"]
      * ```
      */
-    editorSidetools: Record<string, EditorSidetool | undefined>
+    editorSidetools: Record<string, EditorSidetool | undefined>;
 
     /**
      * The currently active tab in the sidebar.
@@ -614,7 +498,7 @@ export interface Orca {
      * }
      * ```
      */
-    sidebarTab: string
+    sidebarTab: string;
 
     /**
      * Optional filter for tags shown in the tags panel.
@@ -627,7 +511,7 @@ export interface Orca {
      * }
      * ```
      */
-    filterInTags?: string
+    filterInTags?: string;
 
     /**
      * Optional filter for pages shown in the pages panel.
@@ -640,8 +524,18 @@ export interface Orca {
      * }
      * ```
      */
-    filterInPages?: string
-  }
+    filterInPages?: string;
+
+    /** Block highlighting data. `container` is stored via valtio `ref()`. */
+    blockHighlight: {
+      container: HTMLElement;
+      type: "selection" | "drag";
+      top: string;
+      left: string;
+      width: string;
+      height: string;
+    } | null;
+  };
 
   /**
    * Commands API, used to register, invoke, and manage commands in Orca.
@@ -685,7 +579,7 @@ export interface Orca {
      * )
      * ```
      */
-    registerCommand(id: string, fn: CommandFn, label: string): void
+    registerCommand(id: string, fn: CommandFn, label: string): void;
 
     /**
      * Unregisters a previously registered command.
@@ -698,7 +592,7 @@ export interface Orca {
      * orca.commands.unregisterCommand("myplugin.exportAsPDF")
      * ```
      */
-    unregisterCommand(id: string): void
+    unregisterCommand(id: string): void;
 
     /**
      * Registers an editor command that can be undone/redone in the editor.
@@ -744,7 +638,7 @@ export interface Orca {
       doFn: EditorCommandFn,
       undoFn: CommandFn,
       opts: { label: string; hasArgs?: boolean; noFocusNeeded?: boolean },
-    ): void
+    ): void;
 
     /**
      * Unregisters a previously registered editor command.
@@ -757,7 +651,7 @@ export interface Orca {
      * orca.commands.unregisterEditorCommand("myplugin.formatSelectedText")
      * ```
      */
-    unregisterEditorCommand(id: string): void
+    unregisterEditorCommand(id: string): void;
 
     /**
      * Invokes a command by its ID with optional arguments.
@@ -778,7 +672,7 @@ export interface Orca {
      * )
      * ```
      */
-    invokeCommand(id: string, ...args: any[]): Promise<any>
+    invokeCommand(id: string, ...args: any[]): Promise<any>;
 
     /**
      * Invokes an editor command by its ID with cursor context and optional arguments.
@@ -802,7 +696,7 @@ export interface Orca {
       id: string,
       cursor: CursorData | null,
       ...args: any[]
-    ): Promise<any>
+    ): Promise<any>;
 
     /**
      * Invokes an editor command (as a top command) by its ID with cursor context and optional arguments.
@@ -826,7 +720,7 @@ export interface Orca {
       id: string,
       cursor: CursorData | null,
       ...args: any[]
-    ): Promise<any>
+    ): Promise<any>;
 
     /**
      * Executes a group of commands as a single undoable operation.
@@ -876,10 +770,10 @@ export interface Orca {
     invokeGroup(
       callback: () => Promise<void>,
       options?: {
-        undoable?: boolean
-        topGroup?: boolean
+        undoable?: boolean;
+        topGroup?: boolean;
       },
-    ): Promise<void>
+    ): Promise<void>;
 
     /**
      * Registers a "before command" hook to conditionally prevent a command from executing.
@@ -907,7 +801,7 @@ export interface Orca {
      * )
      * ```
      */
-    registerBeforeCommand(id: string, pred: BeforeHookPred): void
+    registerBeforeCommand(id: string, pred: BeforeHookPred): void;
 
     /**
      * Unregisters a previously registered "before command" hook.
@@ -924,7 +818,7 @@ export interface Orca {
      * )
      * ```
      */
-    unregisterBeforeCommand(id: string, pred: BeforeHookPred): void
+    unregisterBeforeCommand(id: string, pred: BeforeHookPred): void;
 
     /**
      * Registers an "after command" hook to execute code after a command completes.
@@ -948,7 +842,7 @@ export interface Orca {
      * )
      * ```
      */
-    registerAfterCommand(id: string, fn: AfterHook): void
+    registerAfterCommand(id: string, fn: AfterHook): void;
 
     /**
      * Unregisters a previously registered "after command" hook.
@@ -965,8 +859,8 @@ export interface Orca {
      * )
      * ```
      */
-    unregisterAfterCommand(id: string, fn: AfterHook): void
-  }
+    unregisterAfterCommand(id: string, fn: AfterHook): void;
+  };
 
   /**
    * Keyboard shortcuts management API, used to assign, reset and reload keyboard shortcuts.
@@ -987,7 +881,7 @@ export interface Orca {
      *
      * @returns A Promise that resolves when shortcuts are reloaded
      */
-    reload(): Promise<void>
+    reload(): Promise<void>;
 
     /**
      * Assigns a keyboard shortcut to a command.
@@ -1006,7 +900,7 @@ export interface Orca {
      * await orca.shortcuts.assign("", "myplugin.myCommand")
      * ```
      */
-    assign(shortcut: string, command: string): Promise<void>
+    assign(shortcut: string, command: string): Promise<void>;
 
     /**
      * Resets a command to its default keyboard shortcut.
@@ -1019,8 +913,8 @@ export interface Orca {
      * await orca.shortcuts.reset("core.toggleThemeMode")
      * ```
      */
-    reset(command: string): Promise<void>
-  }
+    reset(command: string): Promise<void>;
+  };
 
   /**
    * Navigation API, used to control Orca's panel navigation and layout.
@@ -1054,7 +948,7 @@ export interface Orca {
       id: string,
       dir: "top" | "bottom" | "left" | "right",
       src?: Pick<ViewPanel, "view" | "viewArgs" | "viewState">,
-    ): string | null
+    ): string | null;
 
     /**
      * Moves a panel from one location to another in the specified direction.
@@ -1073,7 +967,7 @@ export interface Orca {
       from: string,
       to: string,
       dir: "top" | "bottom" | "left" | "right",
-    ): void
+    ): void;
 
     /**
      * Closes a panel by its ID.
@@ -1086,7 +980,7 @@ export interface Orca {
      * orca.nav.close(orca.state.activePanel)
      * ```
      */
-    close(id: string): void
+    close(id: string): void;
 
     /**
      * Closes all panels except the specified one.
@@ -1099,7 +993,7 @@ export interface Orca {
      * orca.nav.closeAllBut(orca.state.activePanel)
      * ```
      */
-    closeAllBut(id: string): void
+    closeAllBut(id: string): void;
 
     /**
      * Changes the sizes of panels starting from the specified panel.
@@ -1113,7 +1007,7 @@ export interface Orca {
      * orca.nav.changeSizes(orca.state.activePanel, [300, 700])
      * ```
      */
-    changeSizes(startPanelId: string, values: number[]): void
+    changeSizes(startPanelId: string, values: number[]): void;
 
     /**
      * Switches focus to the specified panel.
@@ -1125,7 +1019,7 @@ export interface Orca {
      * orca.nav.switchFocusTo("panel1")
      * ```
      */
-    switchFocusTo(id: string): void
+    switchFocusTo(id: string): void;
 
     /**
      * Navigates back to a previous panel state in history.
@@ -1143,7 +1037,7 @@ export interface Orca {
      * orca.nav.goBack({ withRedo: true, steps: 3 })
      * ```
      */
-    goBack(options?: { withRedo?: boolean; steps?: number }): void
+    goBack(options?: { withRedo?: boolean; steps?: number }): void;
 
     /**
      * Navigates forward to a later panel state in history.
@@ -1157,7 +1051,7 @@ export interface Orca {
      * orca.nav.goForward({ steps: 2 })
      * ```
      */
-    goForward(options?: { steps?: number }): void
+    goForward(options?: { steps?: number }): void;
 
     /**
      * Navigates to a specific view in the specified panel or current active panel.
@@ -1179,7 +1073,7 @@ export interface Orca {
       view: PanelView,
       viewArgs?: Record<string, any>,
       panelId?: string,
-    ): void
+    ): void;
 
     /**
      * Replace the view of a panel without recording history.
@@ -1208,7 +1102,7 @@ export interface Orca {
       view: PanelView,
       viewArgs?: Record<string, any>,
       panelId?: string,
-    ): void
+    ): void;
 
     /**
      * Opens a view in the last used panel or creates a new one if needed.
@@ -1223,7 +1117,7 @@ export interface Orca {
      * orca.nav.openInLastPanel("block", { blockId: 123 })
      * ```
      */
-    openInLastPanel(view: PanelView, viewArgs?: Record<string, any>): void
+    openInLastPanel(view: PanelView, viewArgs?: Record<string, any>): void;
 
     /**
      * Finds a view panel by its ID within the panel structure.
@@ -1240,7 +1134,7 @@ export interface Orca {
      * }
      * ```
      */
-    findViewPanel(id: string, panels: RowPanel): ViewPanel | null
+    findViewPanel(id: string, panels: RowPanel): ViewPanel | null;
 
     /**
      * Checks if there is more than one view panel open.
@@ -1254,7 +1148,7 @@ export interface Orca {
      * }
      * ```
      */
-    isThereMoreThanOneViewPanel(): boolean
+    isThereMoreThanOneViewPanel(): boolean;
 
     /**
      * Focuses the next panel in the tab order.
@@ -1264,7 +1158,7 @@ export interface Orca {
      * orca.nav.focusNext()
      * ```
      */
-    focusNext(): void
+    focusNext(): void;
 
     /**
      * Focuses the previous panel in the tab order.
@@ -1274,8 +1168,8 @@ export interface Orca {
      * orca.nav.focusPrev()
      * ```
      */
-    focusPrev(): void
-  }
+    focusPrev(): void;
+  };
 
   /**
    * Plugin management API, used to register, enable, disable, and manage plugin data and settings.
@@ -1308,7 +1202,7 @@ export interface Orca {
      * await orca.plugins.register("my-plugin")
      * ```
      */
-    register(name: string): Promise<void>
+    register(name: string): Promise<void>;
 
     /**
      * Unregisters a plugin from Orca.
@@ -1322,7 +1216,7 @@ export interface Orca {
      * await orca.plugins.unregister("my-plugin")
      * ```
      */
-    unregister(name: string): Promise<void>
+    unregister(name: string): Promise<void>;
 
     /**
      * Enables a previously disabled plugin.
@@ -1335,7 +1229,7 @@ export interface Orca {
      * await orca.plugins.enable("my-plugin")
      * ```
      */
-    enable(name: string): Promise<void>
+    enable(name: string): Promise<void>;
 
     /**
      * Disables a plugin without unregistering it.
@@ -1349,7 +1243,7 @@ export interface Orca {
      * await orca.plugins.disable("my-plugin")
      * ```
      */
-    disable(name: string): Promise<void>
+    disable(name: string): Promise<void>;
 
     /**
      * Sets the settings schema for a plugin, defining what settings are available
@@ -1376,7 +1270,10 @@ export interface Orca {
      * })
      * ```
      */
-    setSettingsSchema(name: string, schema: PluginSettingsSchema): Promise<void>
+    setSettingsSchema(
+      name: string,
+      schema: PluginSettingsSchema,
+    ): Promise<void>;
 
     /**
      * Sets settings for a plugin at either the application or repository level.
@@ -1404,7 +1301,7 @@ export interface Orca {
       to: "app" | "repo",
       name: string,
       settings: Record<string, any>,
-    ): Promise<void>
+    ): Promise<void>;
 
     /**
      * Loads a plugin with the given schema and settings.
@@ -1419,7 +1316,7 @@ export interface Orca {
       name: string,
       schema: PluginSettingsSchema,
       settings: Record<string, any>,
-    ): Promise<void>
+    ): Promise<void>;
 
     /**
      * Unloads a plugin. This is called when disabling or unregistering a plugin.
@@ -1428,7 +1325,7 @@ export interface Orca {
      * @param name - The name of the plugin to unload
      * @returns A Promise that resolves when the plugin is unloaded
      */
-    unload(name: string): Promise<void>
+    unload(name: string): Promise<void>;
 
     /**
      * Gets all data keys stored by a plugin.
@@ -1442,7 +1339,7 @@ export interface Orca {
      * console.log("Stored data keys:", keys)
      * ```
      */
-    getDataKeys(name: string): Promise<string[]>
+    getDataKeys(name: string): Promise<string[]>;
 
     /**
      * Retrieves data stored by a plugin.
@@ -1457,7 +1354,7 @@ export interface Orca {
      * console.log("User preferences:", userData)
      * ```
      */
-    getData(name: string, key: string): Promise<any>
+    getData(name: string, key: string): Promise<any>;
 
     /**
      * Stores data for a plugin.
@@ -1480,7 +1377,7 @@ export interface Orca {
       name: string,
       key: string,
       value: string | number | ArrayBuffer | null,
-    ): Promise<void>
+    ): Promise<void>;
 
     /**
      * Removes a specific piece of data stored by a plugin.
@@ -1494,7 +1391,7 @@ export interface Orca {
      * await orca.plugins.removeData("my-plugin", "cached-results")
      * ```
      */
-    removeData(name: string, key: string): Promise<void>
+    removeData(name: string, key: string): Promise<void>;
 
     /**
      * Removes all data stored by a plugin.
@@ -1507,7 +1404,7 @@ export interface Orca {
      * await orca.plugins.clearData("my-plugin")
      * ```
      */
-    clearData(name: string): Promise<void>
+    clearData(name: string): Promise<void>;
 
     /**
      * Reads a file from the plugin's data directory in the current repository.
@@ -1532,7 +1429,7 @@ export interface Orca {
       filePath: string,
       type?: "string" | "buffer",
       pluginAsRoot?: boolean,
-    ): Promise<string | ArrayBuffer | null>
+    ): Promise<string | ArrayBuffer | null>;
 
     /**
      * Writes a file to the plugin's data directory in the current repository.
@@ -1554,7 +1451,7 @@ export interface Orca {
       filePath: string,
       data: string | ArrayBuffer,
       pluginAsRoot?: boolean,
-    ): Promise<void>
+    ): Promise<void>;
 
     /**
      * Removes a file from the plugin's data directory.
@@ -1573,7 +1470,7 @@ export interface Orca {
       name: string,
       filePath: string,
       pluginAsRoot?: boolean,
-    ): Promise<void>
+    ): Promise<void>;
 
     /**
      * Removes a folder from the plugin's data directory.
@@ -1592,22 +1489,31 @@ export interface Orca {
       name: string,
       folderPath: string,
       pluginAsRoot?: boolean,
-    ): Promise<void>
+    ): Promise<void>;
 
     /**
-     * Lists all files in the plugin's data directory recursively.
+     * Lists files in the plugin's data directory recursively.
      *
      * @param name - The name of the plugin
-     * @param pluginAsRoot - Whether to use the plugin's directory as the root (defaults to false, which uses the repo's plugin data directory)
-     * @returns A Promise that resolves to an array of relative file paths
+     * @param folderOrRoot - Either a folder path relative to the plugin's data directory to scope the listing to (e.g. `"a/b"`), or a boolean treated as the legacy `pluginAsRoot` flag. When omitted, all files in the plugin's data directory are listed.
+     * @param pluginAsRoot - Whether to use the plugin's directory as the root (defaults to false, which uses the repo's plugin data directory). Ignored when `folderOrRoot` is a boolean.
+     * @returns A Promise that resolves to an array of file paths relative to the plugin's data directory. Returns an empty array when the folder does not exist or is not a directory.
      *
      * @example
      * ```ts
      * const files = await orca.plugins.listFiles("my-plugin")
      * console.log("Plugin files:", files)
+     *
+     * // Only files under the "a/b" folder (paths are relative to the plugin root)
+     * const folderFiles = await orca.plugins.listFiles("my-plugin", "a/b")
+     * console.log("Files under a/b:", folderFiles)
      * ```
      */
-    listFiles(name: string, pluginAsRoot?: boolean): Promise<string[]>
+    listFiles(
+      name: string,
+      folderOrRoot?: string | boolean,
+      pluginAsRoot?: boolean,
+    ): Promise<string[]>;
 
     /**
      * Checks if a file exists in the plugin's data directory.
@@ -1626,20 +1532,20 @@ export interface Orca {
       name: string,
       filePath: string,
       pluginAsRoot?: boolean,
-    ): Promise<boolean>
+    ): Promise<boolean>;
 
     /**
      * Reads installed plugin versions from local plugin folders.
      */
     getInstalledVersions(
       ids: string[],
-    ): Promise<Record<string, string | undefined>>
+    ): Promise<Record<string, string | undefined>>;
 
     /**
      * Downloads and deploys a marketplace plugin zip package into the local plugins directory.
      */
-    deployMarketplacePlugin(id: string, zipUrl: string): Promise<void>
-  }
+    deployMarketplacePlugin(id: string, zipUrl: string): Promise<void>;
+  };
 
   /**
    * Theme management API, used to register, unregister, and manage visual themes.
@@ -1663,7 +1569,11 @@ export interface Orca {
      * orca.themes.register("my-plugin", "Dark Ocean", "themes/dark-ocean.css")
      * ```
      */
-    register(pluginName: string, themeName: string, themeFileName: string): void
+    register(
+      pluginName: string,
+      themeName: string,
+      themeFileName: string,
+    ): void;
 
     /**
      * Unregisters a theme.
@@ -1675,7 +1585,7 @@ export interface Orca {
      * orca.themes.unregister("Dark Ocean")
      * ```
      */
-    unregister(themeName: string): void
+    unregister(themeName: string): void;
 
     /**
      * Injects a CSS resource into the application.
@@ -1689,7 +1599,7 @@ export interface Orca {
      * orca.themes.injectCSSResource("styles/my-plugin-styles.css", "my-plugin-ui")
      * ```
      */
-    injectCSSResource(url: string, role: string): void
+    injectCSSResource(url: string, role: string): void;
 
     /**
      * Removes previously injected CSS resources with the specified role.
@@ -1701,21 +1611,21 @@ export interface Orca {
      * orca.themes.removeCSSResources("my-plugin-ui")
      * ```
      */
-    removeCSSResources(role: string): void
+    removeCSSResources(role: string): void;
 
     /**
      * 将 CSS 字符串注入到文档头部，并指定一个角色标识。
      * @param css - 要注入的 CSS 字符串。
      * @param role - 样式元素的角色标识，用于后续删除。
      */
-    injectCSS(css: string, role: string): void
+    injectCSS(css: string, role: string): void;
 
     /**
      * 从文档中删除所有具有指定角色标识的样式元素。
      * @param role - 要删除的样式元素的角色标识。
      */
-    removeCSS(role: string): void
-  }
+    removeCSS(role: string): void;
+  };
 
   /**
    * Renderer management API, used to register custom block and inline content renderers.
@@ -1750,7 +1660,7 @@ export interface Orca {
      * )
      * ```
      */
-    registerInline(type: string, isEditable: boolean, renderer: any): void
+    registerInline(type: string, isEditable: boolean, renderer: any): void;
 
     /**
      * Unregisters a previously registered inline content renderer.
@@ -1762,7 +1672,7 @@ export interface Orca {
      * orca.renderers.unregisterInline("myplugin.special")
      * ```
      */
-    unregisterInline(type: string): void
+    unregisterInline(type: string): void;
 
     /**
      * Registers a custom block renderer.
@@ -1817,11 +1727,11 @@ export interface Orca {
       isEditable: boolean,
       renderer: any,
       opts?: {
-        assetFields?: string[]
-        useChildren?: boolean
-        foldInQuery?: boolean
+        assetFields?: string[];
+        useChildren?: boolean;
+        foldInQuery?: boolean;
       },
-    ): void
+    ): void;
 
     /**
      * Unregisters a previously registered block renderer.
@@ -1833,8 +1743,8 @@ export interface Orca {
      * orca.renderers.unregisterBlock("myplugin.diagram")
      * ```
      */
-    unregisterBlock(type: string): void
-  }
+    unregisterBlock(type: string): void;
+  };
 
   /**
    * Panel renderer API, used to register custom panel types.
@@ -1867,7 +1777,7 @@ export interface Orca {
      * )
      * ```
      */
-    registerPanel(type: string, renderer: any): void
+    registerPanel(type: string, renderer: any): void;
 
     /**
      * Unregisters a previously registered panel renderer.
@@ -1879,8 +1789,8 @@ export interface Orca {
      * orca.panels.unregisterPanel("myplugin.timeline")
      * ```
      */
-    unregisterPanel(type: string): void
-  }
+    unregisterPanel(type: string): void;
+  };
 
   /**
    * Content converter API, used to register converters for transforming blocks and inline content
@@ -1932,7 +1842,7 @@ export interface Orca {
         forExport?: boolean,
         context?: ConvertContext,
       ) => string | Promise<string>,
-    ): void
+    ): void;
 
     /**
      * Registers an inline content converter for transforming inline content to a specific format.
@@ -1970,7 +1880,7 @@ export interface Orca {
         forExport?: boolean,
         context?: ConvertContext,
       ) => string | Promise<string>,
-    ): void
+    ): void;
 
     /**
      * Unregisters a block converter.
@@ -1983,7 +1893,7 @@ export interface Orca {
      * orca.converters.unregisterBlock("html", "myplugin.countdown")
      * ```
      */
-    unregisterBlock(format: string, type: string): void
+    unregisterBlock(format: string, type: string): void;
 
     /**
      * Unregisters an inline content converter.
@@ -1996,7 +1906,7 @@ export interface Orca {
      * orca.converters.unregisterInline("markdown", "myplugin.highlight")
      * ```
      */
-    unregisterInline(format: string, type: string): void
+    unregisterInline(format: string, type: string): void;
 
     /**
      * Converts a block to a specific format.
@@ -2029,7 +1939,7 @@ export interface Orca {
       block?: Block,
       forExport?: boolean,
       context?: ConvertContext,
-    ): Promise<string>
+    ): Promise<string>;
 
     /**
      * Converts an inline content fragment to a specific format.
@@ -2055,8 +1965,8 @@ export interface Orca {
       content: ContentFragment,
       forExport?: boolean,
       context?: ConvertContext,
-    ): Promise<string>
-  }
+    ): Promise<string>;
+  };
 
   /**
    * Broadcasts API, used for application-wide event messaging between different windows of Orca.
@@ -2088,7 +1998,7 @@ export interface Orca {
      * }
      * ```
      */
-    isHandlerRegistered(type: string): boolean
+    isHandlerRegistered(type: string): boolean;
 
     /**
      * Registers a handler function for a specific broadcast type.
@@ -2104,7 +2014,7 @@ export interface Orca {
      * })
      * ```
      */
-    registerHandler(type: string, handler: CommandFn): void
+    registerHandler(type: string, handler: CommandFn): void;
 
     /**
      * Unregisters a previously registered handler for a specific broadcast type.
@@ -2118,7 +2028,7 @@ export interface Orca {
      * orca.broadcasts.unregisterHandler("core.themeChanged", handleThemeChange)
      * ```
      */
-    unregisterHandler(type: string, handler: CommandFn): void
+    unregisterHandler(type: string, handler: CommandFn): void;
 
     /**
      * Broadcasts an event of a specific type with optional arguments to all registered handlers.
@@ -2138,8 +2048,8 @@ export interface Orca {
      * })
      * ```
      */
-    broadcast(type: string, ...args: any[]): void
-  }
+    broadcast(type: string, ...args: any[]): void;
+  };
 
   /**
    * Pre-built UI components from Orca that can be used in plugin development.
@@ -2192,31 +2102,31 @@ export interface Orca {
      */
     AliasEditor: (
       props: {
-        blockId: DbId
+        blockId: DbId;
       } & Partial<{
-        className?: string
-        style?: CSSProperties
-        menu: (close: () => void, state?: any) => ReactNode
+        className?: string;
+        style?: CSSProperties;
+        menu: (close: () => void, state?: any) => ReactNode;
         children: (
           openMenu: (e: React.UIEvent, state?: any) => void,
           closeMenu: () => void,
-        ) => ReactNode
-        container?: RefObject<HTMLElement>
-        alignment?: "left" | "top" | "center" | "bottom" | "right"
-        placement?: "vertical" | "horizontal"
-        defaultPlacement?: "top" | "bottom" | "left" | "right"
-        allowBeyondContainer?: boolean
-        noPointerLogic?: boolean
-        keyboardNav?: boolean
-        navDirection?: "vertical" | "both"
-        menuAttr?: Record<string, any>
-        offset?: number
-        crossOffset?: number
-        escapeToClose?: boolean
-        onOpened?: () => void
-        onClosed?: () => void
+        ) => ReactNode;
+        container?: RefObject<HTMLElement>;
+        alignment?: "left" | "top" | "center" | "bottom" | "right";
+        placement?: "vertical" | "horizontal";
+        defaultPlacement?: "top" | "bottom" | "left" | "right";
+        allowBeyondContainer?: boolean;
+        noPointerLogic?: boolean;
+        keyboardNav?: boolean;
+        navDirection?: "vertical" | "both";
+        menuAttr?: Record<string, any>;
+        offset?: number;
+        crossOffset?: number;
+        escapeToClose?: boolean;
+        onOpened?: () => void;
+        onClosed?: () => void;
       }>,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Renders a block with all its content and children
      *
@@ -2233,14 +2143,14 @@ export interface Orca {
      */
     Block: (
       props: {
-        panelId: string
-        blockId: DbId
-        blockLevel: number
-        indentLevel: number
-        initiallyCollapsed?: boolean
-        renderingMode?: BlockRenderingMode
+        panelId: string;
+        blockId: DbId;
+        blockLevel: number;
+        indentLevel: number;
+        initiallyCollapsed?: boolean;
+        renderingMode?: BlockRenderingMode;
       } & React.HTMLAttributes<HTMLDivElement>,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Renders a breadcrumb trail for a block's ancestors
      *
@@ -2258,10 +2168,10 @@ export interface Orca {
      * ```
      */
     BlockBreadcrumb: (props: {
-      blockId: DbId
-      className?: string
-      style?: React.CSSProperties
-    }) => JSX.Element | null
+      blockId: DbId;
+      className?: string;
+      style?: React.CSSProperties;
+    }) => JSX.Element | null;
     /**
      * Displays an editable caption input for a block.
      * The caption is saved automatically when the input loses focus.
@@ -2280,12 +2190,12 @@ export interface Orca {
      */
     BlockCaption: (props: {
       /** The ID of the panel containing the block */
-      panelId: string
+      panelId: string;
       /** The ID of the block to display/edit the caption for */
-      blockId: DbId
+      blockId: DbId;
       /** The caption text to display */
-      cap?: string
-    }) => JSX.Element | null
+      cap?: string;
+    }) => JSX.Element | null;
     /**
      * Renders a block's children
      *
@@ -2310,12 +2220,12 @@ export interface Orca {
      * ```
      */
     BlockChildren: (props: {
-      blockId?: DbId
-      panelId: string
-      blockLevel: number
-      indentLevel: number
-      renderingMode?: BlockRenderingMode
-    }) => JSX.Element | null
+      blockId?: DbId;
+      panelId: string;
+      blockLevel: number;
+      indentLevel: number;
+      renderingMode?: BlockRenderingMode;
+    }) => JSX.Element | null;
     /**
      * Provides block selection functionality
      *
@@ -2341,10 +2251,10 @@ export interface Orca {
      */
     BlockSelect: (
       props: {
-        mode: "block" | "ref"
-        scope?: string
-        selected: DbId[]
-        onChange?: (selected: string[]) => void | Promise<void>
+        mode: "block" | "ref";
+        scope?: string;
+        selected: DbId[];
+        onChange?: (selected: string[]) => void | Promise<void>;
       } & Omit<
         SelectProps,
         | "options"
@@ -2354,7 +2264,7 @@ export interface Orca {
         | "filterFunction"
         | "onChange"
       >,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Core component for block rendering with common UI elements.
      * It provides the standard block structure including the handle, folding caret, tags, and back-references.
@@ -2410,27 +2320,27 @@ export interface Orca {
      * ```
      */
     BlockShell: (props: {
-      panelId: string
-      blockId: DbId
-      rndId: string
-      mirrorId?: DbId
-      blockLevel: number
-      indentLevel: number
-      initiallyCollapsed?: boolean
-      renderingMode?: BlockRenderingMode
-      reprClassName?: string
-      reprStyle?: React.CSSProperties
-      reprAttrs?: Record<string, any>
-      contentTag?: any
-      contentClassName?: string
-      contentStyle?: React.CSSProperties
-      contentAttrs?: Record<string, any>
-      contentJsx: React.ReactNode
-      childrenJsx: React.ReactNode
-      editable?: boolean
-      droppable?: boolean
-      selfFoldable?: boolean
-    }) => JSX.Element | null
+      panelId: string;
+      blockId: DbId;
+      rndId: string;
+      mirrorId?: DbId;
+      blockLevel: number;
+      indentLevel: number;
+      initiallyCollapsed?: boolean;
+      renderingMode?: BlockRenderingMode;
+      reprClassName?: string;
+      reprStyle?: React.CSSProperties;
+      reprAttrs?: Record<string, any>;
+      contentTag?: any;
+      contentClassName?: string;
+      contentStyle?: React.CSSProperties;
+      contentAttrs?: Record<string, any>;
+      contentJsx: React.ReactNode;
+      childrenJsx: React.ReactNode;
+      editable?: boolean;
+      droppable?: boolean;
+      selfFoldable?: boolean;
+    }) => JSX.Element | null;
     /**
      * Renders a block preview popup.
      *
@@ -2466,35 +2376,35 @@ export interface Orca {
     BlockPreviewPopup: (
       props: {
         /** The ID of the block to display in the preview */
-        blockId: DbId
+        blockId: DbId;
         /** Optional custom query used to build the preview content */
-        customQuery?: BlockCustomQuery
+        customQuery?: BlockCustomQuery;
         /** Whether to expand the query root block in custom preview mode */
-        expandQueryRoot?: boolean
+        expandQueryRoot?: boolean;
         /** Delay in milliseconds before showing the preview on hover (default: 200) */
-        delay?: number
+        delay?: number;
         /** Whether the preview starts in interactive mode */
-        interactive?: boolean
+        interactive?: boolean;
         /** Reference element used to anchor popup positioning */
-        refElement?: React.RefObject<HTMLElement>
+        refElement?: React.RefObject<HTMLElement>;
         /** DOM rect used to position the popup when no reference element is available */
-        rect?: DOMRect
+        rect?: DOMRect;
         /** Whether the preview popup is visible in controlled mode */
-        visible?: boolean
+        visible?: boolean;
         /** Disables hover-to-open behavior for block reference previews */
-        noHoverPreview?: boolean
+        noHoverPreview?: boolean;
         /** Called when the preview begins closing */
-        onClose?: () => void
+        onClose?: () => void;
         /** Called after the close animation finishes */
-        onClosed?: () => void
+        onClosed?: () => void;
         /** CSS class name for the popup container */
-        className?: string
+        className?: string;
         /** Inline styles for the popup container */
-        style?: React.CSSProperties
+        style?: React.CSSProperties;
         /** Child element that triggers the preview */
-        children?: React.ReactElement
+        children?: React.ReactElement;
       } & React.HTMLAttributes<HTMLDivElement>,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Renders a generic breadcrumb navigation
      *
@@ -2517,10 +2427,10 @@ export interface Orca {
      * ```
      */
     Breadcrumb: (props: {
-      items: React.ReactNode[]
-      className?: string
-      style?: React.CSSProperties
-    }) => JSX.Element | null
+      items: React.ReactNode[];
+      className?: string;
+      style?: React.CSSProperties;
+    }) => JSX.Element | null;
     /**
      * Standard button component with multiple variants
      *
@@ -2552,9 +2462,9 @@ export interface Orca {
         ButtonHTMLAttributes<HTMLButtonElement>,
         HTMLButtonElement
       > & {
-        variant: "solid" | "soft" | "dangerous" | "outline" | "plain"
+        variant: "solid" | "soft" | "dangerous" | "outline" | "plain";
       },
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Checkbox form element
      *
@@ -2578,12 +2488,12 @@ export interface Orca {
      */
     Checkbox: (
       props: {
-        checked?: boolean
-        indeterminate?: boolean
-        disabled?: boolean
-        onChange?: (e: { checked: boolean }) => void | Promise<void>
+        checked?: boolean;
+        indeterminate?: boolean;
+        disabled?: boolean;
+        onChange?: (e: { checked: boolean }) => void | Promise<void>;
       } & Omit<React.HTMLAttributes<HTMLSpanElement>, "onChange">,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Input that handles IME composition events properly
      *
@@ -2616,11 +2526,11 @@ export interface Orca {
         InputHTMLAttributes<HTMLInputElement>,
         HTMLInputElement
       > & {
-        pre?: React.ReactElement
-        post?: React.ReactElement
-        error?: React.ReactNode
+        pre?: React.ReactElement;
+        post?: React.ReactElement;
+        error?: React.ReactNode;
       },
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Textarea that handles IME composition events properly
      *
@@ -2646,7 +2556,7 @@ export interface Orca {
         TextareaHTMLAttributes<HTMLTextAreaElement>,
         HTMLTextAreaElement
       >,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Displays a confirmation dialog
      *
@@ -2688,40 +2598,40 @@ export interface Orca {
      */
     ConfirmBox: (
       props: {
-        text: string
+        text: string;
         onConfirm: (
           e: React.UIEvent,
           close: () => void,
           state?: any,
-        ) => void | Promise<void>
+        ) => void | Promise<void>;
         children: (
           openMenu: (e: React.UIEvent, state?: any) => void,
           closeMenu: () => void,
-        ) => ReactNode
+        ) => ReactNode;
       } & Partial<{
-        className?: string
-        style?: CSSProperties
-        menu: (close: () => void, state?: any) => ReactNode
+        className?: string;
+        style?: CSSProperties;
+        menu: (close: () => void, state?: any) => ReactNode;
         children: (
           openMenu: (e: React.UIEvent, state?: any) => void,
           closeMenu: () => void,
-        ) => ReactNode
-        container?: RefObject<HTMLElement>
-        alignment?: "left" | "top" | "center" | "bottom" | "right"
-        placement?: "vertical" | "horizontal"
-        defaultPlacement?: "top" | "bottom" | "left" | "right"
-        allowBeyondContainer?: boolean
-        noPointerLogic?: boolean
-        keyboardNav?: boolean
-        navDirection?: "vertical" | "both"
-        menuAttr?: Record<string, any>
-        offset?: number
-        crossOffset?: number
-        escapeToClose?: boolean
-        onOpened?: () => void
-        onClosed?: () => void
+        ) => ReactNode;
+        container?: RefObject<HTMLElement>;
+        alignment?: "left" | "top" | "center" | "bottom" | "right";
+        placement?: "vertical" | "horizontal";
+        defaultPlacement?: "top" | "bottom" | "left" | "right";
+        allowBeyondContainer?: boolean;
+        noPointerLogic?: boolean;
+        keyboardNav?: boolean;
+        navDirection?: "vertical" | "both";
+        menuAttr?: Record<string, any>;
+        offset?: number;
+        crossOffset?: number;
+        escapeToClose?: boolean;
+        onOpened?: () => void;
+        onClosed?: () => void;
       }>,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Creates a context menu attached to an element
      *
@@ -2768,7 +2678,7 @@ export interface Orca {
      * </orca.components.ContextMenu>
      * ```
      */
-    ContextMenu: (props: ContextMenuProps) => JSX.Element | null
+    ContextMenu: (props: ContextMenuProps) => JSX.Element | null;
     /**
      * Calendar date picker
      *
@@ -2798,20 +2708,20 @@ export interface Orca {
      * ```
      */
     DatePicker: (props: {
-      mode?: "date" | "time" | "datetime"
-      range?: boolean
-      value: Date | [Date, Date]
-      onChange: (v: Date | [Date, Date]) => void | Promise<void>
-      alignment?: "left" | "center" | "right"
-      menuContainer?: React.RefObject<HTMLElement>
-      visible?: boolean
-      refElement?: React.RefObject<HTMLElement>
-      rect?: DOMRect
-      onClose?: () => void | Promise<void>
-      onClosed?: () => void | Promise<void>
-      className?: string
-      style?: React.CSSProperties
-    }) => JSX.Element | null
+      mode?: "date" | "time" | "datetime";
+      range?: boolean;
+      value: Date | [Date, Date];
+      onChange: (v: Date | [Date, Date]) => void | Promise<void>;
+      alignment?: "left" | "center" | "right";
+      menuContainer?: React.RefObject<HTMLElement>;
+      visible?: boolean;
+      refElement?: React.RefObject<HTMLElement>;
+      rect?: DOMRect;
+      onClose?: () => void | Promise<void>;
+      onClosed?: () => void | Promise<void>;
+      className?: string;
+      style?: React.CSSProperties;
+    }) => JSX.Element | null;
     /**
      * Context menu that appears on hover
      *
@@ -2857,9 +2767,9 @@ export interface Orca {
      */
     HoverContextMenu: (
       props: {
-        children: React.ReactElement
+        children: React.ReactElement;
       } & Omit<ContextMenuProps, "children">,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Image component with loading states
      *
@@ -2888,7 +2798,9 @@ export interface Orca {
      * />
      * ```
      */
-    Image: (props: React.HTMLAttributes<HTMLImageElement>) => JSX.Element | null
+    Image: (
+      props: React.HTMLAttributes<HTMLImageElement>,
+    ) => JSX.Element | null;
     /**
      * Standard text input component
      *
@@ -2921,11 +2833,11 @@ export interface Orca {
         InputHTMLAttributes<HTMLInputElement>,
         HTMLInputElement
       > & {
-        pre?: React.ReactElement
-        post?: React.ReactElement
-        error?: React.ReactNode
+        pre?: React.ReactElement;
+        post?: React.ReactElement;
+        error?: React.ReactNode;
       },
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Input dialog with label and actions
      *
@@ -2972,42 +2884,42 @@ export interface Orca {
      */
     InputBox: (
       props: {
-        label: string
+        label: string;
         onConfirm: (
           value: string | undefined,
           e: React.UIEvent,
           close: () => void,
-        ) => void | Promise<void>
-        defaultValue?: string
-        error?: React.ReactNode
+        ) => void | Promise<void>;
+        defaultValue?: string;
+        error?: React.ReactNode;
         children: (
           openMenu: (e: React.UIEvent, state?: any) => void,
           closeMenu: () => void,
-        ) => ReactNode
+        ) => ReactNode;
       } & Partial<{
-        className?: string
-        style?: CSSProperties
-        menu: (close: () => void, state?: any) => ReactNode
+        className?: string;
+        style?: CSSProperties;
+        menu: (close: () => void, state?: any) => ReactNode;
         children: (
           openMenu: (e: React.UIEvent, state?: any) => void,
           closeMenu: () => void,
-        ) => ReactNode
-        container?: RefObject<HTMLElement>
-        alignment?: "left" | "top" | "center" | "bottom" | "right"
-        placement?: "vertical" | "horizontal"
-        defaultPlacement?: "top" | "bottom" | "left" | "right"
-        allowBeyondContainer?: boolean
-        noPointerLogic?: boolean
-        keyboardNav?: boolean
-        navDirection?: "vertical" | "both"
-        menuAttr?: Record<string, any>
-        offset?: number
-        crossOffset?: number
-        escapeToClose?: boolean
-        onOpened?: () => void
-        onClosed?: () => void
+        ) => ReactNode;
+        container?: RefObject<HTMLElement>;
+        alignment?: "left" | "top" | "center" | "bottom" | "right";
+        placement?: "vertical" | "horizontal";
+        defaultPlacement?: "top" | "bottom" | "left" | "right";
+        allowBeyondContainer?: boolean;
+        noPointerLogic?: boolean;
+        keyboardNav?: boolean;
+        navDirection?: "vertical" | "both";
+        menuAttr?: Record<string, any>;
+        offset?: number;
+        crossOffset?: number;
+        escapeToClose?: boolean;
+        onOpened?: () => void;
+        onClosed?: () => void;
       }>,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Component for loading more items in paginated lists
      *
@@ -3031,11 +2943,11 @@ export interface Orca {
      */
     LoadMore: (
       props: {
-        message?: string
-        onLoadMore: () => void | Promise<void>
-        debounceTime?: number
+        message?: string;
+        onLoadMore: () => void | Promise<void>;
+        debounceTime?: number;
       } & React.HTMLAttributes<HTMLDivElement>,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Efficient view container for switching between components
      *
@@ -3067,13 +2979,13 @@ export interface Orca {
      * ```
      */
     MemoizedViews: (props: {
-      name: string
-      active: string
-      views: { [key: string]: React.ReactElement | null }
-      orientation?: "horizontal" | "vertical"
-      className?: string
-      style?: React.CSSProperties
-    }) => JSX.Element | null
+      name: string;
+      active: string;
+      views: { [key: string]: React.ReactElement | null };
+      orientation?: "horizontal" | "vertical";
+      className?: string;
+      style?: React.CSSProperties;
+    }) => JSX.Element | null;
     /**
      * Standard menu container
      *
@@ -3107,14 +3019,14 @@ export interface Orca {
      */
     Menu: (
       props: {
-        children?: React.ReactNode
-        keyboardNav?: boolean
-        navDirection?: "vertical" | "both"
-        onKeyboardNav?: (el: HTMLElement) => void | Promise<void>
-        refocus?: boolean
-        container?: React.RefObject<HTMLElement>
+        children?: React.ReactNode;
+        keyboardNav?: boolean;
+        navDirection?: "vertical" | "both";
+        onKeyboardNav?: (el: HTMLElement) => void | Promise<void>;
+        refocus?: boolean;
+        container?: React.RefObject<HTMLElement>;
       } & React.HTMLAttributes<HTMLDivElement>,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Menu item component
      *
@@ -3148,13 +3060,13 @@ export interface Orca {
      */
     MenuItem: (
       props: {
-        jsx: React.ReactElement
-        children?: React.ReactElement
-        onClick?: (e: React.MouseEvent) => void | Promise<void>
-        className?: string
-        style?: React.CSSProperties
+        jsx: React.ReactElement;
+        children?: React.ReactElement;
+        onClick?: (e: React.MouseEvent) => void | Promise<void>;
+        className?: string;
+        style?: React.CSSProperties;
       } & React.HTMLAttributes<HTMLDivElement>,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Visual separator for menus
      *
@@ -3173,7 +3085,7 @@ export interface Orca {
      * </orca.components.Menu>
      * ```
      */
-    MenuSeparator: (props: {}) => JSX.Element | null
+    MenuSeparator: (props: {}) => JSX.Element | null;
     /**
      * Text-based menu item
      *
@@ -3225,22 +3137,22 @@ export interface Orca {
      */
     MenuText: (
       props: {
-        title: string
-        subtitle?: string
-        raw?: boolean
-        centered?: boolean
-        preIcon?: string
-        postIcon?: string
-        shortcut?: string
-        disabled?: boolean
-        dangerous?: boolean
-        children?: React.ReactElement
-        onClick?: (e: React.MouseEvent) => void | Promise<void>
-        contextMenu?: (close: () => void) => React.ReactNode
-        className?: string
-        style?: React.CSSProperties
+        title: string;
+        subtitle?: string;
+        raw?: boolean;
+        centered?: boolean;
+        preIcon?: string;
+        postIcon?: string;
+        shortcut?: string;
+        disabled?: boolean;
+        dangerous?: boolean;
+        children?: React.ReactElement;
+        onClick?: (e: React.MouseEvent) => void | Promise<void>;
+        contextMenu?: (close: () => void) => React.ReactNode;
+        className?: string;
+        style?: React.CSSProperties;
       } & Omit<React.HTMLAttributes<HTMLDivElement>, "contextMenu">,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Menu section title
      *
@@ -3274,11 +3186,11 @@ export interface Orca {
      * ```
      */
     MenuTitle: (props: {
-      title: string
-      info?: React.ReactNode
-      className?: string
-      style?: React.CSSProperties
-    }) => JSX.Element | null
+      title: string;
+      info?: React.ReactNode;
+      className?: string;
+      style?: React.CSSProperties;
+    }) => JSX.Element | null;
     /**
      * Full-screen modal overlay
      *
@@ -3328,16 +3240,16 @@ export interface Orca {
      */
     ModalOverlay: (
       props: {
-        className?: string
-        style?: React.CSSProperties
-        blurred?: boolean
-        visible: boolean
-        canClose?: boolean
-        onClose?: () => void | Promise<void>
-        onClosed?: () => void
-        children: React.ReactNode
+        className?: string;
+        style?: React.CSSProperties;
+        blurred?: boolean;
+        visible: boolean;
+        canClose?: boolean;
+        onClose?: () => void | Promise<void>;
+        onClosed?: () => void;
+        children: React.ReactNode;
       } & React.HTMLAttributes<HTMLDivElement>,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Popup panel attached to an element.
      *
@@ -3398,102 +3310,102 @@ export interface Orca {
          * Container element to render the popup into. If omitted, the popup will be
          * appended to the `refElement`'s offsetParent.
          */
-        container?: React.RefObject<HTMLElement>
+        container?: React.RefObject<HTMLElement>;
         /**
          * Optional boundary element used to constrain popup placement. Defaults to the container.
          */
-        boundary?: React.RefObject<HTMLElement>
+        boundary?: React.RefObject<HTMLElement>;
         /**
          * Additional offsets to adjust the boundary used for placement.
          * Useful when you need to keep the popup away from fixed elements (e.g. headers).
          */
-        boundaryTopOffset?: number
-        boundaryBottomOffset?: number
-        boundaryLeftOffset?: number
-        boundaryRightOffset?: number
+        boundaryTopOffset?: number;
+        boundaryBottomOffset?: number;
+        boundaryLeftOffset?: number;
+        boundaryRightOffset?: number;
         /**
          * The target element to anchor the popup to.
          */
-        refElement?: React.RefObject<HTMLElement>
+        refElement?: React.RefObject<HTMLElement>;
         /**
          * Alternative explicit rect to anchor to. If provided, `refElement` will be ignored.
          */
-        rect?: DOMRect
+        rect?: DOMRect;
         /**
          * Directly set CSS properties for positioning using top/left/bottom/right strings
          * (e.g. `"8px"`, `"1rem"`). When present, `relativePosition` takes precedence
          * over automatic placement.
          */
         relativePosition?: {
-          top?: string
-          left?: string
-          bottom?: string
-          right?: string
-        }
+          top?: string;
+          left?: string;
+          bottom?: string;
+          right?: string;
+        };
         /**
          * Controls whether the popup is visible (must be controlled externally).
          */
-        visible: boolean
+        visible: boolean;
         /**
          * Called when the popup should request to close (e.g. clicking outside or pressing Escape).
          * Return a Promise if asynchronous cleanup is required.
          */
-        onClose?: () => void | Promise<void>
+        onClose?: () => void | Promise<void>;
         /**
          * Called after the popup finished its exit animation and has been removed.
          */
-        onClosed?: () => void
+        onClosed?: () => void;
         /**
          * When true, the popup will not toggle container pointer logic. Use for specialized UIs.
          * Default: false
          */
-        noPointerLogic?: boolean
+        noPointerLogic?: boolean;
         /**
          * Popup content. The child should be a single React element.
          */
-        children?: React.ReactElement
+        children?: React.ReactElement;
         /**
          * Whether the popup places vertically (top/bottom) or horizontally (left/right). Default: "vertical"
          */
-        placement?: "vertical" | "horizontal"
+        placement?: "vertical" | "horizontal";
         /**
          * Preferred placement direction when there is space (top/bottom/left/right). Default: "bottom"
          */
-        defaultPlacement?: "top" | "bottom" | "left" | "right"
+        defaultPlacement?: "top" | "bottom" | "left" | "right";
         /**
          * Alignment relative to the anchor when placed (e.g. center/left/right for vertical placement).
          * Default: "center"
          */
-        alignment?: "left" | "top" | "center" | "bottom" | "right"
+        alignment?: "left" | "top" | "center" | "bottom" | "right";
         /**
          * If true, the popup is allowed to extend beyond the container/boundary.
          */
-        allowBeyondContainer?: boolean
+        allowBeyondContainer?: boolean;
         /**
          * When true, the Escape key will close the popup (controlled via onClose).
          * Also supports proper IME composition handling to avoid accidental closes.
          */
-        escapeToClose?: boolean
+        escapeToClose?: boolean;
         /**
          * CSS class names to pass to the popup container.
          */
-        className?: string
-        style?: React.CSSProperties
+        className?: string;
+        style?: React.CSSProperties;
         /**
          * Distance (in px) between anchor and the popup. Default: 4
          */
-        offset?: number
+        offset?: number;
         /**
          * Cross-axis offset (in px) to shift popup relative to anchor. Default: 0
          */
-        crossOffset?: number
+        crossOffset?: number;
         /**
          * If set to true (default), the popup will observe content size changes and
          * update its placement accordingly. Set to false for performance-sensitive use-cases.
          */
-        replacement?: boolean
+        replacement?: boolean;
       } & React.HTMLAttributes<HTMLDivElement>,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * A visual builder for creating and editing complex query conditions.
      * It provides a user interface for constructing nested AND/OR logic, property filters,
@@ -3514,10 +3426,10 @@ export interface Orca {
      */
     QueryConditionsBuilder: (props: {
       /** The current query description object representing the conditions. */
-      value: QueryDescription2
+      value: QueryDescription2;
       /** Callback fired when the query conditions are modified. */
-      onChange: (newQuery: QueryDescription2) => void
-    }) => JSX.Element | null
+      onChange: (newQuery: QueryDescription2) => void;
+    }) => JSX.Element | null;
     /**
      * Segmented control for selecting from options
      *
@@ -3550,13 +3462,13 @@ export interface Orca {
      */
     Segmented: (
       props: {
-        selected: string
-        options: { label?: string; value: string; jsx?: React.ReactElement }[]
-        onChange: (value: string) => void | Promise<void>
-        className?: string
-        style?: React.CSSProperties
+        selected: string;
+        options: { label?: string; value: string; jsx?: React.ReactElement }[];
+        onChange: (value: string) => void | Promise<void>;
+        className?: string;
+        style?: React.CSSProperties;
       } & Omit<React.HTMLAttributes<HTMLDivElement>, "onChange">,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Dropdown select component
      *
@@ -3601,7 +3513,7 @@ export interface Orca {
      * />
      * ```
      */
-    Select: (props: SelectProps) => JSX.Element | null
+    Select: (props: SelectProps) => JSX.Element | null;
     /**
      * Loading placeholder
      *
@@ -3631,7 +3543,7 @@ export interface Orca {
      * </div>
      * ```
      */
-    Skeleton: (props: {}) => JSX.Element | null
+    Skeleton: (props: {}) => JSX.Element | null;
     /**
      * Toggle switch component
      *
@@ -3668,12 +3580,12 @@ export interface Orca {
      */
     Switch: (
       props: {
-        on?: boolean
-        unset?: boolean
-        onChange?: (on: boolean) => void | Promise<void>
-        readonly?: boolean
+        on?: boolean;
+        unset?: boolean;
+        onChange?: (on: boolean) => void | Promise<void>;
+        readonly?: boolean;
       } & Omit<React.HTMLAttributes<HTMLButtonElement>, "onChange">,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Data table component
      *
@@ -3723,18 +3635,18 @@ export interface Orca {
      */
     Table: (
       props: {
-        columns: { name: string; icon?: string }[]
-        items: { _type: string; [key: string]: any }[]
+        columns: { name: string; icon?: string }[];
+        items: { _type: string; [key: string]: any }[];
         rowRenderer: (
           item: { _type: string; [key: string]: any },
           className: string,
           index: number,
-        ) => React.ReactNode
-        initialColumnSizes: string
-        pinColumn?: boolean
-        onColumnResize?: (value: string) => void | Promise<void>
+        ) => React.ReactNode;
+        initialColumnSizes: string;
+        pinColumn?: boolean;
+        onColumnResize?: (value: string) => void | Promise<void>;
       } & React.HTMLAttributes<HTMLDivElement>,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Provides a popup menu for tag selection and creation.
      * Allows users to search, select existing tags, or create new ones.
@@ -3770,38 +3682,38 @@ export interface Orca {
      */
     TagPopup: (
       props: {
-        blockId: DbId
-        closeMenu: () => void
-        onTagClick: (alias: string) => void | Promise<void>
-        placeholder?: string
+        blockId: DbId;
+        closeMenu: () => void;
+        onTagClick: (alias: string) => void | Promise<void>;
+        placeholder?: string;
         children: (
           openMenu: (e: React.UIEvent, state?: any) => void,
           closeMenu: () => void,
-        ) => ReactNode
+        ) => ReactNode;
       } & Partial<{
-        className?: string
-        style?: CSSProperties
-        menu: (close: () => void, state?: any) => ReactNode
+        className?: string;
+        style?: CSSProperties;
+        menu: (close: () => void, state?: any) => ReactNode;
         children: (
           openMenu: (e: React.UIEvent, state?: any) => void,
           closeMenu: () => void,
-        ) => ReactNode
-        container?: RefObject<HTMLElement>
-        alignment?: "left" | "top" | "center" | "bottom" | "right"
-        placement?: "vertical" | "horizontal"
-        defaultPlacement?: "top" | "bottom" | "left" | "right"
-        allowBeyondContainer?: boolean
-        noPointerLogic?: boolean
-        keyboardNav?: boolean
-        navDirection?: "vertical" | "both"
-        menuAttr?: Record<string, any>
-        offset?: number
-        crossOffset?: number
-        escapeToClose?: boolean
-        onOpened?: () => void
-        onClosed?: () => void
+        ) => ReactNode;
+        container?: RefObject<HTMLElement>;
+        alignment?: "left" | "top" | "center" | "bottom" | "right";
+        placement?: "vertical" | "horizontal";
+        defaultPlacement?: "top" | "bottom" | "left" | "right";
+        allowBeyondContainer?: boolean;
+        noPointerLogic?: boolean;
+        keyboardNav?: boolean;
+        navDirection?: "vertical" | "both";
+        menuAttr?: Record<string, any>;
+        offset?: number;
+        crossOffset?: number;
+        escapeToClose?: boolean;
+        onOpened?: () => void;
+        onClosed?: () => void;
       }>,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Provides an editor interface for managing and configuring tag properties.
      * Allows users to add, edit, and delete tag properties, set property types and values.
@@ -3847,35 +3759,35 @@ export interface Orca {
      */
     TagPropsEditor: (
       props: {
-        blockId: DbId
+        blockId: DbId;
         children: (
           openMenu: (e: React.UIEvent, state?: any) => void,
           closeMenu: () => void,
-        ) => ReactNode
+        ) => ReactNode;
       } & Partial<{
-        className?: string
-        style?: CSSProperties
-        menu: (close: () => void, state?: any) => ReactNode
+        className?: string;
+        style?: CSSProperties;
+        menu: (close: () => void, state?: any) => ReactNode;
         children: (
           openMenu: (e: React.UIEvent, state?: any) => void,
           closeMenu: () => void,
-        ) => ReactNode
-        container?: RefObject<HTMLElement>
-        alignment?: "left" | "top" | "center" | "bottom" | "right"
-        placement?: "vertical" | "horizontal"
-        defaultPlacement?: "top" | "bottom" | "left" | "right"
-        allowBeyondContainer?: boolean
-        noPointerLogic?: boolean
-        keyboardNav?: boolean
-        navDirection?: "vertical" | "both"
-        menuAttr?: Record<string, any>
-        offset?: number
-        crossOffset?: number
-        escapeToClose?: boolean
-        onOpened?: () => void
-        onClosed?: () => void
+        ) => ReactNode;
+        container?: RefObject<HTMLElement>;
+        alignment?: "left" | "top" | "center" | "bottom" | "right";
+        placement?: "vertical" | "horizontal";
+        defaultPlacement?: "top" | "bottom" | "left" | "right";
+        allowBeyondContainer?: boolean;
+        noPointerLogic?: boolean;
+        keyboardNav?: boolean;
+        navDirection?: "vertical" | "both";
+        menuAttr?: Record<string, any>;
+        offset?: number;
+        crossOffset?: number;
+        escapeToClose?: boolean;
+        onOpened?: () => void;
+        onClosed?: () => void;
       }>,
-    ) => JSX.Element | null
+    ) => JSX.Element | null;
     /**
      * Tooltip component
      *
@@ -3912,19 +3824,19 @@ export interface Orca {
      * ```
      */
     Tooltip: (props: {
-      text: React.ReactNode
-      shortcut?: string
-      image?: string
-      children: React.ReactElement
-      placement?: "vertical" | "horizontal"
-      alignment?: "left" | "top" | "center" | "bottom" | "right"
-      defaultPlacement?: "top" | "bottom" | "left" | "right"
-      allowBeyondContainer?: boolean
-      modifier?: "shift" | "ctrl" | "alt" | "meta"
-      delay?: number
-      [key: string]: any
-    }) => JSX.Element | null
-  }
+      text: React.ReactNode;
+      shortcut?: string;
+      image?: string;
+      children: React.ReactElement;
+      placement?: "vertical" | "horizontal";
+      alignment?: "left" | "top" | "center" | "bottom" | "right";
+      defaultPlacement?: "top" | "bottom" | "left" | "right";
+      allowBeyondContainer?: boolean;
+      modifier?: "shift" | "ctrl" | "alt" | "meta";
+      delay?: number;
+      [key: string]: any;
+    }) => JSX.Element | null;
+  };
 
   /**
    * React contexts exposed for use in plugins.
@@ -3955,10 +3867,10 @@ export interface Orca {
         images: string[],
         thumbnail: HTMLImageElement,
         options?: {
-          initialRotation?: number
+          initialRotation?: number;
         },
-      ): void
-    }
+      ): void;
+    };
 
     /**
      * Block editor context for accessing the current block editor instance.
@@ -3991,14 +3903,14 @@ export interface Orca {
      */
     BlockEditorContext: React.Context<{
       /** Ref to the editor's content Editable (contentEditable) element. */
-      editor: React.RefObject<HTMLDivElement>
+      editor: React.RefObject<HTMLDivElement>;
       /** The ID of the panel this editor resides in. */
-      panelId: string
+      panelId: string;
       /** The database ID of the root block being edited. */
-      rootBlockId: import("@/types/orca").DbId
+      rootBlockId: import("@/types/orca").DbId;
       /** Whether this editor is currently focused / active. */
-      active: boolean
-    }>
+      active: boolean;
+    }>;
 
     /**
      * Z-index context for managing hierarchical stacking order of UI elements.
@@ -4026,8 +3938,51 @@ export interface Orca {
      * }
      * ```
      */
-    ZContext: React.Context<number>
-  }
+    ZContext: React.Context<number>;
+
+    /**
+     * Query context for interacting with the query editor's result loading.
+     *
+     * This React context provides pagination and full-id loading helpers for
+     * custom query views. Custom views should consume this context to manage
+     * their own pagination (loading more pages of blocks) using the loaded
+     * results provided in their props.
+     *
+     * @example
+     * ```tsx
+     * const { useContext } = window.React
+     *
+     * const QueryContext = orca.contexts.QueryContext
+     *
+     * function TimelineView({ data, options }) {
+     *   const { loadPage, getAllIds } = useContext(QueryContext)
+     *
+     *   async function loadMore() {
+     *     const nextPage = (options.page ?? 1) + 1
+     *     const moreIds = await loadPage(nextPage, undefined, undefined)
+     *     options.page = nextPage
+     *     // ... append moreIds to the view's state
+     *   }
+     *
+     *   return <div>Timeline of {data.length} group(s)</div>
+     * }
+     * ```
+     */
+    QueryContext: React.Context<{
+      /** Loads a page of block IDs for the query, optionally in a group. */
+      loadPage: (
+        page: number,
+        pageSize?: number,
+        group?: string,
+      ) => Promise<any[]>;
+      /** Returns all matched block IDs for the query (no pagination). */
+      getAllIds: (group?: string) => Promise<DbId[]>;
+      /** Whether the query root block is collapsed. */
+      isRootCollapsed: boolean;
+      /** Sets the collapsed state of the query root block. */
+      setRootCollapsed: (collapsed: boolean) => void;
+    }>;
+  };
 
   /**
    * Headbar API for registering custom buttons in the application's header bar.
@@ -4064,7 +4019,7 @@ export interface Orca {
      * ))
      * ```
      */
-    registerHeadbarButton(id: string, render: () => React.ReactElement): void
+    registerHeadbarButton(id: string, render: () => React.ReactElement): void;
 
     /**
      * Unregisters a previously registered headbar button.
@@ -4077,8 +4032,8 @@ export interface Orca {
      * orca.headbar.unregisterHeadbarButton("myplugin.settingsButton")
      * ```
      */
-    unregisterHeadbarButton(id: string): void
-  }
+    unregisterHeadbarButton(id: string): void;
+  };
 
   /**
    * Toolbar API for registering custom buttons in the block editor toolbar.
@@ -4152,7 +4107,7 @@ export interface Orca {
     registerToolbarButton(
       id: string,
       button: ToolbarButton | ToolbarButton[],
-    ): void
+    ): void;
 
     /**
      * Unregisters a previously registered toolbar button or button group.
@@ -4165,8 +4120,8 @@ export interface Orca {
      * orca.toolbar.unregisterToolbarButton("myplugin.formatButton")
      * ```
      */
-    unregisterToolbarButton(id: string): void
-  }
+    unregisterToolbarButton(id: string): void;
+  };
 
   /**
    * Slash commands API for registering custom commands that appear when a user types '/' in the editor.
@@ -4200,7 +4155,7 @@ export interface Orca {
      * })
      * ```
      */
-    registerSlashCommand(id: string, command: SlashCommand): void
+    registerSlashCommand(id: string, command: SlashCommand): void;
 
     /**
      * Unregisters a previously registered slash command.
@@ -4213,8 +4168,55 @@ export interface Orca {
      * orca.slashCommands.unregisterSlashCommand("myplugin.insertChart")
      * ```
      */
-    unregisterSlashCommand(id: string): void
-  }
+    unregisterSlashCommand(id: string): void;
+  };
+  /**
+   * Query views API for registering custom result views that appear in the
+   * query editor's result view switcher. Custom views render the matched blocks
+   * of a query and can manage their own pagination via
+   * `orca.contexts.QueryContext`.
+   *
+   * @example
+   * ```tsx
+   * // Register a custom query view (component uses window.React / window.Valtio)
+   * orca.queryViews.registerQueryView("myplugin.timeline", {
+   *   icon: "ti ti-calendar-stats",
+   *   title: "Timeline",
+   *   defaultOptions: { zoom: "day" },
+   *   render: TimelineView,
+   * })
+   * ```
+   */
+  queryViews: {
+    /**
+     * Registers a custom query view in the query editor's result view switcher.
+     *
+     * @param id - A unique identifier for the view
+     * @param view - The query view configuration
+     *
+     * @example
+     * ```ts
+     * orca.queryViews.registerQueryView("myplugin.timeline", {
+     *   icon: "ti ti-calendar-stats",
+     *   title: "Timeline",
+     *   render: TimelineView,
+     * })
+     * ```
+     */
+    registerQueryView(id: string, view: QueryView): void;
+
+    /**
+     * Unregisters a previously registered custom query view.
+     *
+     * @param id - The identifier of the query view to unregister
+     *
+     * @example
+     * ```ts
+     * orca.queryViews.unregisterQueryView("myplugin.timeline")
+     * ```
+     */
+    unregisterQueryView(id: string): void;
+  };
   /**
    * Block menu commands API for adding custom commands to block context menus.
    * This allows plugins to add custom actions that appear when users right-click on blocks' handle.
@@ -4277,7 +4279,7 @@ export interface Orca {
      * })
      * ```
      */
-    registerBlockMenuCommand(id: string, command: BlockMenuCommand): void
+    registerBlockMenuCommand(id: string, command: BlockMenuCommand): void;
 
     /**
      * Unregisters a previously registered block menu command.
@@ -4290,8 +4292,8 @@ export interface Orca {
      * orca.blockMenuCommands.unregisterBlockMenuCommand("myplugin.exportBlock")
      * ```
      */
-    unregisterBlockMenuCommand(id: string): void
-  }
+    unregisterBlockMenuCommand(id: string): void;
+  };
   /**
    * Tag menu commands API for adding custom commands to tag context menus.
    * This allows plugins to add custom actions that appear when users open the tag's context menu.
@@ -4337,7 +4339,7 @@ export interface Orca {
      * })
      * ```
      */
-    registerTagMenuCommand(id: string, command: TagMenuCommand): void
+    registerTagMenuCommand(id: string, command: TagMenuCommand): void;
 
     /**
      * Unregisters a previously registered tag menu command.
@@ -4350,8 +4352,8 @@ export interface Orca {
      * orca.tagMenuCommands.unregisterTagMenuCommand("myplugin.exportTaggedBlocks")
      * ```
      */
-    unregisterTagMenuCommand(id: string): void
-  }
+    unregisterTagMenuCommand(id: string): void;
+  };
   /**
    * Editor sidetools API for adding custom tools to the block editor's sidebar.
    * This allows plugins to add custom utilities and functionality in the editor sidebar.
@@ -4407,7 +4409,7 @@ export interface Orca {
      * })
      * ```
      */
-    registerEditorSidetool(id: string, tool: EditorSidetool): void
+    registerEditorSidetool(id: string, tool: EditorSidetool): void;
 
     /**
      * Unregisters a previously registered editor sidetool.
@@ -4420,8 +4422,8 @@ export interface Orca {
      * orca.editorSidetools.unregisterEditorSidetool("myplugin.outlineViewer")
      * ```
      */
-    unregisterEditorSidetool(id: string): void
-  }
+    unregisterEditorSidetool(id: string): void;
+  };
 
   /**
    * Utility functions.
@@ -4447,7 +4449,7 @@ export interface Orca {
      */
     getCursorDataFromSelection: (
       selection: Selection | null,
-    ) => CursorData | null
+    ) => CursorData | null;
 
     /**
      * Converts a DOM Range object into Orca's internal CursorData format.
@@ -4464,7 +4466,7 @@ export interface Orca {
      * }
      * ```
      */
-    getCursorDataFromRange: (range: Range | undefined) => CursorData | null
+    getCursorDataFromRange: (range: Range | undefined) => CursorData | null;
 
     /**
      * Sets the editor's selection and caret position based on Orca's CursorData.
@@ -4478,7 +4480,7 @@ export interface Orca {
      * await orca.utils.setSelectionFromCursorData(cursorData);
      * ```
      */
-    setSelectionFromCursorData: (cursorData: CursorData) => Promise<void>
+    setSelectionFromCursorData: (cursorData: CursorData) => Promise<void>;
 
     /**
      * Resolves the absolute URL or file path for an asset used by a plugin or the application.
@@ -4496,7 +4498,7 @@ export interface Orca {
      * <img src={orca.utils.getAssetPath(iconSrc)} alt="Logo" />
      * ```
      */
-    getAssetPath: (assetPath: string) => string
+    getAssetPath: (assetPath: string) => string;
 
     /**
      * Shows a preview popup for a specific block.
@@ -4523,7 +4525,7 @@ export interface Orca {
       rect?: DOMRect,
       interactive?: boolean,
       blockEditorActive?: boolean,
-    ) => () => void
+    ) => () => void;
 
     /**
      * Computes a numeric hash from an array of numbers (e.g., block IDs).
@@ -4547,8 +4549,8 @@ export interface Orca {
      * }, [childrenHash])
      * ```
      */
-    hashArray: (arr?: Array<number | undefined>) => number
-  }
+    hashArray: (arr?: Array<number | undefined>) => number;
+  };
 
   /**
    * AI/LLM API, used to send messages to and receive responses from AI models configured in Orca.
@@ -4601,11 +4603,11 @@ export interface Orca {
     sendMessage: (
       messages: ChatCompletionMessageParam[],
       options?: {
-        extraTools?: OpenAI.Chat.Completions.ChatCompletionFunctionTool[]
+        extraTools?: OpenAI.Chat.Completions.ChatCompletionFunctionTool[];
       },
     ) => Promise<
       OpenAI.Chat.Completions.ChatCompletion & { _request_id?: string | null }
-    >
+    >;
 
     /**
      * Sends a list of chat messages to the AI model and returns an async generator
@@ -4644,16 +4646,16 @@ export interface Orca {
       messages: ChatCompletionMessageParam[],
       controller: AbortController,
       options?: {
-        extraTools?: OpenAI.Chat.Completions.ChatCompletionFunctionTool[]
+        extraTools?: OpenAI.Chat.Completions.ChatCompletionFunctionTool[];
       },
     ) => AsyncGenerator<
       OpenAI.Chat.Completions.ChatCompletionChunk.Choice.Delta & {
-        reasoning_content: string
+        reasoning_content: string;
       },
       void,
       unknown
-    >
-  }
+    >;
+  };
 
   /**
    * Display a notification to the user. Notifications appear in the bottom right corner of the application
@@ -4686,10 +4688,10 @@ export interface Orca {
     type: "info" | "success" | "warn" | "error",
     message: string,
     options?: {
-      title?: string
-      action?: () => void | Promise<void>
+      title?: string;
+      action?: () => void | Promise<void>;
     },
-  ) => void
+  ) => void;
 }
 
 // Backend API
@@ -4747,14 +4749,143 @@ export type APIMsg =
   | "upload-assets"
   /** Perform OCR on an image. */
   | "image-ocr"
-  | string
+  | string;
+
+/** Props for the ContextMenu component */
+export interface ContextMenuProps {
+  className?: string;
+  style?: React.CSSProperties;
+  menu: (close: () => void, state?: any) => React.ReactNode;
+  children: (
+    openMenu: (e: React.UIEvent, state?: any) => void,
+    closeMenu: () => void,
+    menuShown: boolean,
+  ) => React.ReactNode;
+  container?: React.RefObject<HTMLElement>;
+  alignment?: "left" | "top" | "center" | "bottom" | "right";
+  placement?: "vertical" | "horizontal";
+  defaultPlacement?: "top" | "bottom" | "left" | "right";
+  allowBeyondContainer?: boolean;
+  noPointerLogic?: boolean;
+  clickToClose?: boolean;
+  restoreSelectionOnClose?: boolean;
+  keyboardNav?: boolean;
+  navDirection?: "vertical" | "both";
+  onKeyboardNav?: (el: HTMLElement) => void | Promise<void>;
+  menuAttr?: Record<string, any>;
+  offset?: number;
+  crossOffset?: number;
+  escapeToClose?: boolean;
+  replacement?: boolean;
+  useCurrentTarget?: boolean;
+  onOpened?: () => void;
+  onClosed?: () => void;
+  rect?: DOMRect;
+}
+
+/** A single option item for the Select component */
+export interface SelectOption {
+  /** Icon class (e.g., "ti ti-folder") or emoji string */
+  icon?: string;
+  /** Background color for the option label (e.g., "#ff6600") */
+  color?: string;
+  /** Display label shown in the dropdown and button */
+  label?: string;
+  /** Unique value identifying this option */
+  value?: string;
+  /** Pinyin representation for Chinese text filtering */
+  pinyin?: string;
+  /** Click handler attached to the selected chip (multi-selection mode only) */
+  onClick?: (e: React.MouseEvent) => void | Promise<void>;
+  /**
+   * Custom render function for the option item in the dropdown.
+   * Return `null` to skip this option (useful for non-selectable separators/headings).
+   */
+  render?: (
+    closeMenu: () => void,
+    icon?: string,
+    color?: string,
+    label?: string,
+    value?: string,
+    selected?: boolean,
+    onClick?: (e: React.MouseEvent) => void | Promise<void>,
+  ) => React.ReactElement | null;
+  /**
+   * Custom render function for the selected value chip (multi-selection mode only).
+   * When set, this replaces the default coloured-chip display for this option.
+   */
+  renderSelected?: (
+    closeMenu: () => void,
+    icon?: string,
+    color?: string,
+    label?: string,
+    value?: string,
+    onClick?: (e: React.MouseEvent) => void | Promise<void>,
+  ) => React.ReactElement;
+}
+
+/** Props for the Select dropdown component */
+export interface SelectProps {
+  /** Currently selected values */
+  selected: string[];
+  /** Available options */
+  options: SelectOption[];
+  /** Called when selection changes; second argument is the current filter keyword if filtering is active */
+  onChange?: (
+    selected: string[],
+    filterKeyword?: string,
+  ) => void | Promise<void>;
+  /** Formats a selected value into a display string when the value has no matching option */
+  formatter?: (value: string) => string;
+  /** Scrolling container ref for the popup */
+  menuContainer?: React.RefObject<HTMLElement>;
+  /** Minimum width of the select button and dropdown */
+  width?: number | string;
+  /** Placeholder text when nothing is selected */
+  placeholder?: string;
+  /** Allow selecting multiple values */
+  multiSelection?: boolean;
+  /** Show a "Clear selection(s)" action at the bottom of the dropdown */
+  withClear?: boolean;
+  /** Show a search input to filter options */
+  filter?: boolean;
+  /** Placeholder for the filter input */
+  filterPlaceholder?: string;
+  /**
+   * Custom filter function.
+   * Receives the keyword and the full option list, returns filtered options.
+   * When omitted, a default label/pinyin substring match is used.
+   */
+  filterFunction?: (
+    keyword: string,
+    options?: SelectOption[],
+  ) => Promise<SelectOption[]> | SelectOption[];
+  /** Element appended after the filter input */
+  filterPost?: React.ReactElement;
+  /** Popup alignment relative to the button */
+  alignment?: "left" | "center" | "right";
+  /** Element prepended inside the select button */
+  pre?: React.ReactElement;
+  /** Class name for the trigger button */
+  buttonClassName?: string;
+  /** Class name for the dropdown menu */
+  menuClassName?: string;
+  /** Additional attributes forwarded to the Menu component */
+  menuAttrs?: Record<string, any>;
+  /** Disable the select */
+  disabled?: boolean;
+  /** Show the select in read-only mode (button click does nothing) */
+  readOnly?: boolean;
+  onMouseEnter?: (e: React.MouseEvent) => void;
+  onMouseLeave?: (e: React.MouseEvent) => void;
+}
 
 // Panels
 /**
  * Types of views that can be displayed in a panel.
  * Currently supports journal view (for displaying daily notes) and block view (for displaying block content).
  */
-export type PanelView = string
+export type PanelView = string;
 
 /**
  * Represents a panel container that arranges its children in a row.
@@ -4762,13 +4893,13 @@ export type PanelView = string
  */
 export interface RowPanel {
   /** Unique identifier for the row panel */
-  id: string
+  id: string;
   /** Specifies that children are arranged horizontally */
-  direction: "row"
+  direction: "row";
   /** Child panels contained within this row */
-  children: (ColumnPanel | ViewPanel)[]
+  children: (ColumnPanel | ViewPanel)[];
   /** Height of the row panel in pixels */
-  height: number
+  height: number;
 }
 
 /**
@@ -4777,13 +4908,13 @@ export interface RowPanel {
  */
 export interface ColumnPanel {
   /** Unique identifier for the column panel */
-  id: string
+  id: string;
   /** Specifies that children are arranged vertically */
-  direction: "column"
+  direction: "column";
   /** Child panels contained within this column */
-  children: (RowPanel | ViewPanel)[]
+  children: (RowPanel | ViewPanel)[];
   /** Width of the column panel in pixels */
-  width: number
+  width: number;
 }
 
 /**
@@ -4792,21 +4923,21 @@ export interface ColumnPanel {
  */
 export interface ViewPanel {
   /** Unique identifier for the view panel */
-  id: string
+  id: string;
   /** Type of view displayed in this panel (journal or block) */
-  view: PanelView
+  view: PanelView;
   /** Arguments for the view, such as blockId for block views or date for journal views */
-  viewArgs: Record<string, any>
+  viewArgs: Record<string, any>;
   /** State of the view, used to preserve UI state like scroll position or editor selections */
-  viewState: Record<string, any>
+  viewState: Record<string, any>;
   /** Optional width of the panel in pixels */
-  width?: number
+  width?: number;
   /** Optional height of the panel in pixels */
-  height?: number
+  height?: number;
   /** Whether the panel is locked and cannot be closed or resized */
-  locked?: boolean
+  locked?: boolean;
   /** Whether the panel should take up extra space when available */
-  wide?: boolean
+  wide?: boolean;
 }
 
 /**
@@ -4815,11 +4946,11 @@ export interface ViewPanel {
  */
 export interface PanelHistory {
   /** ID of the panel that was active at this history point */
-  activePanel: string
+  activePanel: string;
   /** The view type that was displayed */
-  view: PanelView
+  view: PanelView;
   /** Arguments for the view at this history point */
-  viewArgs?: Record<string, any>
+  viewArgs?: Record<string, any>;
 }
 
 /**
@@ -4828,28 +4959,29 @@ export interface PanelHistory {
  */
 export interface PanelLayouts {
   /** The key of the default layout to use */
-  default: string
+  default: string;
   /** Map of named layouts with their panel configurations */
-  layouts: Record<string, { activePanel: string; panels: RowPanel }>
+  layouts: Record<string, { activePanel: string; panels: RowPanel }>;
 }
 
 /**
  * Properties for rendering a panel component.
  */
 export type PanelProps = {
-  panelId: string
-  active: boolean
-  preview?: "content" | "backRef"
-  customQuery?: BlockCustomQuery
-  expandQueryRoot?: boolean
-}
+  panelId: string;
+  active: boolean;
+  viewStateIdSuffix?: string;
+  preview?: "content" | "backRef";
+  customQuery?: BlockCustomQuery;
+  expandQueryRoot?: boolean;
+};
 
 // Commands
 /**
  * Basic command function type that defines functions that can be executed as commands.
  * Can be synchronous or asynchronous.
  */
-export type CommandFn = (...args: any[]) => void | Promise<void>
+export type CommandFn = (...args: any[]) => void | Promise<void>;
 
 /**
  * Editor command function type that defines functions that can be executed in the editor context.
@@ -4861,20 +4993,20 @@ export type EditorCommandFn = (
 ) =>
   | { ret?: any; undoArgs: any }
   | null
-  | Promise<{ ret?: any; undoArgs?: any } | null>
+  | Promise<{ ret?: any; undoArgs?: any } | null>;
 
 /**
  * Defines a command's properties including its label, function, and behavioral flags.
  */
 export interface Command {
   /** Human-readable name for the command */
-  label: string
+  label: string;
   /** The function to execute when the command is invoked, or a pair of do/undo functions */
-  fn: CommandFn | [EditorCommandFn, CommandFn]
+  fn: CommandFn | [EditorCommandFn, CommandFn];
   /** Whether the command accepts arguments */
-  hasArgs?: boolean
+  hasArgs?: boolean;
   /** Whether the command can be executed when no panel has focus */
-  noFocusNeeded?: boolean
+  noFocusNeeded?: boolean;
 }
 
 /**
@@ -4882,7 +5014,7 @@ export interface Command {
  */
 export interface CommandWithPinyin extends Command {
   /** Pinyin phonetic representation for improved search in Chinese */
-  pinyin: string
+  pinyin: string;
 }
 
 /**
@@ -4897,19 +5029,19 @@ export type EditorArg = [
   CursorData | null,
   /** Whether this is a redo operation */
   boolean,
-]
+];
 
 /**
  * Predicate function type used for "before command" hooks.
  * Returns true to allow the command to proceed, false to cancel it.
  */
-export type BeforeHookPred = (id: string, ...args: any[]) => boolean
+export type BeforeHookPred = (id: string, ...args: any[]) => boolean;
 
 /**
  * Function type used for "after command" hooks.
  * Called after a command has been executed.
  */
-export type AfterHook = (id: string, ...args: any[]) => void | Promise<void>
+export type AfterHook = (id: string, ...args: any[]) => void | Promise<void>;
 
 /**
  * Represents the current cursor position in the editor.
@@ -4917,15 +5049,17 @@ export type AfterHook = (id: string, ...args: any[]) => void | Promise<void>
  */
 export interface CursorData {
   /** Start position of the selection */
-  anchor: CursorNodeData
+  anchor: CursorNodeData;
   /** End position of the selection */
-  focus: CursorNodeData
+  focus: CursorNodeData;
   /** Whether the selection direction is forward (anchor comes before focus) */
-  isForward: boolean
+  isForward: boolean;
   /** ID of the panel containing the cursor */
-  panelId: string
+  panelId: string;
   /** ID of the root block in the editor */
-  rootBlockId: DbId
+  rootBlockId: DbId;
+  /** The mirror the cursor is under */
+  mirror?: CursorMirror;
 }
 
 /**
@@ -4933,13 +5067,21 @@ export interface CursorData {
  */
 export interface CursorNodeData {
   /** ID of the block where the cursor is located */
-  blockId: DbId
+  blockId: DbId;
   /** Whether the cursor is in inline content */
-  isInline: boolean
+  isInline: boolean;
   /** Index within the block's content array */
-  index: number
+  index: number;
   /** Character offset within the content item */
-  offset: number
+  offset: number;
+}
+
+/**
+ * Mirror IDs for the cursor.
+ */
+export interface CursorMirror {
+  blockId: string;
+  mirrorId: string;
 }
 
 // Notifications
@@ -4949,15 +5091,15 @@ export interface CursorNodeData {
  */
 export interface Notification {
   /** Unique identifier for the notification */
-  id: number
+  id: number;
   /** Type of notification that determines its visual appearance and severity */
-  type: "info" | "success" | "warn" | "error"
+  type: "info" | "success" | "warn" | "error";
   /** Optional title text for the notification */
-  title?: string
+  title?: string;
   /** Main message content of the notification */
-  message: string
+  message: string;
   /** Optional action callback that can be triggered from the notification */
-  action?: () => void | Promise<void>
+  action?: () => void | Promise<void>;
 }
 
 // Plugins
@@ -4967,15 +5109,15 @@ export interface Notification {
  */
 export interface Plugin {
   /** Whether the plugin is currently enabled */
-  enabled: boolean
+  enabled: boolean;
   /** Icon identifier for the plugin */
-  icon: string
+  icon: string;
   /** Optional settings schema defining available configuration options */
-  schema?: PluginSettingsSchema
+  schema?: PluginSettingsSchema;
   /** Current settings values for the plugin */
-  settings?: Record<string, any>
+  settings?: Record<string, any>;
   /** The loaded plugin module when enabled */
-  module?: any
+  module?: any;
 }
 
 /**
@@ -4985,9 +5127,9 @@ export interface Plugin {
 export interface PluginSettingsSchema {
   [key: string]: {
     /** Human-readable label for the setting */
-    label: string
+    label: string;
     /** Optional description explaining the purpose of the setting */
-    description?: string
+    description?: string;
     /** Data type of the setting, which determines how it is edited in the UI */
     type:
       | "string"
@@ -5001,14 +5143,14 @@ export interface PluginSettingsSchema {
       | "color"
       | "singleChoice"
       | "multiChoices"
-      | "array"
+      | "array";
     /** Default value for the setting if not explicitly set */
-    defaultValue?: any
+    defaultValue?: any;
     /** For choice types, the available options */
-    choices?: { label: string; value: string }[]
+    choices?: { label: string; value: string }[];
     /** For array types, the schema for each item in the array */
-    arrayItemSchema?: PluginSettingsSchema
-  }
+    arrayItemSchema?: PluginSettingsSchema;
+  };
 }
 
 // Toolbar
@@ -5018,17 +5160,17 @@ export interface PluginSettingsSchema {
  */
 export interface ToolbarButton {
   /** Icon identifier (usually a Tabler Icons class) */
-  icon: string
+  icon: string;
   /** Tooltip text displayed on hover */
-  tooltip: string
+  tooltip: string;
   /** Optional command ID to execute when clicked */
-  command?: string
+  command?: string;
   /** Optional function to render a dropdown menu when clicked */
-  menu?: (close: () => void, state?: any) => React.ReactNode
+  menu?: (close: () => void, state?: any) => React.ReactNode;
   /** Optional text color for the button */
-  color?: string
+  color?: string;
   /** Optional background color for the button */
-  background?: string
+  background?: string;
 }
 
 // Slash Command
@@ -5038,13 +5180,13 @@ export interface ToolbarButton {
  */
 export interface SlashCommand {
   /** Icon identifier for the command */
-  icon: string
+  icon: string;
   /** Group name for organizing commands in the slash menu */
-  group: string
+  group: string;
   /** Display title for the command */
-  title: string
+  title: string;
   /** Command ID to execute when selected */
-  command: string
+  command: string;
 }
 
 /**
@@ -5052,7 +5194,48 @@ export interface SlashCommand {
  */
 export interface SlashCommandWithPinyin extends SlashCommand {
   /** Pinyin phonetic representation for improved search in Chinese */
-  pinyin: string
+  pinyin: string;
+}
+
+// Query View
+/**
+ * Props passed to a registered custom query view component.
+ */
+export interface QueryViewProps {
+  /**
+   * The currently loaded query results, grouped by result group.
+   * Each inner array is the block IDs of one result group. For an
+   * ungrouped query this is a single group containing all loaded block IDs.
+   */
+  data: DbId[][];
+  /** Tag names derived from the query conditions. */
+  tagNames: string[];
+  /**
+   * Per-view options, backed by the query editor's reactive view options proxy.
+   * The view owns this object and should mutate it directly (and use
+   * `useSnapshot` for reactivity) to persist its configuration.
+   */
+  options: Record<string, any>;
+  /** Re-runs the query and refreshes the results. */
+  refresh: () => Promise<void>;
+}
+
+/**
+ * Configuration for a custom query view that appears in the query editor's
+ * result view switcher and renders the matched blocks.
+ */
+export interface QueryView {
+  /** Display title shown in the result view dropdown. */
+  title: string;
+  /** Tabler icon identifier for the result view dropdown. */
+  icon: string;
+  /** React component that renders the query results. */
+  render: React.ComponentType<QueryViewProps>;
+  /**
+   * Optional initial options merged into the view's options object on its
+   * first selection.
+   */
+  defaultOptions?: Record<string, any>;
 }
 
 // Block Menu Command
@@ -5063,24 +5246,24 @@ export interface SlashCommandWithPinyin extends SlashCommand {
 export type BlockMenuCommand =
   | {
       /** Indicates this command works only on a single block */
-      worksOnMultipleBlocks: false
+      worksOnMultipleBlocks: false;
       /** Function to render the menu item, receiving the block ID and context */
       render: (
         blockId: DbId,
         rootBlockId: DbId,
         close: () => void,
-      ) => React.ReactNode
+      ) => React.ReactNode;
     }
   | {
       /** Indicates this command works on multiple selected blocks */
-      worksOnMultipleBlocks: true
+      worksOnMultipleBlocks: true;
       /** Function to render the menu item, receiving an array of block IDs and context */
       render: (
         blockIds: DbId[],
         rootBlockId: DbId,
         close: () => void,
-      ) => React.ReactNode
-    }
+      ) => React.ReactNode;
+    };
 
 // Tag Menu Command
 /**
@@ -5096,8 +5279,8 @@ export type TagMenuCommand = {
     tagBlock: Block,
     close: () => void,
     tagRef?: BlockRef,
-  ) => React.ReactElement
-}
+  ) => React.ReactElement;
+};
 
 // Editor Sidetool
 /**
@@ -5108,14 +5291,14 @@ export type EditorSidetool = {
   /**
    * Function to render the sidetool, receiving the root block ID and panel ID.
    */
-  render: (rootBlockId: DbId, panelId: string) => React.ReactNode
-}
+  render: (rootBlockId: DbId, panelId: string) => React.ReactNode;
+};
 
 // Blocks
 /**
  * Database ID type used to uniquely identify blocks and other entities in the database.
  */
-export type DbId = number
+export type DbId = number;
 
 /**
  * Core block data structure that represents a single note, section, or other content unit.
@@ -5123,29 +5306,29 @@ export type DbId = number
  */
 export interface Block {
   /** Unique identifier for the block */
-  id: DbId
+  id: DbId;
   /** Optional array of content fragments for rich text content */
-  content?: ContentFragment[]
+  content?: ContentFragment[];
   /** Optional plain text content, used along with the content array */
-  text?: string
+  text?: string;
   /** Timestamp when the block was created */
-  created: Date
+  created: Date;
   /** Timestamp when the block was last modified */
-  modified: Date
+  modified: Date;
   /** ID of the parent block, if any */
-  parent?: DbId
+  parent?: DbId;
   /** ID of the block to the left in the content flow, used for ordering siblings */
-  left?: DbId
+  left?: DbId;
   /** Array of child block IDs */
-  children: DbId[]
+  children: DbId[];
   /** Array of aliases (alternative names) for the block */
-  aliases: string[]
+  aliases: string[];
   /** Array of named properties attached to the block */
-  properties: BlockProperty[]
+  properties: BlockProperty[];
   /** Array of outgoing references from this block to other blocks */
-  refs: BlockRef[]
+  refs: BlockRef[];
   /** Array of incoming references from other blocks to this block */
-  backRefs: BlockRef[]
+  backRefs: BlockRef[];
 }
 
 /**
@@ -5154,16 +5337,16 @@ export interface Block {
  */
 export type ContentFragment = {
   /** The type of content fragment (e.g., "text", "code", "link") */
-  t: string
+  t: string;
   /** The value of the content fragment */
-  v: any
+  v: any;
   /** Optional formatting information */
-  f?: string
+  f?: string;
   /** Optional formatting arguments */
-  fa?: Record<string, any>
+  fa?: Record<string, any>;
   /** Additional properties can be included based on content type */
-  [key: string]: any
-}
+  [key: string]: any;
+};
 
 /**
  * Represents a block's structure and type information.
@@ -5171,10 +5354,10 @@ export type ContentFragment = {
  */
 export type Repr = {
   /** The type of the block (e.g., "text", "code", "heading") */
-  type: string
+  type: string;
   /** Additional properties specific to the block type */
-  [key: string]: any
-}
+  [key: string]: any;
+};
 
 /**
  * Represents a named property attached to a block.
@@ -5182,15 +5365,15 @@ export type Repr = {
  */
 export interface BlockProperty {
   /** Name of the property */
-  name: string
+  name: string;
   /** Type code for the property (determines how the value is interpreted) */
-  type: number
+  type: number;
   /** Optional arguments specific to the property type */
-  typeArgs?: any
+  typeArgs?: any;
   /** The property value */
-  value?: any
+  value?: any;
   /** Optional position for visual ordering of properties */
-  pos?: number
+  pos?: number;
 }
 
 /**
@@ -5199,58 +5382,58 @@ export interface BlockProperty {
  */
 export interface BlockRef {
   /** Unique identifier for the reference */
-  id: DbId
+  id: DbId;
   /** ID of the block containing the reference */
-  from: DbId
+  from: DbId;
   /** ID of the block being referenced */
-  to: DbId
+  to: DbId;
   /** Type code for the reference */
-  type: number
+  type: number;
   /** Optional alias name used for the reference */
-  alias?: string
+  alias?: string;
   /** Optional additional properties for the reference */
-  data?: BlockProperty[]
+  data?: BlockProperty[];
 }
 
 /**
  * Simplified type for block reference data.
  */
-export type BlockRefData = Pick<BlockProperty, "name" | "type" | "value">
+export type BlockRefData = Pick<BlockProperty, "name" | "type" | "value">;
 
 export type TagInput =
   | string
   | {
-      name: string
-      props?: Record<string, any>
-    }
+      name: string;
+      props?: Record<string, any>;
+    };
 
 /**
  * Simplified block structure used when converting blocks to other formats.
  */
 export type BlockForConversion = {
   /** Content fragments in the block */
-  content?: ContentFragment[]
+  content?: ContentFragment[];
   /** IDs of child blocks */
-  children?: DbId[]
-  sub?: [BlockForConversion, Repr, Block][]
-}
+  children?: DbId[];
+  sub?: [BlockForConversion, Repr, Block][];
+};
 
 /**
  * Context for block conversion, used to track export scope.
  */
 export type ConvertContext = {
   /** The root block ID of the export scope */
-  exportRootId?: DbId
+  exportRootId?: DbId;
   /** Resolve a block from a temporary conversion context before falling back to global state. */
-  getBlockById?: (blockId: DbId) => Block | undefined
+  getBlockById?: (blockId: DbId) => Block | undefined;
   /** Resolve an inline reference from a temporary conversion context before hitting the backend. */
   getRefById?: (
     refId: DbId,
-  ) => Promise<{ to: DbId; alias?: string } | undefined>
-}
+  ) => Promise<{ to: DbId; alias?: string } | undefined>;
+};
 
 /** Block rendering modes */
-export type BlockRenderingMode = "normal" | "simple" | "simple-children"
+export type BlockRenderingMode = "normal" | "simple" | "simple-children";
 
 // Query
 /**
@@ -5259,34 +5442,34 @@ export type BlockRenderingMode = "normal" | "simple" | "simple-children"
  */
 export interface QueryDescription {
   /** The main query group with conditions */
-  q?: QueryGroup
+  q?: QueryGroup;
   /** Optional block ID to exclude from results */
-  excludeId?: DbId
+  excludeId?: DbId;
   /** Array of sort specifications for ordering results */
-  sort?: QuerySort[]
+  sort?: QuerySort[];
   /** For paginated results, the page number (0-based) */
-  page?: number
+  page?: number;
   /** For paginated results, the number of items per page */
-  pageSize?: number
+  pageSize?: number;
   /** Filters results to blocks with a specific tag */
-  tagName?: string
+  tagName?: string;
   /** Field to group results by */
-  groupBy?: string
+  groupBy?: string;
   /** Specifies which group to return results for */
-  group?: string
+  group?: string;
   /** Statistical calculations to perform on results */
-  stats?: QueryStat[]
+  stats?: QueryStat[];
   /** Whether to format results as a table */
-  asTable?: boolean
+  asTable?: boolean;
   /** Calendar view configuration if results should be displayed in calendar format */
   asCalendar?: {
     /** Field to use for calendar date (created/modified/journal date) */
-    field: "created" | "modified" | "journal"
+    field: "created" | "modified" | "journal";
     /** Start date for the calendar range */
-    start: Date
+    start: Date;
     /** End date for the calendar range */
-    end: Date
-  }
+    end: Date;
+  };
 }
 
 /**
@@ -5302,7 +5485,7 @@ export type QueryItem =
   | QueryBlock
   | QueryNoText
   | QueryNoTag
-  | QueryNoRef
+  | QueryNoRef;
 
 /**
  * A group of query conditions combined with a logical operator.
@@ -5310,13 +5493,13 @@ export type QueryItem =
  */
 export interface QueryGroup {
   /** Kind of group: 1 for AND, 2 for OR */
-  kind: QueryKindAnd | QueryKindOr
+  kind: QueryKindAnd | QueryKindOr;
   /** Array of conditions within this group */
-  conditions: QueryItem[]
+  conditions: QueryItem[];
   /** Whether to include descendant blocks in results */
-  includeDescendants?: boolean
+  includeDescendants?: boolean;
   /** Optional conditions that apply to descendant blocks */
-  subConditions?: QueryGroup
+  subConditions?: QueryGroup;
 }
 
 /**
@@ -5325,13 +5508,13 @@ export interface QueryGroup {
  */
 export interface QueryTag {
   /** Kind identifier for tag queries (4) */
-  kind: QueryKindTag
+  kind: QueryKindTag;
   /** The tag name to match */
-  name: string
+  name: string;
   /** Optional property conditions for the tag */
-  properties?: QueryTagProperty[]
+  properties?: QueryTagProperty[];
   /** Whether to include descendant blocks in results */
-  includeDescendants?: boolean
+  includeDescendants?: boolean;
 }
 
 /**
@@ -5339,9 +5522,9 @@ export interface QueryTag {
  */
 export interface QueryNoTag {
   /** Kind identifier for no-tag queries (5) */
-  kind: QueryKindNoTag
+  kind: QueryKindNoTag;
   /** The tag name that should not be present */
-  name: string
+  name: string;
 }
 
 /**
@@ -5349,13 +5532,13 @@ export interface QueryNoTag {
  */
 export interface QueryJournal {
   /** Kind identifier for journal queries (3) */
-  kind: QueryKindJournal
+  kind: QueryKindJournal;
   /** Start date for the journal range */
-  start: QueryJournalDate
+  start: QueryJournalDate;
   /** End date for the journal range */
-  end: QueryJournalDate
+  end: QueryJournalDate;
   /** Whether to include descendant blocks in results */
-  includeDescendants?: boolean
+  includeDescendants?: boolean;
 }
 
 /**
@@ -5364,11 +5547,11 @@ export interface QueryJournal {
  */
 export interface QueryJournalDate {
   /** Type of date: 1 for relative, 2 for full/absolute date */
-  t: QueryJournalRelative | QueryJournalFull
+  t: QueryJournalRelative | QueryJournalFull;
   /** For relative dates, the numeric value (e.g., 2 in "2 days ago") */
-  v?: number
+  v?: number;
   /** For relative dates, the unit (s=seconds, m=minutes, h=hours, d=days, w=weeks, M=months, y=years) */
-  u?: "s" | "m" | "h" | "d" | "w" | "M" | "y"
+  u?: "s" | "m" | "h" | "d" | "w" | "M" | "y";
 }
 
 /**
@@ -5376,11 +5559,11 @@ export interface QueryJournalDate {
  */
 export interface QueryRef {
   /** Kind identifier for reference queries (6) */
-  kind: QueryKindRef
+  kind: QueryKindRef;
   /** ID of the block that should be referenced */
-  blockId: DbId
+  blockId: DbId;
   /** Whether to include descendant blocks in results */
-  includeDescendants?: boolean
+  includeDescendants?: boolean;
 }
 
 /**
@@ -5388,9 +5571,9 @@ export interface QueryRef {
  */
 export interface QueryNoRef {
   /** Kind identifier for no-reference queries (7) */
-  kind: QueryKindNoRef
+  kind: QueryKindNoRef;
   /** ID of the block that should not be referenced */
-  blockId: DbId
+  blockId: DbId;
 }
 
 /**
@@ -5398,22 +5581,22 @@ export interface QueryNoRef {
  */
 export interface QueryText {
   /** Kind identifier for text queries (8) */
-  kind: QueryKindText
+  kind: QueryKindText;
   /** The text to search for */
-  text: string
+  text: string;
   /** Whether to perform raw text search (no stemming/normalization) */
-  raw?: boolean
+  raw?: boolean;
   /** Whether to include descendant blocks in results */
-  includeDescendants?: boolean
+  includeDescendants?: boolean;
 }
 
 export interface QueryNoText {
   /** Kind identifier for no-text queries (10) */
-  kind: QueryKindNoText
+  kind: QueryKindNoText;
   /** The text to exclude */
-  text: string
+  text: string;
   /** Whether to perform raw text search */
-  raw?: boolean
+  raw?: boolean;
 }
 
 /**
@@ -5421,42 +5604,42 @@ export interface QueryNoText {
  */
 export interface QueryBlock {
   /** Kind identifier for block queries (9) */
-  kind: QueryKindBlock
+  kind: QueryKindBlock;
   /** The block types to match or not match */
   types?: {
-    op?: QueryHas | QueryNotHas
-    value?: string[]
-  }
+    op?: QueryHas | QueryNotHas;
+    value?: string[];
+  };
   /** Whether to match blocks with a parent */
-  hasParent?: boolean
+  hasParent?: boolean;
   /** Whether to match blocks with a child */
-  hasChild?: boolean
+  hasChild?: boolean;
   /** Whether to match blocks with tags */
-  hasTags?: boolean
+  hasTags?: boolean;
   /** Whether to match blocks with back references */
-  hasBackRefs?: boolean
+  hasBackRefs?: boolean;
   /** Whether to match blocks with aliases */
-  hasAliases?: boolean
+  hasAliases?: boolean;
   /** Whether to match blocks with a specific creation date */
   created?: {
-    op?: QueryEq | QueryNotEq | QueryGt | QueryLt | QueryGe | QueryLe
-    value?: Date | QueryJournalDate
-  }
+    op?: QueryEq | QueryNotEq | QueryGt | QueryLt | QueryGe | QueryLe;
+    value?: Date | QueryJournalDate;
+  };
   /** Whether to match blocks with a specific modification date */
   modified?: {
-    op?: QueryEq | QueryNotEq | QueryGt | QueryLt | QueryGe | QueryLe
-    value?: Date | QueryJournalDate
-  }
+    op?: QueryEq | QueryNotEq | QueryGt | QueryLt | QueryGe | QueryLe;
+    value?: Date | QueryJournalDate;
+  };
   /** Whether to include descendant blocks in results */
-  includeDescendants?: boolean
+  includeDescendants?: boolean;
 }
 
 /** Query condition that matches task blocks */
 export interface QueryTask {
   /** Kind identifier for task queries (11) */
-  kind: QueryKindTask
+  kind: QueryKindTask;
   /** Whether the task is completed */
-  completed?: boolean
+  completed?: boolean;
 }
 
 /**
@@ -5464,11 +5647,11 @@ export interface QueryTask {
  */
 export interface QueryTagProperty {
   /** Name of the tag property */
-  name: string
+  name: string;
   /** Optional type code for the property */
-  type?: number
+  type?: number;
   /** Optional type arguments */
-  typeArgs?: any
+  typeArgs?: any;
   /** Operation to perform (equals, not equals, etc.) */
   op?:
     | QueryEq
@@ -5482,16 +5665,16 @@ export interface QueryTagProperty {
     | QueryGe
     | QueryLe
     | QueryNull
-    | QueryNotNull
+    | QueryNotNull;
   /** Value to compare against */
-  value?: any
+  value?: any;
 }
 
 /**
  * Specifies sorting for query results.
  * A tuple of field name and direction.
  */
-export type QuerySort = [string, "ASC" | "DESC"]
+export type QuerySort = [string, "ASC" | "DESC"];
 
 /**
  * Types of statistical operations that can be performed on query results.
@@ -5506,169 +5689,169 @@ export type QueryStat =
   | "min" // Minimum value
   | "max" // Maximum value
   | "percent_e" // Percentage of items with non-empty values
-  | "percent_ne" // Percentage of items with empty values
+  | "percent_ne"; // Percentage of items with empty values
 
 /**
  * Constant for the AND query group type.
  * All conditions must match for the group to match.
  */
-export type QueryKindAnd = 1
+export type QueryKindAnd = 1;
 
 /**
  * Constant for the OR query group type.
  * At least one condition must match for the group to match.
  */
-export type QueryKindOr = 2
+export type QueryKindOr = 2;
 
 /**
  * Constant for the journal query type.
  * Matches blocks in journal date range.
  */
-export type QueryKindJournal = 3
+export type QueryKindJournal = 3;
 
 /**
  * Constant for the tag query type.
  * Matches blocks with specific tags.
  */
-export type QueryKindTag = 4
+export type QueryKindTag = 4;
 
 /**
  * Constant for the no-tag query type.
  * Matches blocks without specific tags.
  */
-export type QueryKindNoTag = 5
+export type QueryKindNoTag = 5;
 
 /**
  * Constant for the reference query type.
  * Matches blocks referencing other blocks.
  */
-export type QueryKindRef = 6
+export type QueryKindRef = 6;
 
 /**
  * Constant for the no-reference query type.
  * Matches blocks not referencing other blocks.
  */
-export type QueryKindNoRef = 7
+export type QueryKindNoRef = 7;
 
 /**
  * Constant for the text query type.
  * Matches blocks containing specific text.
  */
-export type QueryKindText = 8
+export type QueryKindText = 8;
 
 /**
  * Constant for the block query type.
  * Matches blocks according to their properties.
  */
-export type QueryKindBlock = 9
+export type QueryKindBlock = 9;
 
 /**
  * Constant for the no-text query type.
  * Matches blocks without specific text.
  */
-export type QueryKindNoText = 10
+export type QueryKindNoText = 10;
 
 /**
  * Constant for the task query type.
  * Matches blocks that are tasks, optionally filtering by completion status.
  */
-export type QueryKindTask = 11
+export type QueryKindTask = 11;
 
 /**
  * Constant for the block match query type.
  * Matches specific blocks by their ID.
  */
-export type QueryKindBlockMatch = 12
+export type QueryKindBlockMatch = 12;
 
 /**
  * Constant for the content format query type.
  * Matches blocks containing specific formatting in content.
  */
-export type QueryKindFormat = 13
+export type QueryKindFormat = 13;
 
 /**
  * Operation constant: equals.
  * Matches if a value is equal to the specified value.
  */
-export type QueryEq = 1
+export type QueryEq = 1;
 
 /**
  * Operation constant: not equals.
  * Matches if a value is not equal to the specified value.
  */
-export type QueryNotEq = 2
+export type QueryNotEq = 2;
 
 /**
  * Operation constant: includes.
  * Matches if an array value includes the specified value.
  */
-export type QueryIncludes = 3
+export type QueryIncludes = 3;
 
 /**
  * Operation constant: not includes.
  * Matches if an array value doesn't include the specified value.
  */
-export type QueryNotIncludes = 4
+export type QueryNotIncludes = 4;
 
 /**
  * Operation constant: has property.
  * Matches if an object has the specified property.
  */
-export type QueryHas = 5
+export type QueryHas = 5;
 
 /**
  * Operation constant: doesn't have property.
  * Matches if an object doesn't have the specified property.
  */
-export type QueryNotHas = 6
+export type QueryNotHas = 6;
 
 /**
  * Operation constant: greater than.
  * Matches if a value is greater than the specified value.
  */
-export type QueryGt = 7
+export type QueryGt = 7;
 
 /**
  * Operation constant: less than.
  * Matches if a value is less than the specified value.
  */
-export type QueryLt = 8
+export type QueryLt = 8;
 
 /**
  * Operation constant: greater than or equal to.
  * Matches if a value is greater than or equal to the specified value.
  */
-export type QueryGe = 9
+export type QueryGe = 9;
 
 /**
  * Operation constant: less than or equal to.
  * Matches if a value is less than or equal to the specified value.
  */
-export type QueryLe = 10
+export type QueryLe = 10;
 
 /**
  * Operation constant: is null.
  * Matches if a value is null or undefined.
  */
-export type QueryNull = 11
+export type QueryNull = 11;
 
 /**
  * Operation constant: is not null.
  * Matches if a value is neither null nor undefined.
  */
-export type QueryNotNull = 12
+export type QueryNotNull = 12;
 
 /**
  * Constant for relative date specification in journal queries.
  * Used for dates like "2 days ago" or "next week".
  */
-export type QueryJournalRelative = 1
+export type QueryJournalRelative = 1;
 
 /**
  * Constant for absolute date specification in journal queries.
  * Used for specific dates.
  */
-export type QueryJournalFull = 2
+export type QueryJournalFull = 2;
 
 /**
  * Describes a query for searching and filtering blocks.
@@ -5676,40 +5859,40 @@ export type QueryJournalFull = 2
  */
 export interface QueryDescription2 {
   /** The main query group with conditions */
-  q?: QueryGroup2
+  q?: QueryGroup2;
   /** Optional block ID to exclude from results */
-  excludeId?: DbId
+  excludeId?: DbId;
   /** Array of sort specifications for ordering results */
-  sort?: QuerySort[]
+  sort?: QuerySort[];
   /** For paginated results, the page number (0-based) */
-  page?: number
+  page?: number;
   /** For paginated results, the number of items per page */
-  pageSize?: number
+  pageSize?: number;
   /** Filters results to blocks with a specific tag */
-  tagName?: string
+  tagName?: string;
   /** Field to group results by */
-  groupBy?: string
+  groupBy?: string;
   /** Specifies which group to return results for */
-  group?: string
+  group?: string;
   /** Statistical calculations to perform on results */
-  stats?: QueryStat[]
+  stats?: QueryStat[];
   /** Whether to format results as a table */
-  asTable?: boolean
+  asTable?: boolean;
   /** Calendar view configuration if results should be displayed in calendar format */
   asCalendar?: {
     /** Field to use for calendar date (created/modified/journal or a tag DateTime property prefixed with `_`) */
-    field: "created" | "modified" | "journal" | (string & {})
+    field: "created" | "modified" | "journal" | (string & {});
     /** Start date for the calendar range */
-    start: Date
+    start: Date;
     /** End date for the calendar range */
-    end: Date
-  }
+    end: Date;
+  };
   /** Random seed for stable random sorting across pagination */
-  randomSeed?: number
+  randomSeed?: number;
   /** Whether to use the current page's date as the reference for relative dates */
-  useReferenceDate?: boolean
+  useReferenceDate?: boolean;
   /** The reference date for relative dates (Unix timestamp) */
-  referenceDate?: number
+  referenceDate?: number;
 }
 
 /**
@@ -5725,7 +5908,7 @@ export type QueryItem2 =
   | QueryBlock2
   | QueryBlockMatch2
   | QueryTask
-  | QueryFormat2
+  | QueryFormat2;
 
 /**
  * A group of query conditions combined with a logical operator.
@@ -5740,11 +5923,11 @@ export interface QueryGroup2 {
     | QueryKindAncestorOr
     | QueryKindDescendantAnd
     | QueryKindDescendantOr
-    | QueryKindChainAnd
+    | QueryKindChainAnd;
   /** Array of conditions within this group */
-  conditions: QueryItem2[]
+  conditions: QueryItem2[];
   /** Whether to negate the conditions in this group */
-  negate?: boolean
+  negate?: boolean;
 }
 
 /**
@@ -5752,11 +5935,11 @@ export interface QueryGroup2 {
  */
 export interface QueryText2 {
   /** Kind identifier for text queries (8) */
-  kind: QueryKindText
+  kind: QueryKindText;
   /** The text to search for */
-  text: string
+  text: string;
   /** Whether to perform raw text search (no stemming/normalization) */
-  raw?: boolean
+  raw?: boolean;
 }
 
 /**
@@ -5765,13 +5948,13 @@ export interface QueryText2 {
  */
 export interface QueryTag2 {
   /** Kind identifier for tag queries (4) */
-  kind: QueryKindTag
+  kind: QueryKindTag;
   /** The tag name to match */
-  name: string
+  name: string;
   /** Optional property conditions for the tag */
-  properties?: QueryTagProperty[]
+  properties?: QueryTagProperty[];
   /** Only show direct tag references, not references to included tags */
-  selfOnly?: boolean
+  selfOnly?: boolean;
 }
 
 /**
@@ -5779,11 +5962,11 @@ export interface QueryTag2 {
  */
 export interface QueryRef2 {
   /** Kind identifier for reference queries (6) */
-  kind: QueryKindRef
+  kind: QueryKindRef;
   /** ID of the block that should be referenced */
-  blockId?: DbId
+  blockId?: DbId;
   /** Only show direct references, not references to included tags */
-  selfOnly?: boolean
+  selfOnly?: boolean;
 }
 
 /**
@@ -5791,11 +5974,11 @@ export interface QueryRef2 {
  */
 export interface QueryJournal2 {
   /** Kind identifier for journal queries (3) */
-  kind: QueryKindJournal
+  kind: QueryKindJournal;
   /** Start date for the journal range */
-  start: QueryJournalDate
+  start: QueryJournalDate;
   /** End date for the journal range */
-  end: QueryJournalDate
+  end: QueryJournalDate;
 }
 
 /**
@@ -5803,39 +5986,39 @@ export interface QueryJournal2 {
  */
 export interface QueryBlock2 {
   /** Kind identifier for block queries (9) */
-  kind: QueryKindBlock
+  kind: QueryKindBlock;
   /** The block types to match or not match */
   types?: {
-    op?: QueryHas | QueryNotHas
-    value?: string[]
-  }
+    op?: QueryHas | QueryNotHas;
+    value?: string[];
+  };
   /** Whether to match blocks with a parent */
-  hasParent?: boolean
+  hasParent?: boolean;
   /** Whether to match blocks with a child */
-  hasChild?: boolean
+  hasChild?: boolean;
   /** Whether to match blocks with tags */
-  hasTags?: boolean
+  hasTags?: boolean;
   /** Whether to match blocks with aliases */
-  hasAliases?: boolean
+  hasAliases?: boolean;
   /** Whether to match blocks with content */
-  hasContent?: boolean
+  hasContent?: boolean;
   /** Whether to match blocks with outgoing references */
-  hasRefs?: boolean
+  hasRefs?: boolean;
   /** Whether to match blocks with a specific number of back references */
   backRefs?: {
-    op?: QueryEq | QueryNotEq | QueryGt | QueryLt | QueryGe | QueryLe
-    value?: number
-  }
+    op?: QueryEq | QueryNotEq | QueryGt | QueryLt | QueryGe | QueryLe;
+    value?: number;
+  };
   /** Whether to match blocks with a specific creation date */
   created?: {
-    op?: QueryEq | QueryNotEq | QueryGt | QueryLt | QueryGe | QueryLe
-    value?: Date | QueryJournalDate
-  }
+    op?: QueryEq | QueryNotEq | QueryGt | QueryLt | QueryGe | QueryLe;
+    value?: Date | QueryJournalDate;
+  };
   /** Whether to match blocks with a specific modification date */
   modified?: {
-    op?: QueryEq | QueryNotEq | QueryGt | QueryLt | QueryGe | QueryLe
-    value?: Date | QueryJournalDate
-  }
+    op?: QueryEq | QueryNotEq | QueryGt | QueryLt | QueryGe | QueryLe;
+    value?: Date | QueryJournalDate;
+  };
 }
 
 /**
@@ -5843,9 +6026,9 @@ export interface QueryBlock2 {
  */
 export interface QueryBlockMatch2 {
   /** Kind identifier for block match queries (12) */
-  kind: QueryKindBlockMatch
+  kind: QueryKindBlockMatch;
   /** ID of the specific block to match */
-  blockId?: DbId
+  blockId?: DbId;
 }
 
 /**
@@ -5853,33 +6036,33 @@ export interface QueryBlockMatch2 {
  */
 export interface QueryFormat2 {
   /** Kind identifier for format queries (13) */
-  kind: QueryKindFormat
+  kind: QueryKindFormat;
   /** The format identifier (e.g., 'b', 'i', 'c') */
-  f: string
+  f: string;
   /** The format attributes for precise matching */
-  fa?: Record<string, any>
+  fa?: Record<string, any>;
 }
 
 /** Constant for the self AND group type. */
-export type QueryKindSelfAnd = 100
+export type QueryKindSelfAnd = 100;
 
 /** Constant for the self OR group type. */
-export type QueryKindSelfOr = 101
+export type QueryKindSelfOr = 101;
 
 /** Constant for the ancestor AND group type. */
-export type QueryKindAncestorAnd = 102
+export type QueryKindAncestorAnd = 102;
 
 /** Constant for the ancestor OR group type. */
-export type QueryKindAncestorOr = 103
+export type QueryKindAncestorOr = 103;
 
 /** Constant for the descendant AND group type. */
-export type QueryKindDescendantAnd = 104
+export type QueryKindDescendantAnd = 104;
 
 /** Constant for the descendant OR group type. */
-export type QueryKindDescendantOr = 105
+export type QueryKindDescendantOr = 105;
 
 /** Constant for the chain AND group type. */
-export type QueryKindChainAnd = 106
+export type QueryKindChainAnd = 106;
 
 // Misc
 /**
@@ -5888,25 +6071,25 @@ export type QueryKindChainAnd = 106
  */
 export interface IdContent {
   /** The block ID */
-  id: DbId
+  id: DbId;
   /** The block's content fragments, or null if no content */
-  content: ContentFragment[] | null
+  content: ContentFragment[] | null;
 }
 
 /**
  * Type representing a choice with an optional color.
  * Can be a string or an object with name and optional color.
  */
-export type Choice = { n: string; c?: string } | string
+export type Choice = { n: string; c?: string } | string;
 
 /**
  * Configuration for custom queries (used in block previews primarily).
  */
 export interface BlockCustomQuery {
   /** The query description */
-  q: QueryDescription2
+  q: QueryDescription2;
   /** Optional extra SQL to append to the query defined in `q` */
-  extraSql?: string
+  extraSql?: string;
 }
 
 /** Options passed to `core.editor.moveBlocks` for fine-grained control over the move operation. */
@@ -5916,7 +6099,7 @@ export interface BlockMoveOptions {
    * the target parent or sibling (e.g., converting a text block to a list item
    * when moving into a list).
    */
-  autoMatchType?: boolean
+  autoMatchType?: boolean;
   /**
    * Additional move operations that are performed atomically alongside the
    * primary move. Each entry is a tuple of:
@@ -5930,10 +6113,10 @@ export interface BlockMoveOptions {
     DbId[],
     DbId | null,
     "before" | "after" | "firstChild" | "lastChild" | null,
-  ][]
+  ][];
 }
 
 export interface BlockMoveBackendOptions {
-  autoMatchType?: boolean
-  extraMoves?: [DbId[], DbId, DbId | null][]
+  autoMatchType?: boolean;
+  extraMoves?: [DbId[], DbId, DbId | null][];
 }

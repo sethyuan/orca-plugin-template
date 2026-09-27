@@ -152,6 +152,15 @@ Commands are invoked by calling the `orca.commands.invokeCommand` function.
   - Parameters:
     - `url`: string (optional) - The URL to load in the WebView
 
+- `core.notify`
+
+  - Description: Displays a notification
+  - Parameters:
+    - `type`: "info" | "success" | "warn" | "error" - The notification type
+    - `message`: string - The notification message
+    - `title`: string (optional) - The notification title
+    - `actionCommand`: string (optional) - The command to invoke when the notification action is clicked
+
 ### Editor Commands
 
 - `core.editor.toggleTOC`
@@ -236,6 +245,10 @@ Commands are invoked by calling the `orca.commands.invokeCommand` function.
 
 - `core.rebuildIndex`
   - Description: Rebuilds the search index
+  - Parameters: None
+
+- `core.rebuildAllBlocksIndexText`
+  - Description: Rebuilds the index text for all blocks and then rebuilds the search index
   - Parameters: None
 
 ### S3 Sync Commands

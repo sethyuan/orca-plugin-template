@@ -5882,6 +5882,8 @@ export interface QueryDescription2 {
   asCalendar?: {
     /** Field to use for calendar date (created/modified/journal or a tag DateTime property prefixed with `_`) */
     field: "created" | "modified" | "journal" | (string & {});
+    /** Optional tag DateTime property (prefixed with `_`) used as the end date of a result. Does not filter; it widens the fetched range to overlapping results so month view can render them as time-spans. */
+    endField?: string;
     /** Start date for the calendar range */
     start: Date;
     /** End date for the calendar range */

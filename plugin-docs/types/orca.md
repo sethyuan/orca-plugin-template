@@ -7524,6 +7524,12 @@ Calendar view configuration if results should be displayed in calendar format
 
 End date for the calendar range
 
+###### endField?
+
+> `optional` **endField**: `string`
+
+Optional tag DateTime property (prefixed with `_`) used as the end date of a result. Does not filter; it widens the fetched range to overlapping results so month view can render them as time-spans.
+
 ###### field
 
 > **field**: `"created"` \| `"modified"` \| `"journal"` \| `string` & `object`

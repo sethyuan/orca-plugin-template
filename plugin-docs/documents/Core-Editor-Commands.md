@@ -1512,6 +1512,13 @@ await orca.commands.invokeEditorCommand("core.editor.selectAll", cursor);
 - **Parameters**:
   - `id?: DbId`: Optional specific block ID to convert. If not provided, uses blocks from cursor selection.
 - **Usage**: Converts blocks to simple text blocks.
+- **Quote blocks**: A quote block (`quote2`) is converted in place by changing
+  its type, so the block ID, tags, aliases and references are preserved. When
+  the quote has exactly one child, that child's content is merged into the
+  quote block, its own children are hoisted up and the child is removed, which
+  keeps the rendering identical. With multiple children the quote simply keeps
+  them as children. This also works when the quote is the root block of a
+  panel.
 
 ```typescript
 // Convert current selection to text blocks

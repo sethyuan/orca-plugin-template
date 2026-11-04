@@ -5936,31 +5936,31 @@ const hasConverter = !!orca.state.blockConverters?.["html"]?.["myplugin.customBl
 
 > **blockHighlight**: `object`
 
-Block highlighting data. `container` is stored via valtio `ref()`.
+Block highlighting data. DOM nodes are stored via valtio `ref()`.
+Geometry is NOT stored: it is derived at render time from
+`startEl`/`endEl` relative to `origin` (see
+`computeBlockHighlightGeometry`), so it stays correct when the layout
+shifts while a highlight is active.
 
 ###### blockHighlight.container
 
 > **container**: `HTMLElement`
 
-###### blockHighlight.height
+###### blockHighlight.endEl
 
-> **height**: `string`
+> **endEl**: `HTMLElement`
 
-###### blockHighlight.left
+###### blockHighlight.origin
 
-> **left**: `string`
+> **origin**: `HTMLElement`
 
-###### blockHighlight.top
+###### blockHighlight.startEl
 
-> **top**: `string`
+> **startEl**: `HTMLElement`
 
 ###### blockHighlight.type
 
 > **type**: `"selection"` \| `"drag"`
-
-###### blockHighlight.width
-
-> **width**: `string`
 
 ###### blockMenuCommands
 
@@ -8710,7 +8710,7 @@ Called after a command has been executed.
 
 ### APIMsg
 
-> **APIMsg** = `"change-tag-property-choice"` \| `"export-png"` \| `"get-aliased-blocks"` \| `"get-aliases"` \| `"get-aliases-ids"` \| `"get-block"` \| `"get-block-by-alias"` \| `"get-blockid-by-alias"` \| `"get-blocks"` \| `"get-blocks-with-tags"` \| `"get-block-tree"` \| `"get-children-tags"` \| `"get-journal-block"` \| `"get-remindings"` \| `"query"` \| `"search-aliases"` \| `"search-blocks-by-text"` \| `"set-app-config"` \| `"set-config"` \| `"shell-open"` \| `"show-in-folder"` \| `"upload-asset-binary"` \| `"upload-assets"` \| `"image-ocr"` \| `string`
+> **APIMsg** = `"change-tag-property-choice"` \| `"export-png"` \| `"get-aliased-blocks"` \| `"get-aliases"` \| `"get-aliases-ids"` \| `"get-block"` \| `"get-block-by-alias"` \| `"get-blockid-by-alias"` \| `"get-blocks"` \| `"get-blocks-with-tags"` \| `"get-block-tree"` \| `"get-children-tags"` \| `"get-journal-block"` \| `"get-remindings"` \| `"query"` \| `"search-aliases"` \| `"search-blocks-by-text"` \| `"set-app-config"` \| `"set-config"` \| `"shell-open"` \| `"show-in-folder"` \| `"upload-asset-binary"` \| `"upload-assets"` \| `"image-ocr"` \| `"import-markdown"` \| `string`
 
 Supported backend API message types for communicating with the Orca backend.
 These message types are used with the `invokeBackend` method to perform

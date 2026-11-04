@@ -6,9 +6,9 @@
 
 # Introduction
 
-Orca provides a rich set of editor commands to manipulate blocks, text, and other content. These commands are registered under the `core.editor` namespace and can be invoked programmatically. This document describes all the available editor commands, their parameters, and usage examples.
+Orca provides a rich set of editor commands to manipulate blocks, text, and other content. Most of them are registered under the `core.editor` namespace; a few closely related commands use other prefixes (`core.ai.*`, `core.duplicateTag`) and are documented here as well. These commands can be invoked programmatically, and this document describes the available editor commands, their parameters, and usage examples.
 
-Editor commands are invoked by calling the `orca.commands.invokeEditorCommand` function.
+Editor commands are invoked by calling the `orca.commands.invokeEditorCommand` function. Commands that operate on the application, the window or the panels rather than on an editor are documented in [Core Commands](Core-Commands.md) (including `core.editor.copySelection` and `core.editor.copySelectionForMove`, which are plain commands rather than editor commands).
 
 The commands are organized into several categories:
 
@@ -118,6 +118,23 @@ await orca.commands.invokeEditorCommand(
 );
 ```
 
+### `core.editor.batchInsertTags`
+
+- **Description**: Inserts tags into the given blocks in one batch.
+- **Parameters**:
+  - `blockIds: DbId[]`: An array of block IDs to add the tags to.
+  - `tags: TagInput[]`: An array of tags to insert. `TagInput` is either a string (the tag alias) or `{ name: string, props?: Record<string, any> }`.
+- **Usage**: Used when pasting content that carries tags. All the blocks are updated in a single undoable step.
+
+```typescript
+await orca.commands.invokeEditorCommand(
+  "core.editor.batchInsertTags",
+  null,
+  [123, 124],
+  ["project", { name: "deadline", props: { date: "2023-12-31" } }],
+);
+```
+
 ### `core.editor.deleteBlocks`
 
 - **Description**: Deletes the given blocks.
@@ -168,7 +185,7 @@ await orca.commands.invokeEditorCommand(
 - **Usage**: Reorders blocks in the hierarchy. Prevents moving a block to be a descendant of itself.
 
 ```typescript
-import type { BlockMoveOptions } from "@/types/orca";
+import type { BlockMoveOptions } from "@shared/types/orca";
 
 const blockIdsToMove: DbId[] = [101];
 const targetRefBlockId: DbId = 102;
@@ -210,7 +227,7 @@ await orca.commands.invokeEditorCommand(
 - **Parameters**:
 - `blockIds: DbId[]`: An array of block IDs (numbers) to copy.
 - `refBlockId: DbId | null`: The ID (number) of the reference block.
-- `position: "before" | "after" | "firstChild" | "lastChild | null"`: The target position relative to `refBlockId`.
+- `position: "before" | "after" | "firstChild" | "lastChild" | null`: The target position relative to `refBlockId`.
 - `processVars?: boolean`: Optional flag to process variables during copying (defaults to `false`).
 - **Usage**: Duplicates blocks and their descendants.
 
@@ -318,14 +335,14 @@ await orca.commands.invokeEditorCommand(
 - `type: number`: The type of reference being created. Possible values are:
   - `1` (`RefType.Inline`): An inline reference.
   - `2` (`RefType.Property`): A reference via a block property.
-  - `3` (`RefType.RefData`): A reference via a reference data.
-  - `4` (`RefType.Media`): A reference via a media, like a whiteboard, pdf or epub.
+  - `3` (`RefType.RefData`): A reference via reference data.
+  - `4` (`RefType.Media`): A reference via a media block, such as a whiteboard, PDF or EPUB.
   - `5` (`RefType.Mirror`): A reference from a mirror block to its source block.
 - `alias?: string`: An optional alias for this specific reference instance (often used with `RefType.Property`).
 - **Usage**: Establishes relationships between blocks, like properties or embeds.
 
 ```typescript
-import { RefType } from "@/constants/db";
+import { RefType } from "@shared/constants/db";
 
 const sourceBlockId: DbId = 401;
 const targetBlockId: DbId = 402;
@@ -366,6 +383,24 @@ if (blockRef) {
 }
 ```
 
+### `core.editor.deleteRef`
+
+- **Description**: Deletes the given reference (link) between two blocks.
+- **Parameters**:
+  - `{ refId }`: A single object argument, not a positional one. `refId: DbId` is the ID of the `BlockRef` to delete.
+- **Usage**: Removes a reference created by `core.editor.createRef`, e.g. a property reference or a mirror reference.
+
+```typescript
+const refId = orca.state.blocks[801]?.refs[0]?.id;
+if (refId != null) {
+  await orca.commands.invokeEditorCommand(
+    "core.editor.deleteRef",
+    null,
+    { refId },
+  );
+}
+```
+
 ### `core.editor.setProperties`
 
 - **Description**: Sets or updates specified properties of the given blocks. Properties are stored as key-value pairs.
@@ -395,7 +430,7 @@ if (blockRef) {
 - **Usage**: Attaches metadata or structured data to blocks, allowing for typed properties.
 
 ```typescript
-import { PropType } from "@/constants/db";
+import { PropType } from "@shared/constants/db";
 
 // Old format: same properties applied to multiple blocks
 const blockIdsToUpdate: DbId[] = [601, 602];
@@ -659,7 +694,7 @@ const newTagId = await orca.commands.invokeEditorCommand(
 );
 
 // Duplicate with a specific name
-const newTagId = await orca.commands.invokeEditorCommand(
+const newNamedTagId = await orca.commands.invokeEditorCommand(
   "core.duplicateTag",
   null,
   tagBlockId,
@@ -915,6 +950,68 @@ await orca.commands.invokeEditorCommand("core.editor.insertPDF", cursor);
 await orca.commands.invokeEditorCommand("core.editor.insertHR", cursor);
 ```
 
+### `core.editor.insertSpreadsheet`
+
+- **Description**: Inserts a spreadsheet block.
+- **Parameters**:
+  - `id?: DbId`: Optional block ID to insert at or modify. An empty block is converted in place, otherwise a new block is inserted after it.
+- **Usage**: Creates an embedded spreadsheet with a full grid: values, formulas, formatting, filters and find & replace.
+
+```typescript
+await orca.commands.invokeEditorCommand(
+  "core.editor.insertSpreadsheet",
+  cursor,
+);
+```
+
+### `core.editor.insertWhiteboard`
+
+- **Description**: Inserts a whiteboard block.
+- **Parameters**:
+  - `id?: DbId`: Optional block ID to insert at or modify. An empty block is converted in place, otherwise a new block is inserted after it.
+- **Usage**: Creates an Excalidraw canvas for sketching and free-form diagrams.
+
+```typescript
+await orca.commands.invokeEditorCommand(
+  "core.editor.insertWhiteboard",
+  cursor,
+);
+```
+
+### `core.editor.insertEPUB`
+
+- **Description**: Inserts an EPUB block. A prompt (with a file picker) asks for the EPUB file path.
+- **Parameters**:
+  - `id?: DbId`: Optional block ID used as the reference. The book block is inserted after it.
+- **Usage**: Opens an EPUB book inside the editor so it can be read in place and referenced like other media.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.insertEPUB", cursor);
+```
+
+### `core.editor.importMarkdown`
+
+- **Description**: Imports a Markdown file. A prompt (with a file picker) asks for the file path, and the file is converted into blocks.
+- **Parameters**:
+  - `id?: DbId`: Optional block ID used as the reference. The imported blocks become its last children when it is the root block of the panel, replace it when it is an empty block, and are inserted after it otherwise.
+- **Usage**: Bulk-imports an existing Markdown document into the current page.
+
+```typescript
+await orca.commands.invokeEditorCommand(
+  "core.editor.importMarkdown",
+  cursor,
+);
+```
+
+### `core.editor.createAndGoEmptyBlock`
+
+- **Description**: Creates a new empty block at the root level and opens it as its own page.
+- **Usage**: A plain command (no editor context argument): it acts on the active panel, creating the block and navigating to it.
+
+```typescript
+orca.commands.invokeCommand("core.editor.createAndGoEmptyBlock");
+```
+
 ## Deletion Commands
 
 These commands handle the removal and modification of content within blocks.
@@ -1110,6 +1207,23 @@ const newBlockId = await orca.commands.invokeEditorCommand(
 );
 ```
 
+### `core.editor.collapseEmptyBlock`
+
+- **Description**: Collapses an empty block that has children: the children are hoisted and the now empty block is deleted, in a single undoable step.
+- **Parameters**:
+  - `blockId: DbId`: The ID of the empty block to collapse. It must have children.
+  - `mode: "promote" | "absorb"`: How the children are rearranged. `promote` moves all the children up to the parent, at the slot of the collapsed block. `absorb` moves the first child up to the parent, then makes the remaining children its children.
+- **Usage**: Removes a redundant empty wrapper while keeping its content, e.g. after removing the only list item text of a container.
+
+```typescript
+await orca.commands.invokeEditorCommand(
+  "core.editor.collapseEmptyBlock",
+  cursor,
+  123, // the empty block that has children
+  "promote",
+);
+```
+
 ## Text Commands
 
 These commands control text formatting and block type conversion.
@@ -1181,7 +1295,7 @@ await orca.commands.invokeEditorCommand(
 );
 ```
 
-### `core.editor.formatUderlineCustomColor`
+### `core.editor.formatUnderlineCustomColor`
 
 - **Description**: Formats the selected text with an underline in a custom color.
 - **Parameters**:
@@ -1191,21 +1305,30 @@ await orca.commands.invokeEditorCommand(
 ```typescript
 // With color picker
 await orca.commands.invokeEditorCommand(
-  "core.editor.formatUderlineCustomColor",
+  "core.editor.formatUnderlineCustomColor",
   cursor,
 );
 
 // With predefined color
 await orca.commands.invokeEditorCommand(
-  "core.editor.formatUderlineCustomColor",
+  "core.editor.formatUnderlineCustomColor",
   cursor,
   "#FF5500",
 );
 ```
 
-### `core.editor.formatUderlineWavyCustomColor`
+### `core.editor.formatUnderlineWavy`
 
-- **Description**: Formats the selected text with a wavy underline with custom color.
+- **Description**: Formats the selected text with a wavy underline or toggles wavy underline formatting.
+- **Usage**: Applies the default color wavy underline to selected text, or inserts wavy underline formatting at cursor position.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.formatUnderlineWavy", cursor);
+```
+
+### `core.editor.formatUnderlineWavyCustomColor`
+
+- **Description**: Formats the selected text with a wavy underline in a custom color.
 - **Parameters**:
   - `color?: string`: Optional color value. If not provided, shows a color picker.
 - **Usage**: Applies a wavy underline with custom color to selected text.
@@ -1213,13 +1336,13 @@ await orca.commands.invokeEditorCommand(
 ```typescript
 // With color picker
 await orca.commands.invokeEditorCommand(
-  "core.editor.formatUderlineWavyCustomColor",
+  "core.editor.formatUnderlineWavyCustomColor",
   cursor,
 );
 
 // With predefined color
 await orca.commands.invokeEditorCommand(
-  "core.editor.formatUderlineWavyCustomColor",
+  "core.editor.formatUnderlineWavyCustomColor",
   cursor,
   "#FF5500",
 );
@@ -1455,7 +1578,7 @@ await orca.commands.invokeEditorCommand("core.editor.copyFormatting", cursor);
 ### `core.editor.convertSelectionIntoLink`
 
 - **Description**: Converts the currently selected text into a link.
-- **Usage**: Opens a dialog to create either an URL link or a reference to another block.
+- **Usage**: Opens a dialog to create either a URL link or a reference to another block.
 
 ```typescript
 await orca.commands.invokeEditorCommand(
@@ -1572,6 +1695,20 @@ await orca.commands.invokeEditorCommand("core.editor.makeHeading3", cursor);
 await orca.commands.invokeEditorCommand("core.editor.makeHeading4", cursor);
 ```
 
+### `core.editor.makeHeadingAuto`
+
+- **Description**: Converts the selected block(s) to auto headings: heading blocks with an automatically assigned level (`level: -1`) that is resolved from the surrounding heading hierarchy, e.g. when exporting to Markdown.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID to convert. If not provided, uses blocks from cursor selection.
+- **Usage**: Turns blocks into headings without having to pick an explicit level.
+
+```typescript
+await orca.commands.invokeEditorCommand(
+  "core.editor.makeHeadingAuto",
+  cursor,
+);
+```
+
 ### `core.editor.makeNumberedList`
 
 - **Description**: Converts the selected block(s) to numbered list items.
@@ -1626,15 +1763,70 @@ await orca.commands.invokeEditorCommand("core.editor.makeQuote", cursor);
 await orca.commands.invokeEditorCommand("core.editor.makeMath", cursor);
 ```
 
-### `core.editor.makeTask`
+### `core.editor.makeKanban`
 
-- **Description**: Converts the selected block(s) to task blocks.
+- **Description**: Converts the selected block(s) to a kanban board block.
 - **Parameters**:
-  - `id?: DbId`: Optional specific block ID to convert.
-- **Usage**: Converts blocks to checkable task items.
+  - `id?: DbId`: Optional specific block ID to convert. If not provided, uses blocks from cursor selection.
+- **Usage**: Turns blocks into a board whose level-1 children are lists and whose level-2 children are cards.
 
 ```typescript
-await orca.commands.invokeEditorCommand("core.editor.makeTask", cursor);
+await orca.commands.invokeEditorCommand("core.editor.makeKanban", cursor);
+```
+
+### `core.editor.makeGallery`
+
+- **Description**: Converts the selected block(s) to a gallery block.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID to convert. If not provided, uses blocks from cursor selection.
+- **Usage**: Turns blocks into cards laid out in a wrapping grid.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.makeGallery", cursor);
+```
+
+### `core.editor.makeColumns`
+
+- **Description**: Converts the selected block(s) to a columns block.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID to convert. If not provided, uses blocks from cursor selection.
+- **Usage**: Turns blocks into columns laid out side by side in a single row.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.makeColumns", cursor);
+```
+
+### `core.editor.makeTimeline`
+
+- **Description**: Converts the selected block(s) to a timeline block.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID to convert. If not provided, uses blocks from cursor selection.
+- **Usage**: Turns blocks into time entries on a vertical axis.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.makeTimeline", cursor);
+```
+
+### `core.editor.makeTabsH`
+
+- **Description**: Converts the selected block(s) to a horizontal tabs block.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID to convert. If not provided, uses blocks from cursor selection.
+- **Usage**: Turns blocks into tabs in a horizontal strip.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.makeTabsH", cursor);
+```
+
+### `core.editor.makeTabsV`
+
+- **Description**: Converts the selected block(s) to a vertical tabs block.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID to convert. If not provided, uses blocks from cursor selection.
+- **Usage**: Turns blocks into tabs in a vertical strip on the left.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.makeTabsV", cursor);
 ```
 
 ### `core.editor.insertFragments`
@@ -1658,10 +1850,10 @@ await orca.commands.invokeEditorCommand("core.editor.insertFragments", cursor, [
 
 ### `core.editor.toggleTask`
 
-- **Description**: Toggles the completion status of a task block.
+- **Description**: Converts the selected block(s) to task blocks and toggles their completion state. An unchecked task becomes checked, a checked task turns back into a plain text block, and any other block is converted into an (unchecked) task.
 - **Parameters**:
   - `id?: DbId`: Optional specific block ID to toggle.
-- **Usage**: Marks task blocks as complete/incomplete.
+- **Usage**: Marks task blocks as complete/incomplete, and turns plain blocks into tasks on the fly.
 
 ```typescript
 // Toggle task on current block
@@ -1684,6 +1876,31 @@ await orca.commands.invokeEditorCommand(
 
 ```typescript
 await orca.commands.invokeEditorCommand("core.editor.makeAliased", cursor);
+```
+
+### `core.editor.makeMirror`
+
+- **Description**: Converts a reference to a mirror block: the block starts showing the content of the referenced block instead of a link to it.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID. If not provided, uses the block at cursor position. The block must consist of exactly one reference and have no children.
+- **Usage**: Turns an existing reference into a live mirror of its source block.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.makeMirror", cursor);
+```
+
+### `core.editor.makeInlineReference`
+
+- **Description**: Converts a mirror block back to an inline reference to its source block.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID. If not provided, uses the block at cursor position. The block must be a mirror with exactly one reference.
+- **Usage**: The reverse of `core.editor.makeMirror`; turns an embedded mirror into a plain reference link.
+
+```typescript
+await orca.commands.invokeEditorCommand(
+  "core.editor.makeInlineReference",
+  cursor,
+);
 ```
 
 ## Misc Commands
@@ -1814,6 +2031,21 @@ await orca.commands.invokeEditorCommand("core.editor.openOnTheSide", cursor);
 await orca.commands.invokeEditorCommand("core.editor.copyBlockLink", cursor);
 ```
 
+### `core.editor.copy.md`
+
+- **Description**: Copies the given block(s) to the clipboard as Markdown.
+- **Parameters**:
+  - `idOrIds?: DbId | DbId[]`: Optional block ID or array of block IDs to copy. If not provided, uses the block at cursor position.
+- **Usage**: Copies a block together with its children as Markdown source, ready to be pasted into another app. Use `core.editor.export.md` to write a file instead.
+
+```typescript
+// Copy the current block as Markdown
+await orca.commands.invokeEditorCommand("core.editor.copy.md", cursor);
+
+// Copy specific blocks as Markdown
+await orca.commands.invokeEditorCommand("core.editor.copy.md", null, [123, 124]);
+```
+
 ### `core.editor.foldAll`
 
 - **Description**: Folds all top-level blocks in the current document.
@@ -1936,12 +2168,21 @@ await orca.commands.invokeEditorCommand("core.editor.export.txt", cursor);
 
 ### `core.editor.pasteText`
 
-- **Description**: Pastes plain text from the clipboard, handling multi-line text appropriately.
-- **Usage**: Pastes text without formatting, creating new blocks for line breaks.
+- **Description**: Pastes the clipboard as Markdown text, parsing Markdown syntax and tags while pasting.
+- **Usage**: Pastes formatted content by interpreting the Markdown in the clipboard. Use `core.editor.pastePlainText` to paste without any parsing.
 
 ```typescript
 // Paste text from clipboard
 await orca.commands.invokeEditorCommand("core.editor.pasteText", cursor);
+```
+
+### `core.editor.pastePlainText`
+
+- **Description**: Pastes the clipboard as plain text, without parsing Markdown or tags.
+- **Usage**: Pastes text verbatim; multi-line text becomes multiple blocks and no formatting is applied.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.pastePlainText", cursor);
 ```
 
 ### `core.editor.pasteAsReference`
@@ -2121,4 +2362,194 @@ await orca.commands.invokeEditorCommand("core.editor.showAliasEditor", cursor);
 ```typescript
 // Show tag insertion menu
 await orca.commands.invokeEditorCommand("core.editor.showTagInsertion", cursor);
+```
+
+### `core.editor.openBlockGraph`
+
+- **Description**: Opens the block graph view of the given block in the current panel.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID. If not provided, uses the block at cursor position.
+- **Usage**: Navigates the current panel to the graph that shows the block together with its references.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.openBlockGraph", cursor);
+```
+
+### `core.editor.openBlockGraphAside`
+
+- **Description**: Opens the block graph view of the given block in the panel on the side.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID. If not provided, uses the block at cursor position.
+- **Usage**: Shows the block graph next to the current editor, without navigating away from it.
+
+```typescript
+await orca.commands.invokeEditorCommand(
+  "core.editor.openBlockGraphAside",
+  cursor,
+);
+```
+
+### `core.editor.side.openBlockGraph`
+
+- **Description**: Opens the block graph view of the current root block in the panel on the side.
+- **Usage**: A plain command (no editor context argument): it acts on the active panel's root block.
+
+```typescript
+orca.commands.invokeCommand("core.editor.side.openBlockGraph");
+```
+
+### `core.editor.openMindMap`
+
+- **Description**: Opens the mind map view of the current root block.
+- **Usage**: A plain command (no editor context argument): it switches the active panel's editor into mind map mode.
+
+```typescript
+orca.commands.invokeCommand("core.editor.openMindMap");
+```
+
+### `core.editor.openBlockInNewWindow`
+
+- **Description**: Opens the given block in a new Orca window.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID. If not provided, uses the block at cursor position.
+- **Usage**: Detaches a block (or, for a journal block, the whole journal page) into its own window.
+
+```typescript
+await orca.commands.invokeEditorCommand(
+  "core.editor.openBlockInNewWindow",
+  cursor,
+);
+```
+
+### `core.editor.openLastTagEditor`
+
+- **Description**: Opens (or closes) the data editor of the last tag of the block at the cursor.
+- **Usage**: A keyboard-friendly shortcut to the tag data editor, instead of clicking the tag arrow.
+
+```typescript
+await orca.commands.invokeEditorCommand(
+  "core.editor.openLastTagEditor",
+  cursor,
+);
+```
+
+### `core.editor.toggleGoTo`
+
+- **Description**: Adds the given block to, or removes it from, the "go to" command list.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID. If not provided, uses the block at cursor position.
+- **Usage**: Lets you pin blocks in the command palette: every registered block gets its own go-to command (plus a variant that opens it on the side).
+
+```typescript
+await orca.commands.invokeEditorCommand("core.editor.toggleGoTo", cursor);
+```
+
+### `core.editor.openAIAssistant`
+
+- **Description**: Opens the AI assistant of the current editor.
+- **Usage**: A plain command (no editor context argument): it acts on the active panel.
+
+```typescript
+orca.commands.invokeCommand("core.editor.openAIAssistant");
+```
+
+### `core.ai.openChatAside`
+
+- **Description**: Opens an AI chat about the given block in the panel on the side.
+- **Parameters**:
+  - `id?: DbId`: Optional specific block ID. If not provided, uses the block at cursor position.
+- **Usage**: Creates an `aichat` block (tagged with the AI result tag configured in settings) that uses the given block as context, opens it in the panel on the side and focuses its chat input. Requires the AI base URL, API key and model to be configured, otherwise an error notification pointing to the settings is shown.
+
+```typescript
+await orca.commands.invokeEditorCommand("core.ai.openChatAside", cursor);
+```
+
+### `core.editor.toggleTOC`
+
+- **Description**: Toggles the table of contents of the current editor.
+- **Usage**: A plain command (no editor context argument): it acts on the active panel.
+
+```typescript
+orca.commands.invokeCommand("core.editor.toggleTOC");
+```
+
+### `core.editor.toggleFindReplace`
+
+- **Description**: Toggles the find and replace dialog of the current editor.
+- **Usage**: A plain command (no editor context argument): it acts on the active panel.
+
+```typescript
+orca.commands.invokeCommand("core.editor.toggleFindReplace");
+```
+
+### `core.editor.goToReferrers`
+
+- **Description**: Scrolls the current editor to the referrers section of the root block.
+- **Usage**: A plain command (no editor context argument): it acts on the active panel.
+
+```typescript
+orca.commands.invokeCommand("core.editor.goToReferrers");
+```
+
+### `core.editor.goToSameKind`
+
+- **Description**: Scrolls the current editor to the "same tags" section of the root block.
+- **Usage**: A plain command (no editor context argument): it acts on the active panel.
+
+```typescript
+orca.commands.invokeCommand("core.editor.goToSameKind");
+```
+
+### `core.editor.goToCandidates`
+
+- **Description**: Scrolls the current editor to the candidate references section of the root block.
+- **Usage**: A plain command (no editor context argument): it acts on the active panel.
+
+```typescript
+orca.commands.invokeCommand("core.editor.goToCandidates");
+```
+
+### `core.editor.goTop`
+
+- **Description**: Scrolls the current editor to the top.
+- **Usage**: A plain command (no editor context argument): it acts on the active panel and animates the scroll.
+
+```typescript
+orca.commands.invokeCommand("core.editor.goTop");
+```
+
+### `core.editor.goBottom`
+
+- **Description**: Scrolls the current editor to the bottom.
+- **Usage**: A plain command (no editor context argument): it acts on the active panel and animates the scroll.
+
+```typescript
+orca.commands.invokeCommand("core.editor.goBottom");
+```
+
+### `core.editor.undo`
+
+- **Description**: Undoes the last change in the current editor.
+- **Usage**: A plain command (no editor context argument): it acts on the active panel's editor.
+
+```typescript
+orca.commands.invokeCommand("core.editor.undo");
+```
+
+### `core.editor.redo`
+
+- **Description**: Redoes the last undone change in the current editor.
+- **Usage**: A plain command (no editor context argument): it acts on the active panel's editor.
+
+```typescript
+orca.commands.invokeCommand("core.editor.redo");
+```
+
+### `core.editor.stopAIStreaming`
+
+- **Description**: Stops the AI output stream that is currently running.
+- **Usage**: A plain command (no editor context argument): it aborts the active AI streaming request in the window.
+
+```typescript
+orca.commands.invokeCommand("core.editor.stopAIStreaming");
 ```

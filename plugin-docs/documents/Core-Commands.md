@@ -8,9 +8,9 @@
 
 ## Introduction
 
-This document provides a comprehensive list of core commands available in Orca. These commands control various aspects of the application, including theme management, navigation, panel operations, editor functions, and more. Each command can be triggered through the command palette or keyboard shortcuts configured in the settings.
+This document provides a comprehensive list of core commands available in Orca. These commands control various aspects of the application, including theme management, navigation, panel operations, layout, and more. Each command can be triggered through the command palette or keyboard shortcuts configured in the settings.
 
-Commands are invoked by calling the `orca.commands.invokeCommand` function.
+Commands are invoked by calling the `orca.commands.invokeCommand` function. Commands that operate inside an editor are documented in [Core Editor Commands](Core-Editor-Commands.md).
 
 ## Commands
 
@@ -152,6 +152,21 @@ Commands are invoked by calling the `orca.commands.invokeCommand` function.
   - Parameters:
     - `url`: string (optional) - The URL to load in the WebView
 
+- `core.checkForUpdates`
+
+  - Description: Checks for application updates and shows the update dialog
+  - Parameters: None
+
+- `core.openPluginMarketplace`
+
+  - Description: Opens the plugin marketplace
+  - Parameters: None
+
+- `core.openRepoSwitcher`
+
+  - Description: Opens the repo switcher
+  - Parameters: None
+
 - `core.notify`
 
   - Description: Displays a notification
@@ -161,60 +176,18 @@ Commands are invoked by calling the `orca.commands.invokeCommand` function.
     - `title`: string (optional) - The notification title
     - `actionCommand`: string (optional) - The command to invoke when the notification action is clicked
 
-### Editor Commands
+### Clipboard Commands
 
-- `core.editor.toggleTOC`
+These commands copy the current editor selection into Orca's clipboard buffer so that a following paste command (for example `core.editor.pasteAsMove` or `core.editor.pasteAsCopy`) can reuse it. They are plain commands, not editor commands: they take no editor context argument, they operate on the active panel, and they are not undoable.
 
-  - Description: Toggles the table of contents for the current editor
+- `core.editor.copySelection`
+
+  - Description: Copies the current selection (blocks, or the content of a single block) into Orca's clipboard buffer
   - Parameters: None
 
-- `core.editor.goToReferrers`
+- `core.editor.copySelectionForMove`
 
-  - Description: Navigates to the referrers section
-  - Parameters: None
-
-- `core.editor.goToSameKind`
-
-  - Description: Navigates to the same tags section
-  - Parameters: None
-
-- `core.editor.goToCandidates`
-
-  - Description: Navigates to the candidate references section
-  - Parameters: None
-
-- `core.editor.toggleFindReplace`
-
-  - Description: Toggles the find and replace dialog
-  - Parameters: None
-
-- `core.editor.undo`
-
-  - Description: Undoes the last editor change
-  - Parameters: None
-
-- `core.editor.redo`
-
-  - Description: Redoes the last undone change
-  - Parameters: None
-
-- `core.editor.goTop`
-
-  - Description: Scrolls to the top of the current editor
-  - Parameters: None
-
-- `core.editor.goBottom`
-
-  - Description: Scrolls to the bottom of the current editor
-  - Parameters: None
-
-- `core.editor.createAndGoEmptyBlock`
-
-  - Description: Creates a new empty block and navigates to it
-  - Parameters: None
-
-- `core.editor.stopAIStreaming`
-  - Description: Stops the current AI output stream
+  - Description: Copies the current selection into Orca's clipboard buffer and marks it for a later move (cut and paste)
   - Parameters: None
 
 ### Panel Operations
@@ -234,6 +207,17 @@ Commands are invoked by calling the `orca.commands.invokeCommand` function.
   - Description: Toggles wide view mode for the panel
   - Parameters:
     - `id`: string (optional) - Panel ID, defaults to active panel
+
+- `core.panel.toggleMaximize`
+
+  - Description: Toggles whether the panel is maximized; does nothing when there is only one panel
+  - Parameters:
+    - `id`: string (optional) - Panel ID, defaults to active panel
+
+- `core.panel.split`
+
+  - Description: Splits the current panel and opens a new panel on its right, then switches focus to it
+  - Parameters: None - it targets the panel of the editor context it is invoked from
 
 ### Asset Management
 
@@ -273,3 +257,48 @@ Additional layout commands are dynamically registered based on saved layouts in 
 - `core.enableInteractivePreview`
   - Description: Enables interactive preview mode
   - Parameters: None
+
+### AI Commands
+
+These commands are meant for AI agents (the in-app assistant's `call_commands` tool and the MCP `invoke_commands` tool). They take arguments, so they are not listed in the command palette, and they can return data to the caller.
+
+- `core.ai.getBlocks`
+  - Description: Reads blocks and returns a JSON view of them. It is a read-only wrapper around the `get-blocks` backend call: nothing is stored in the editor's state and no undo step is created.
+  - Parameters:
+    - `blockIds`: number | number[] (required) - The blocks to read.
+    - `opts`: object (optional)
+      - `maxBlocks`: number (default: 500, at most: 1000) - How many block IDs are read per call.
+      - `includeContent`: boolean (default: false) - Also return the raw content fragments (debugging aid; far more verbose).
+  - Returns:
+    ```json
+    {
+      "success": true,
+      "count": 1,
+      "blocks": [
+        {
+          "id": 1000,
+          "type": "heading",
+          "text": "Title",
+          "parent": 999,
+          "children": [1001],
+          "aliases": ["/pages/title"],
+          "tags": ["Project"],
+          "links": [1002],
+          "properties": {
+            "Status": "done",
+            "_repr": { "type": "heading", "level": 2 }
+          }
+        }
+      ],
+      "missingIds": [123],
+      "truncated": false
+    }
+    ```
+  - Notes:
+    - `properties` keeps `_repr` (the block's type and its type-specific fields). Values stay structured (`Date` → ISO string).
+    - Empty fields are omitted, so `text`, `children`, `aliases`, `tags`, `links` and `properties` only appear when the block has them.
+    - `text` is the block's own text plus its tag property values; a property that points at a block contributes the **target block ID**.
+    - `links` are the targets of inline references.
+    - `missingIds` lists requested IDs that have no block, `truncated` is set when the input was cut to `maxBlocks`.
+    - Invalid input is answered with `{ "success": false, "error": "…" }` instead of a failed command.
+    - Only `block` and `journal` panels have an editor, so run it in one of those (otherwise the caller gets `skipped` / `panel_has_no_editor`).
